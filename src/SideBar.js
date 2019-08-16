@@ -1,20 +1,16 @@
 import React from "react";
-import { Route, Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function SideItem(props) {
   return (
-    <Route
-      path={props.to}
-      exact={true}
-      children={({ match }) => (
-        <Link
-          className={match ? "nav-link active" : "nav-link text-seconday"}
-          to={props.to}
-        >
-          {props.label}
-        </Link>
-      )}
-    />
+    <NavLink
+      exact
+      className="nav-link text-secondary"
+      activeClassName="active"
+      to={props.to}
+    >
+      {props.label}
+    </NavLink>
   );
 }
 

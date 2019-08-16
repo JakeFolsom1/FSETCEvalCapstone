@@ -1,49 +1,42 @@
 import React from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
 import Sidebar from "./SideBar.js";
-
-function FinishedEvals(props) {
-  return <h2>Finished Evals</h2>;
-}
-
-function EvalProgress(props) {
-  return <h2>Eval Progress</h2>;
-}
-
-function EditEvals(props) {
-  return <h2>Edit Evals</h2>;
-}
+import FinishedEvals from "./FinishedEvals.js";
+import EvalProgress from "./EvalProgress.js";
+import EditEvals from "./EditEvals.js";
 
 function Evaluations(props) {
   const sideItems = [
-    { title: "View Finished Evaluations", component: FinishedEvals, to: "/" },
+    {
+      title: "View Finished Evaluations",
+      component: FinishedEvals,
+      to: "/evals/"
+    },
     {
       title: "Check Evaluation Progress",
       component: EvalProgress,
-      to: "/eval_progress/"
+      to: "/evals/eval_progress"
     },
-    { title: "Edit Evaluations", component: EditEvals, to: "/edit_evals/" }
+    { title: "Edit Evaluations", component: EditEvals, to: "/evals/edit_evals" }
   ];
   return (
-    <Router>
-      <div className="row h-100">
-        <div className="col-2">
-          <Sidebar sideItems={sideItems} />
-        </div>
-        <div className="col-10">
-          {sideItems.map(sideItem => {
-            return (
-              <Route
-                key={sideItem.title}
-                path={sideItem.to}
-                exact
-                component={sideItem.component}
-              />
-            );
-          })}
-        </div>
+    <div className="row h-100">
+      <div className="d-none d-lg-block  col-lg-2">
+        <Sidebar sideItems={sideItems} />
       </div>
-    </Router>
+      <div className="col-lg-10 col-md-12">
+        {sideItems.map(sideItem => {
+          return (
+            <Route
+              key={sideItem.title}
+              path={sideItem.to}
+              exact
+              component={sideItem.component}
+            />
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
