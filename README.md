@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ASU tutoring center evaluation website*
 
 Designed as a replacement for the FSETC evaluation website.
