@@ -61,6 +61,11 @@ build/Release
 node_modules/
 jspm_packages/
 
+# API Build directories
+api/target
+api/.idea
+api/swagger-spring.iml
+
 # TypeScript v1 declaration files
 typings/
 
