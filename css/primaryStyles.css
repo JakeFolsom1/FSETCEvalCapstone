@@ -14,3 +14,29 @@
     background-color: #8C1D40;
     color: #FFC627;
 }
+.sideNav{
+    height:100%;
+    width:160px;
+    position:fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    padding-top: 0;
+}
+
+body{
+    padding-left: 160px;
+}
+
+.sideButton{
+    width: 140px;
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 16pt;
+    display: block;
+    font-family: "Roboto Material", sans-serif;
+    background-color: #8C1D40;
+    color: #FFFFFF;
+}
