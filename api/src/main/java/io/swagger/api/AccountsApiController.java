@@ -3,8 +3,10 @@ package io.swagger.api;
 import io.swagger.model.Account;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
+import io.swagger.repository.AccountRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -31,6 +33,9 @@ public class AccountsApiController implements AccountsApi {
 
     private final HttpServletRequest request;
 
+    @Autowired
+    private AccountRepository accountRepository;
+
     @org.springframework.beans.factory.annotation.Autowired
     public AccountsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
@@ -39,7 +44,8 @@ public class AccountsApiController implements AccountsApi {
 
     public ResponseEntity<Void> createAccount(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Account body) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        accountRepository.save(body);
+        return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
     }
 
     public ResponseEntity<Void> deleteAccount(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite) {
