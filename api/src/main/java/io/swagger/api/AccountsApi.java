@@ -48,7 +48,7 @@ public interface AccountsApi {
     ResponseEntity<Void> deleteAccount(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite);
 
 
-    @ApiOperation(value = "Get an account by asurite", nickname = "getAccountType", notes = "", response = Account.class, tags={ "accounts", })
+    @ApiOperation(value = "Get an account by asurite", nickname = "getAccount", notes = "", response = Account.class, tags={ "accounts", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Success", response = Account.class),
         @ApiResponse(code = 400, message = "Invalid asurite supplied"),
@@ -56,7 +56,7 @@ public interface AccountsApi {
     @RequestMapping(value = "/accounts/{asurite}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<Account> getAccountType(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite);
+    ResponseEntity<Account> getAccount(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite);
 
 
     @ApiOperation(value = "Get all active accounts", nickname = "getAllActiveAccounts", notes = "", response = Account.class, responseContainer = "List", tags={ "accounts", })

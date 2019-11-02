@@ -1,8 +1,8 @@
 package io.swagger.api;
 
-import io.swagger.model.Account;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.annotations.*;
+import io.swagger.annotations.ApiParam;
+import io.swagger.model.Account;
 import io.swagger.repository.AccountRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,15 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.*;
-import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 
@@ -44,46 +40,76 @@ public class AccountsApiController implements AccountsApi {
 
     public ResponseEntity<Void> createAccount(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Account body) {
         String accept = request.getHeader("Accept");
-        accountRepository.save(body);
-        return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+        if (accept != null && accept.contains("application/json")) {
+            if (accountRepository.exists(body.getAsurite())) {
+                return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+            }
+            else {
+                accountRepository.save(body);
+                return new ResponseEntity<Void>(HttpStatus.CREATED);
+            }
+        }
+        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<Void> deleteAccount(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        if (accept != null && accept.contains("application/json")) {
+            if (accountRepository.findOne(asurite) == null) {
+                return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            }
+            else {
+                accountRepository.delete(asurite);
+            }
+        }
+        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<Account> getAccountType(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite) {
+    public ResponseEntity<Account> getAccount(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<Account>(objectMapper.readValue("{  \"asurite\" : \"jjbowma2\",  \"accountType\" : \"admin\",  \"isActive\" : true}", Account.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Account>(HttpStatus.INTERNAL_SERVER_ERROR);
+            Account account = accountRepository.findOne(asurite);
+            if (account == null) {
+                return new ResponseEntity<Account>(HttpStatus.NOT_FOUND);
+            }
+            else {
+                return new ResponseEntity<Account>(account, HttpStatus.OK);
             }
         }
 
-        return new ResponseEntity<Account>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<Account>(HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<List<Account>> getAllActiveAccounts() {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<List<Account>>(objectMapper.readValue("[ {  \"asurite\" : \"jjbowma2\",  \"accountType\" : \"admin\",  \"isActive\" : true}, {  \"asurite\" : \"jjbowma2\",  \"accountType\" : \"admin\",  \"isActive\" : true} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<List<Account>>(HttpStatus.INTERNAL_SERVER_ERROR);
+            List<Account> activeAccountList = new ArrayList<Account>();
+            Iterator<Account> accountIterator = accountRepository.findAll().iterator();
+            while(accountIterator.hasNext())
+            {
+                Account tempAccount = accountIterator.next();
+                if (tempAccount.isIsActive()) {
+                   activeAccountList.add(tempAccount);
+                }
             }
+            return new ResponseEntity<List<Account>>(activeAccountList, HttpStatus.OK);
         }
 
-        return new ResponseEntity<List<Account>>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<List<Account>>(HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<Void> updateAccount(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Account body) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        if (accept != null && accept.contains("application/json")) {
+            if (accountRepository.findOne(body.getAsurite()) == null) {
+                return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            }
+            else {
+                accountRepository.save(body);
+                return new ResponseEntity<Void>(HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
 }
