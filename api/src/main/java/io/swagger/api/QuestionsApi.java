@@ -38,8 +38,8 @@ public interface QuestionsApi {
 
     @ApiOperation(value = "Create a new question", nickname = "createQuestion", notes = "", tags={ "questions", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Successfully created"),
-        @ApiResponse(code = 405, message = "Invalid input") })
+        @ApiResponse(code = 201, message = "Successfully created"),
+        @ApiResponse(code = 409, message = "Question already exists")})
     @RequestMapping(value = "/questions",
         produces = { "application/json" }, 
         consumes = { "application/json" },
@@ -60,7 +60,7 @@ public interface QuestionsApi {
     @ApiOperation(value = "Get all questions by evalType", nickname = "getActiveQuestions", notes = "", response = Question.class, responseContainer = "List", tags={ "questions", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Success", response = Question.class, responseContainer = "List"),
-        @ApiResponse(code = 400, message = "Invalid evalType supplied") })
+        @ApiResponse(code = 404, message = "Questions not found") })
     @RequestMapping(value = "/questions/{evalType}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
@@ -80,8 +80,7 @@ public interface QuestionsApi {
     @ApiOperation(value = "Update an existing question", nickname = "updateQuestion", notes = "", tags={ "questions", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Successfully updated"),
-        @ApiResponse(code = 404, message = "Question ID not found"),
-        @ApiResponse(code = 405, message = "Invalid input") })
+        @ApiResponse(code = 404, message = "Question ID not found") })
     @RequestMapping(value = "/questions",
         produces = { "application/json" }, 
         consumes = { "application/json" },

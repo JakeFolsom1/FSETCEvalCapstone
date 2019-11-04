@@ -84,13 +84,10 @@ public class AccountsApiController implements AccountsApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             List<Account> activeAccountList = new ArrayList<Account>();
-            Iterator<Account> accountIterator = accountRepository.findAll().iterator();
+            Iterator<Account> accountIterator = accountRepository.findAccountsByIsActive(true).iterator();
             while(accountIterator.hasNext())
             {
-                Account tempAccount = accountIterator.next();
-                if (tempAccount.isIsActive()) {
-                   activeAccountList.add(tempAccount);
-                }
+                activeAccountList.add(accountIterator.next());
             }
             return new ResponseEntity<List<Account>>(activeAccountList, HttpStatus.OK);
         }

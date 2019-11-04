@@ -3,8 +3,10 @@ package io.swagger.api;
 import io.swagger.model.Question;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
+import io.swagger.repository.QuestionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,8 @@ import javax.validation.constraints.*;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 
@@ -31,6 +35,9 @@ public class QuestionsApiController implements QuestionsApi {
 
     private final HttpServletRequest request;
 
+    @Autowired
+    QuestionRepository questionRepository;
+
     @org.springframework.beans.factory.annotation.Autowired
     public QuestionsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
@@ -39,50 +46,89 @@ public class QuestionsApiController implements QuestionsApi {
 
     public ResponseEntity<Void> activateQuestion(@ApiParam(value = "",required=true) @PathVariable("questionId") Long questionId) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        if (accept != null && accept.contains("application/json")) {
+            Question questionToActivate = questionRepository.findOne(questionId);
+            if (questionToActivate == null) {
+                return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            }
+            questionToActivate.setIsActive(true);
+            questionRepository.save(questionToActivate);
+            return new ResponseEntity<Void>(HttpStatus.OK);
+        }
+        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<Void> createQuestion(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Question body) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        if (accept != null && accept.contains("application/json")) {
+            if (questionRepository.exists(body.getQuestionId())) {
+                return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+            }
+            else {
+                questionRepository.save(body);
+                return new ResponseEntity<Void>(HttpStatus.CREATED);
+            }
+        }
+        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<Void> deactivateQuestion(@ApiParam(value = "",required=true) @PathVariable("questionId") Long questionId) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        if (accept != null && accept.contains("application/json")) {
+            Question questionToDeactivate = questionRepository.findOne(questionId);
+            if (questionToDeactivate == null) {
+                return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            }
+            questionToDeactivate.setIsActive(false);
+            questionRepository.save(questionToDeactivate);
+            return new ResponseEntity<Void>(HttpStatus.OK);
+        }
+        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<List<Question>> getActiveQuestions(@ApiParam(value = "",required=true) @PathVariable("evalType") String evalType) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<List<Question>>(objectMapper.readValue("[ {  \"evalType\" : \"p2p\",  \"questionId\" : 22,  \"questionPrompt\" : \"Does tutor obey all procedures and policies of the center?\",  \"isActive\" : true,  \"questionNumber\" : 3}, {  \"evalType\" : \"p2p\",  \"questionId\" : 22,  \"questionPrompt\" : \"Does tutor obey all procedures and policies of the center?\",  \"isActive\" : true,  \"questionNumber\" : 3} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<List<Question>>(HttpStatus.INTERNAL_SERVER_ERROR);
+            List<Question> activeQuestionList = new ArrayList<Question>();
+            Iterator<Question> questionIterator = questionRepository.findQuestionsByIsActiveAndEvalType(true, evalType).iterator();
+            if (!questionIterator.hasNext()) {
+                return new ResponseEntity<List<Question>>(HttpStatus.NOT_FOUND);
             }
+            while(questionIterator.hasNext())
+            {
+                activeQuestionList.add(questionIterator.next());
+            }
+            return new ResponseEntity<List<Question>>(activeQuestionList, HttpStatus.OK);
         }
-
-        return new ResponseEntity<List<Question>>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<List<Question>>(HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<Question> getQuestion(@ApiParam(value = "",required=true) @PathVariable("questionId") Long questionId) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<Question>(objectMapper.readValue("{  \"evalType\" : \"p2p\",  \"questionId\" : 22,  \"questionPrompt\" : \"Does tutor obey all procedures and policies of the center?\",  \"isActive\" : true,  \"questionNumber\" : 3}", Question.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Question>(HttpStatus.INTERNAL_SERVER_ERROR);
+            Question question = questionRepository.findOne(questionId);
+            if (question == null) {
+                return new ResponseEntity<Question>(HttpStatus.NOT_FOUND);
+            }
+            else {
+                return new ResponseEntity<Question>(question, HttpStatus.OK);
             }
         }
-
-        return new ResponseEntity<Question>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<Question>(HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<Void> updateQuestion(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Question body) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        if (accept != null && accept.contains("application/json")) {
+            if (questionRepository.findOne(body.getQuestionId()) == null) {
+                return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            }
+            else {
+                questionRepository.save(body);
+                return new ResponseEntity<Void>(HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
 }
