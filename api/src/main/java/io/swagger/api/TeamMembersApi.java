@@ -28,8 +28,8 @@ public interface TeamMembersApi {
 
     @ApiOperation(value = "Create a teamMember", nickname = "createTeamMember", notes = "", tags={ "teamMembers", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Successfully created"),
-        @ApiResponse(code = 405, message = "Invalid input") })
+        @ApiResponse(code = 201, message = "Successfully created"),
+        @ApiResponse(code = 409, message = "TeamMember already exists")})
     @RequestMapping(value = "/teamMembers",
         produces = { "application/json" }, 
         consumes = { "application/json" },
@@ -40,7 +40,6 @@ public interface TeamMembersApi {
     @ApiOperation(value = "Delete all teamMember's of a lead by leadAsurite", nickname = "deleteLeadTeam", notes = "", tags={ "teamMembers", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Successfully deleted"),
-        @ApiResponse(code = 400, message = "Invalid asurite supplied"),
         @ApiResponse(code = 404, message = "User not found") })
     @RequestMapping(value = "/teamMembers/{leadAsurite}",
         produces = { "application/json" }, 
@@ -48,21 +47,19 @@ public interface TeamMembersApi {
     ResponseEntity<Void> deleteLeadTeam(@ApiParam(value = "",required=true) @PathVariable("leadAsurite") String leadAsurite);
 
 
-    @ApiOperation(value = "Delete a team member by lead's asurite and tutor's asurite", nickname = "deleteTeamMember", notes = "", tags={ "teamMembers", })
+    @ApiOperation(value = "Delete a team member by tutor's asurite", nickname = "deleteTeamMember", notes = "", tags={ "teamMembers", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Successfully deleted"),
-        @ApiResponse(code = 400, message = "Invalid asurite(s) supplied"),
-        @ApiResponse(code = 404, message = "User(s) not found") })
-    @RequestMapping(value = "/teamMembers/{leadAsurite}/{tutorAsurite}",
+        @ApiResponse(code = 404, message = "User not found") })
+    @RequestMapping(value = "/teamMembers/tutor/{tutorAsurite}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
-    ResponseEntity<Void> deleteTeamMember(@ApiParam(value = "",required=true) @PathVariable("leadAsurite") String leadAsurite,@ApiParam(value = "",required=true) @PathVariable("tutorAsurite") String tutorAsurite);
+    ResponseEntity<Void> deleteTeamMember(@ApiParam(value = "",required=true) @PathVariable("tutorAsurite") String tutorAsurite);
 
 
     @ApiOperation(value = "Get a list of teamMembers by lead's asurite", nickname = "getTeamMembers", notes = "", response = String.class, responseContainer = "List", tags={ "teamMembers", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Success", response = String.class, responseContainer = "List"),
-        @ApiResponse(code = 400, message = "Invalid asurite supplied"),
         @ApiResponse(code = 404, message = "User not found") })
     @RequestMapping(value = "/teamMembers/{leadAsurite}",
         produces = { "application/json" }, 
@@ -73,9 +70,7 @@ public interface TeamMembersApi {
     @ApiOperation(value = "Update an existing teamMember", nickname = "updateTeamMember", notes = "", tags={ "teamMembers", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Successfully updated"),
-        @ApiResponse(code = 400, message = "Invalid asurite(s) supplied"),
-        @ApiResponse(code = 404, message = "User(s) not found"),
-        @ApiResponse(code = 405, message = "Validation exception") })
+        @ApiResponse(code = 404, message = "User not found") })
     @RequestMapping(value = "/teamMembers",
         produces = { "application/json" }, 
         consumes = { "application/json" },
