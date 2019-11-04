@@ -28,8 +28,7 @@ public interface AccountsApi {
 
     @ApiOperation(value = "Create an account", nickname = "createAccount", notes = "", tags={ "accounts", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Successfully created"),
-        @ApiResponse(code = 405, message = "Invalid input") })
+        @ApiResponse(code = 201, message = "Successfully created") })
     @RequestMapping(value = "/accounts",
         produces = { "application/json" }, 
         consumes = { "application/json" },
@@ -40,7 +39,6 @@ public interface AccountsApi {
     @ApiOperation(value = "Delete an account by asurite", nickname = "deleteAccount", notes = "", tags={ "accounts", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Successfully deleted"),
-        @ApiResponse(code = 400, message = "Invalid asurite supplied"),
         @ApiResponse(code = 404, message = "User not found") })
     @RequestMapping(value = "/accounts/{asurite}",
         produces = { "application/json" }, 
@@ -51,7 +49,6 @@ public interface AccountsApi {
     @ApiOperation(value = "Get an account by asurite", nickname = "getAccount", notes = "", response = Account.class, tags={ "accounts", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Success", response = Account.class),
-        @ApiResponse(code = 400, message = "Invalid asurite supplied"),
         @ApiResponse(code = 404, message = "User not found") })
     @RequestMapping(value = "/accounts/{asurite}",
         produces = { "application/json" }, 
@@ -71,9 +68,7 @@ public interface AccountsApi {
     @ApiOperation(value = "Update an existing account", nickname = "updateAccount", notes = "", tags={ "accounts", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Successfully updated"),
-        @ApiResponse(code = 400, message = "Invalid asurite supplied"),
-        @ApiResponse(code = 404, message = "User not found"),
-        @ApiResponse(code = 405, message = "Validation exception") })
+        @ApiResponse(code = 404, message = "User not found")})
     @RequestMapping(value = "/accounts",
         produces = { "application/json" }, 
         consumes = { "application/json" },

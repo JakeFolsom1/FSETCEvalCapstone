@@ -28,8 +28,8 @@ public interface SemestersApi {
 
     @ApiOperation(value = "Create a new semester", nickname = "createSemester", notes = "", tags={ "semesters", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Successfully created"),
-        @ApiResponse(code = 405, message = "Invalid input") })
+        @ApiResponse(code = 201, message = "Successfully created"),
+        @ApiResponse(code = 409, message = "Semester already exists")})
     @RequestMapping(value = "/semesters",
         produces = { "application/json" }, 
         consumes = { "application/json" },
@@ -40,7 +40,7 @@ public interface SemestersApi {
     @ApiOperation(value = "Delete a semester by semesterName", nickname = "deleteSemester", notes = "", tags={ "semesters", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Successfully deleted"),
-        @ApiResponse(code = 400, message = "Semester not found") })
+        @ApiResponse(code = 404, message = "Semester not found")})
     @RequestMapping(value = "/semesters/{semesterName}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
@@ -68,7 +68,7 @@ public interface SemestersApi {
     @ApiOperation(value = "Set a semester as active by semesterName", nickname = "setActiveSemester", notes = "All other semesters will be marked as inactive", tags={ "semesters", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Successfully updated"),
-        @ApiResponse(code = 400, message = "Semester not found") })
+        @ApiResponse(code = 404, message = "Semester not found") })
     @RequestMapping(value = "/semesters/{semesterName}",
         produces = { "application/json" }, 
         method = RequestMethod.PUT)
