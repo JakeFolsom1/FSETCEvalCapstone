@@ -1,0 +1,16 @@
+.loginBox{
+    width: 500px;
+    background-color: #FFFFFF;
+    border: 1px #000000 solid;
+    border-radius: 15px;
+    height: 400px;
+}
+.buttons{
+    padding: 15px 15px;
+    font-size: 16pt;
+    font-family: "Segoe UI", sans-serif;
+    margin-top: 75px;
+    border-radius: 5px;
+    background-color: #8C1D40;
+    color: #FFC627;
+}
