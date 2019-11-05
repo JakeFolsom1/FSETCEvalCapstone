@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.Check;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -19,7 +21,8 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 @Entity
-@Table(name = "QUESTION")
+@Table(name = "question")
+@Check(constraints = "question_type in ('numeric','free-response','y/n') and eval_type in ('p2p','l2t','t2l')")
 public class Question   {
   @Id
   @JsonProperty("questionId")
@@ -27,6 +30,9 @@ public class Question   {
 
   @JsonProperty("questionPrompt")
   private String questionPrompt = null;
+
+  @JsonProperty("questionType")
+  private String questionType = null;
 
   @JsonProperty("isActive")
   private Boolean isActive = null;
@@ -77,6 +83,27 @@ public class Question   {
 
   public void setQuestionPrompt(String questionPrompt) {
     this.questionPrompt = questionPrompt;
+  }
+
+  public Question questionType(String questionType) {
+    this.questionType = questionType;
+    return this;
+  }
+
+  /**
+   * Get questionType
+   * @return questionType
+   **/
+  @ApiModelProperty(example = "free-response", required = true, value = "")
+  @NotNull
+
+
+  public String getQuestionType() {
+    return questionType;
+  }
+
+  public void setQuestionType(String questionType) {
+    this.questionType = questionType;
   }
 
   public Question isActive(Boolean isActive) {
