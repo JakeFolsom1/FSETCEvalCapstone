@@ -1,42 +1,53 @@
-.loginBox{
-    width: 500px;
-    background-color: #FFFFFF;
-    border: 1px #000000 solid;
-    border-radius: 15px;
-    height: 400px;
-}
 .buttons{
-    padding: 15px 15px;
+    padding: 0.1% 0.1% 0.1% 0.1%;
+    height: auto;
+    width: 99%;
     font-size: 16pt;
     font-family: "Segoe UI", sans-serif;
-    margin-top: 75px;
+    margin: 5% 1% 1%;
     border-radius: 5px;
     background-color: #8C1D40;
     color: #FFC627;
 }
+.buttons:hover {
+    border-color: #FFAA22;
+}
+
 .sideNav{
     height:100%;
     width:160px;
     position:fixed;
+    background: gainsboro;
+    border: 1px solid;
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #111;
     overflow-x: hidden;
+    overflow-y: hidden;
     padding-top: 0;
 }
 
-body{
-    padding-left: 160px;
+.topNav{
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    margin-left: 150px;
+    margin-top: 0;
+    padding: 0;
+    list-style-type: none;
+    background-color: #111111;
+}
+.topNav a{
+    font-size: 26pt;
+    color: #ffffff;
+    display: block;
+    height: 100%;
+    width: 100%;
 }
 
-.sideButton{
-    width: 140px;
-    padding: 6px 8px 6px 16px;
-    text-decoration: none;
-    font-size: 16pt;
-    display: block;
-    font-family: "Roboto Material", sans-serif;
-    background-color: #8C1D40;
-    color: #FFFFFF;
+.sidePicture{
+    max-width: 100%;
+    height: 10%;
 }
+
+
