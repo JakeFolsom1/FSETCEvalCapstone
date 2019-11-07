@@ -6,13 +6,13 @@
     font-size: 16pt;
     font-family: "Segoe UI", sans-serif;
     margin: 5% 1% 1%;
-    border-radius: 5px;
+    border-radius: 4px;
     background-color: #8C1D40;
-    color: #FFC627;
+    color: #ffffff;
 }
 
 .buttons:hover {
-    border-color: #FFAA22;
+    border-color: #F0F0F0;
 }
 
 .midMenu{
@@ -46,7 +46,7 @@
     overflow: hidden;
     margin: 0;
     border: 1px solid #cccccc;
-    border-radius: 5px;
+    border-radius: 4px;
     justify-content: center;
 }
 
@@ -61,11 +61,12 @@
 }
 
 .tableContainer, .tableContainer table, .tableContainer td{
-    border: 1px solid black;
+    border: 1px solid #ffffff;
+    border-top: None;
     border-collapse: collapse;
 }
 .tableContainer th, .tableContainer td{
-    padding: 15px;
+    padding: 15px 15px 15px 130px;
 }
 .tableContainer table{
     border-spacing: 5px;
@@ -87,8 +88,8 @@
 }
 
 .dot{
-    height: 25px;
-    width: 25px;
+    height: 15px;
+    width: 15px;
     background-color: green;
     border-radius: 50%;
     display: inline-block;

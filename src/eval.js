@@ -15,6 +15,11 @@ function openTab(e, tabName){
     {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
+    tablinks = document.getElementsByClassName("tabLink");
+    for (i = 0; i < tablinks.length; i++)
+    {
+
+    }
     document.getElementById(tabName).style.display = "block";
     e.currentTarget.className += "active";
 }
