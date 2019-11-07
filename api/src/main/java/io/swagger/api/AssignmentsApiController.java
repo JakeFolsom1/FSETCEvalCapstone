@@ -90,6 +90,20 @@ public class AssignmentsApiController implements AssignmentsApi {
         return new ResponseEntity<List<Assignment>>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    public ResponseEntity<List<Assignment>> getActiveUserAssignments(String asurite) {
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            try {
+                return new ResponseEntity<List<Assignment>>(objectMapper.readValue("[ {  \"assignedAsurite\" : \"smurra11\",  \"evalType\" : \"p2p\",  \"asurite\" : \"jjbowma2\",  \"semester\" : \"Fall 2019\",  \"assignmentId\" : 54,  \"isComplete\" : false}, {  \"assignedAsurite\" : \"smurra11\",  \"evalType\" : \"p2p\",  \"asurite\" : \"jjbowma2\",  \"semester\" : \"Fall 2019\",  \"assignmentId\" : 54,  \"isComplete\" : false} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
+            } catch (IOException e) {
+                log.error("Couldn't serialize response for content type application/json", e);
+                return new ResponseEntity<List<Assignment>>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+
+        return new ResponseEntity<List<Assignment>>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
     public ResponseEntity<Void> updateAssignment(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Assignment body) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);

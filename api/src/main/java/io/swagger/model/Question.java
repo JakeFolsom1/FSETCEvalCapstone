@@ -6,12 +6,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Check;
+import org.hibernate.annotations.Generated;
 import org.springframework.validation.annotation.Validated;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -25,6 +23,7 @@ import javax.validation.constraints.*;
 @Check(constraints = "question_type in ('numeric','free-response','y/n') and eval_type in ('p2p','l2t','t2l')")
 public class Question   {
   @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
   @JsonProperty("questionId")
   private Long questionId = null;
 
@@ -52,8 +51,7 @@ public class Question   {
    * Get questionId
    * @return questionId
   **/
-  @ApiModelProperty(example = "22", required = true, value = "")
-  @NotNull
+  @ApiModelProperty(example = "22", value = "")
 
 
   public Long getQuestionId() {

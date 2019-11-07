@@ -95,6 +95,11 @@ public class AccountsApiController implements AccountsApi {
         return new ResponseEntity<List<Account>>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
+    public ResponseEntity<List<Account>> getAllActiveTutors() {
+        return null;
+    }
+
     public ResponseEntity<Void> updateAccount(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Account body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
