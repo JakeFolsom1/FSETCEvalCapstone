@@ -1,16 +1,141 @@
-.loginBox{
-    width: 500px;
-    background-color: #FFFFFF;
-    border: 1px #000000 solid;
-    border-radius: 15px;
-    height: 400px;
-}
 .buttons{
-    padding: 15px 15px;
+    padding: 0.1% 0.1% 0.1% 0.1%;
+    height: auto;
+    justify-content: center;
+    width: 90%;
     font-size: 16pt;
     font-family: "Segoe UI", sans-serif;
-    margin-top: 75px;
-    border-radius: 5px;
+    margin: 5% 1% 1%;
+    border-radius: 4px;
     background-color: #8C1D40;
-    color: #FFC627;
+    color: #ffffff;
 }
+
+.buttons:hover {
+    border-color: #F0F0F0;
+}
+
+.midMenu{
+    margin: auto;
+    padding-top: 5%;
+    padding-left: 16%;
+    justify-content: center;
+}
+.midMenu h1{
+    font-family: "Segoe UI", sans-serif;
+    font-size: 20pt;
+}
+
+.sideNav{
+    height:100%;
+    width:15%;
+    position:fixed;
+    background: gainsboro;
+    border: 1px solid;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    padding-top: 0;
+}
+
+.tabLink{
+    color: #8C1D40;
+    background-color: white;
+    overflow: hidden;
+    margin: 0;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    justify-content: center;
+}
+
+.tabLink button {
+    float: left;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-size: 14pt;
+    transition: 0.3s;
+}
+
+.tableContainer, .tableContainer table, .tableContainer td{
+    border: 1px solid #ffffff;
+    border-top: None;
+    border-collapse: collapse;
+}
+.tableContainer th, .tableContainer td{
+    padding: 15px 15px 15px 130px;
+}
+.tableContainer table{
+    border-spacing: 5px;
+}
+.tableContainer th{
+    text-align: left;
+}
+.tableContainer tr:nth-child(even) {
+    background-color: #ffffff;
+}
+.tableContainer tr:nth-child(odd) {
+    background-color: #FFF1CC
+}
+
+
+
+.tabLink:hover{
+    border-color: gray;
+}
+
+.dot{
+    height: 15px;
+    width: 15px;
+    background-color: green;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.tabLink button.active{
+    background-color: #FFC627;
+    border-bottom: 0;
+}
+
+.tabContent{
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #cccccc;
+    border-top: none;
+}
+
+.topNav{
+    position: fixed;
+    top: 0;
+    z-index: 1;
+    overflow: hidden;
+    height: 8%;
+    width: 100%;
+    margin-left: 8.5%;
+    margin-top: 0;
+    border-top: 0;
+    list-style-type: none;
+    background-color: #111111;
+}
+
+.topNav a{
+    margin-top: .5%;
+    justify-content: center;
+    font-family: "Segoe UI", serif;
+    text-align: center;
+    font-size: 20pt;
+    color: #ffffff;
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+
+.sidePicture{
+    max-width: 100%;
+    height: 8%;
+}
+
+
