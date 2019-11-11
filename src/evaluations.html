@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../css/primaryStyles.css">
+    <script type="text/javascript" src="eval.js"></script>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div class="topNav">
+        <a>Tutor Management System (TMS)</a>
+    </div>
+    <div class="sideNav">
+        <img class="sidePicture" src="../public/tutoringCenterHeaderText.jpg"/>
+        <button class ="buttons">Home</button>
+        <button class ="buttons">Question queue</button>
+        <button class = "buttons">Staff information</button>
+        <button class = "buttons">Shift Management</button>
+        <button class = "buttons">Update profile</button>
+        <button class = "buttons">Time Clock</button>
+        <button class = "buttons">Payroll</button>
+        <button class = "buttons">Inventory</button>
+        <button class = "buttons">Evaluations</button>
+        <button class="buttons">Logout</button>
+        <img class="sidePicture" src="../public/asu_fultonengineering.png"/>
+    </div>
+    <div class="midMenu">
+        <h1>
+            Evaluations
+        </h1>
+        <div class="menuTabs">
+            <button class="tabLink" onclick="openTab(event, 'viewShared')">View Shared</button>
+            <button class="tabLink" onclick="openTab(event, 'completeAssignments')">Complete Assignments</button>
+            <button class="tabLink" onclick="openTab(event, 'preferences')">Preferences</button>
+        </div>
+        <div id="viewShared" class="tabContent">
+            <div class = "tableContainer">
+                <table>
+                    <tr>
+                        <th>
+                            Semester
+                        </th>
+                        <th>
+                            Evaluator Name
+                        </th>
+                        <th>
+                            Lead
+                        </th>
+                        <th>
+                            Actions
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            Fall 2019
+                        </th>
+                        <th>
+                            Jedde Bowman
+                        </th>
+                        <th>
+                            <span class="dot"/>
+                        </th>
+                        <th>
+                            <button class="buttons" style="font-size: 12pt; size: 5pt;">View</button>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            Spring 2020
+                        </th>
+                        <th>
+                            Jacob Folsom
+                        </th>
+                        <th>
+
+                        </th>
+                        <th>
+                            <button class="buttons" style="font-size: 12pt; size: 5pt;">View</button>
+                        </th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div id="completeAssignments" class="tabContent">
+            <h3>More tab data here</h3>
+        </div>
+        <div id="preferences" class="tabContent">
+            <h3>Even more tab data here</h3>
+        </div>
+    </div>
+    <main>
+        <p> Memes </p>
+    </main>
+</body>
+</html>
