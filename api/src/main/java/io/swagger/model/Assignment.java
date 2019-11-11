@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -14,8 +16,11 @@ import javax.validation.constraints.*;
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
-
+@Entity
+@Table(name = "ASSIGNMENT")
 public class Assignment   {
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
   @JsonProperty("assignmentId")
   private Long assignmentId = null;
 
@@ -43,7 +48,7 @@ public class Assignment   {
    * Get assignmentId
    * @return assignmentId
   **/
-  @ApiModelProperty(example = "54", required = true, value = "")
+  @ApiModelProperty(example = "54", value = "")
   @NotNull
 
 
