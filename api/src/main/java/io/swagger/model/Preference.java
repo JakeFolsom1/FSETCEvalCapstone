@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -14,8 +16,14 @@ import javax.validation.constraints.*;
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
-
+@Entity
+@Table(name = "PREFERENCE")
 public class Preference   {
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @JsonProperty("preferenceId")
+  private Long preferenceId = null;
+
   @JsonProperty("asurite")
   private String asurite = null;
 
@@ -24,6 +32,27 @@ public class Preference   {
 
   @JsonProperty("preferredAsurite")
   private String preferredAsurite = null;
+
+  public Preference preferenceId(Long preferenceId) {
+    this.preferenceId = preferenceId;
+    return this;
+  }
+
+  /**
+   * Get preferenceId
+   * @return preferenceId
+   **/
+  @ApiModelProperty(example = "1", value = "")
+  @NotNull
+
+
+  public Long getPreferenceId() {
+    return preferenceId;
+  }
+
+  public void setPreferenceId(Long preferenceId) {
+    this.preferenceId = preferenceId;
+  }
 
   public Preference asurite(String asurite) {
     this.asurite = asurite;
