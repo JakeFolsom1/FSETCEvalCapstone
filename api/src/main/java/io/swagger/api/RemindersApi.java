@@ -36,7 +36,7 @@ public interface RemindersApi {
     @ApiOperation(value = "Remind user by asurite to complete their evaluations", nickname = "remindUser", notes = "", tags={ "reminders", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Successfully reminded") })
-    @RequestMapping(value = "/reminders/{asurite",
+    @RequestMapping(value = "/reminders/{asurite}",
         method = RequestMethod.POST)
     ResponseEntity<Void> remindUser(@ApiParam(value = "", required = true) @PathVariable("asurite") String asurite);
 

@@ -72,6 +72,14 @@ public interface AccountsApi {
             method = RequestMethod.GET)
     ResponseEntity<List<Account>> getAllActiveTutors();
 
+    @ApiOperation(value = "Get all active tutor accounts by major", nickname = "getAllActiveTutorsByMajor", notes = "", response = Account.class, responseContainer = "List", tags={ "accounts", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = Account.class, responseContainer = "List") })
+    @RequestMapping(value = "/accounts/tutors/{major}",
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<List<Account>> getAllActiveTutorsByMajor(@ApiParam(value = "",required=true) @PathVariable("major") String major);
+
 
     @ApiOperation(value = "Update an existing account", nickname = "updateAccount", notes = "", tags={ "accounts", })
     @ApiResponses(value = { 

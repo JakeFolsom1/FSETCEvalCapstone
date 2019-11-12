@@ -1,11 +1,14 @@
 package io.swagger.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -15,7 +18,14 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 
+@Entity
+@Table(name = "RESPONSE")
 public class Response   {
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @JsonProperty
+  private Long responseId;
+
   @JsonProperty("assignmentId")
   private Long assignmentId = null;
 
@@ -27,6 +37,28 @@ public class Response   {
 
   @JsonProperty("isShared")
   private Boolean isShared = null;
+
+  public Response responseId(Long responseId) {
+    this.responseId = responseId;
+    return this;
+  }
+
+  /**
+   * Get responseId
+   * @return responseId
+   **/
+  @ApiModelProperty(example = "1", value = "")
+  @NotNull
+
+
+  public Long getResponseId() {
+    return responseId;
+  }
+
+  public void setResponseId(Long responseId) {
+    this.responseId = responseId;
+  }
+
 
   public Response assignmentId(Long assignmentId) {
     this.assignmentId = assignmentId;
@@ -122,22 +154,24 @@ public class Response   {
       return false;
     }
     Response response = (Response) o;
-    return Objects.equals(this.assignmentId, response.assignmentId) &&
-        Objects.equals(this.questionId, response.questionId) &&
-        Objects.equals(this.response, response.response) &&
-        Objects.equals(this.isShared, response.isShared);
+    return Objects.equals(this.responseId, response.responseId) &&
+            Objects.equals(this.assignmentId, response.assignmentId) &&
+            Objects.equals(this.questionId, response.questionId) &&
+            Objects.equals(this.response, response.response) &&
+            Objects.equals(this.isShared, response.isShared);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(assignmentId, questionId, response, isShared);
+    return Objects.hash(responseId, assignmentId, questionId, response, isShared);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Response {\n");
-    
+
+    sb.append("    responseId: ").append(toIndentedString(responseId)).append("\n");
     sb.append("    assignmentId: ").append(toIndentedString(assignmentId)).append("\n");
     sb.append("    questionId: ").append(toIndentedString(questionId)).append("\n");
     sb.append("    response: ").append(toIndentedString(response)).append("\n");
@@ -157,4 +191,3 @@ public class Response   {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

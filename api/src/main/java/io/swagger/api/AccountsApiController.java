@@ -95,9 +95,42 @@ public class AccountsApiController implements AccountsApi {
         return new ResponseEntity<List<Account>>(HttpStatus.BAD_REQUEST);
     }
 
-    @Override
     public ResponseEntity<List<Account>> getAllActiveTutors() {
-        return null;
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            List<Account> activeAccountList = new ArrayList<Account>();
+            Iterator<Account> accountIterator = accountRepository.findAccountsByAccountType("tutor").iterator();
+            while(accountIterator.hasNext())
+            {
+                activeAccountList.add(accountIterator.next());
+            }
+            return new ResponseEntity<List<Account>>(activeAccountList, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<List<Account>>(HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseEntity<List<Account>> getAllActiveTutorsByMajor(@ApiParam(value = "",required=true) @PathVariable("major") String major) {
+//        String accept = request.getHeader("Accept");
+//        if (accept != null && accept.contains("application/json")) {
+//            CredentialsProvider provider = new BasicCredentialsProvider();
+//            UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("EVAL", "dbbac9ba-feeb-11e9-8f0b-362b9e155667");
+//            provider.setCredentials(AuthScope.ANY, credentials);
+//
+//            HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
+//
+//            List<Account> tutorAccountList = getAllActiveTutors().getBody();
+//            for(Account account: tutorAccountList) {
+//                HttpGet request = new HttpGet("https://fsetc.asu.edu/ps-data?id=" + account.getAsurite());
+//                try {
+//                    HttpResponse response = client.execute(request);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+
+        return new ResponseEntity<List<Account>>(HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<Void> updateAccount(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Account body) {

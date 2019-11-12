@@ -1,5 +1,6 @@
 package io.swagger.model;
 
+import java.util.List;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -29,8 +30,8 @@ public class CompletedEvaluation   {
   @JsonProperty("isShared")
   private Boolean isShared = null;
 
-  @JsonProperty("questionAndResponse")
-  private QuestionAndResponse questionAndResponse = null;
+  @JsonProperty("questionsAndResponses")
+  private List<QuestionAndResponse> questionsAndResponses = null;
 
   public CompletedEvaluation evaluator(String evaluator) {
     this.evaluator = evaluator;
@@ -116,8 +117,8 @@ public class CompletedEvaluation   {
     this.isShared = isShared;
   }
 
-  public CompletedEvaluation questionAndResponse(QuestionAndResponse questionAndResponse) {
-    this.questionAndResponse = questionAndResponse;
+  public CompletedEvaluation questionsAndResponses(List<QuestionAndResponse> questionsAndResponses) {
+    this.questionsAndResponses = questionsAndResponses;
     return this;
   }
 
@@ -130,12 +131,12 @@ public class CompletedEvaluation   {
 
   @Valid
 
-  public QuestionAndResponse getQuestionAndResponse() {
-    return questionAndResponse;
+  public List<QuestionAndResponse> getQuestionAndResponse() {
+    return questionsAndResponses;
   }
 
-  public void setQuestionAndResponse(QuestionAndResponse questionAndResponse) {
-    this.questionAndResponse = questionAndResponse;
+  public void setQuestionAndResponse(List<QuestionAndResponse> questionAndResponse) {
+    this.questionsAndResponses = questionsAndResponses;
   }
 
 
@@ -152,12 +153,12 @@ public class CompletedEvaluation   {
         Objects.equals(this.evaluatee, completedEvaluation.evaluatee) &&
         Objects.equals(this.evalType, completedEvaluation.evalType) &&
         Objects.equals(this.isShared, completedEvaluation.isShared) &&
-        Objects.equals(this.questionAndResponse, completedEvaluation.questionAndResponse);
+        Objects.equals(this.questionsAndResponses, completedEvaluation.questionsAndResponses);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(evaluator, evaluatee, evalType, isShared, questionAndResponse);
+    return Objects.hash(evaluator, evaluatee, evalType, isShared, questionsAndResponses);
   }
 
   @Override
@@ -169,7 +170,7 @@ public class CompletedEvaluation   {
     sb.append("    evaluatee: ").append(toIndentedString(evaluatee)).append("\n");
     sb.append("    evalType: ").append(toIndentedString(evalType)).append("\n");
     sb.append("    isShared: ").append(toIndentedString(isShared)).append("\n");
-    sb.append("    questionAndResponse: ").append(toIndentedString(questionAndResponse)).append("\n");
+    sb.append("    questionAndResponse: ").append(toIndentedString(questionsAndResponses)).append("\n");
     sb.append("}");
     return sb.toString();
   }

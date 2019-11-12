@@ -17,7 +17,7 @@ import javax.validation.constraints.*;
 
 public class QuestionDetails   {
   @JsonProperty("questionNumber")
-  private Integer questionNumber = null;
+  private Long questionNumber = null;
 
   @JsonProperty("questionPrompt")
   private String questionPrompt = null;
@@ -25,7 +25,7 @@ public class QuestionDetails   {
   @JsonProperty("questionType")
   private String questionType = null;
 
-  public QuestionDetails questionNumber(Integer questionNumber) {
+  public QuestionDetails questionNumber(Long questionNumber) {
     this.questionNumber = questionNumber;
     return this;
   }
@@ -38,11 +38,11 @@ public class QuestionDetails   {
   @NotNull
 
 
-  public Integer getQuestionNumber() {
+  public Long getQuestionNumber() {
     return questionNumber;
   }
 
-  public void setQuestionNumber(Integer questionNumber) {
+  public void setQuestionNumber(Long questionNumber) {
     this.questionNumber = questionNumber;
   }
 

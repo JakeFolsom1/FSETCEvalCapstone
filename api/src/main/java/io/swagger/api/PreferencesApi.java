@@ -34,22 +34,20 @@ public interface PreferencesApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<Void> createPreference(@ApiParam(value = "Prefrence object that needs to be created in the database" ,required=true )  @Valid @RequestBody Preference body);
+    ResponseEntity<Void> createPreference(@ApiParam(value = "Preference object that needs to be created in the database" ,required=true )  @Valid @RequestBody Preference body);
 
 
-    @ApiOperation(value = "Delete a user preference by asurite and the preferenceNumber", nickname = "deletePreference", notes = "", tags={ "preferences", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 400, message = "Invalid asurite supplied"),
-        @ApiResponse(code = 401, message = "Invalid preference number supplied"),
+    @ApiOperation(value = "Delete a user preference by preference ID", nickname = "deletePreference", notes = "", tags={ "preferences", })
+    @ApiResponses(value = {
         @ApiResponse(code = 404, message = "User not found"),
         @ApiResponse(code = 405, message = "Preference number not found") })
-    @RequestMapping(value = "/preferences/{asurite}/{preferenceNumber}",
+    @RequestMapping(value = "/preferences/{preferenceId}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
-    ResponseEntity<Void> deletePreference(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite,@ApiParam(value = "",required=true) @PathVariable("preferenceNumber") Long preferenceNumber);
+    ResponseEntity<Void> deletePreference(@ApiParam(value = "",required=true) @PathVariable("preferenceId") Long preferenceId);
 
 
-    @ApiOperation(value = "Get all preferences", nickname = "getAllPreferences", notes = "", response = Preference.class, responseContainer = "List", tags={ "preferences", })
+    @ApiOperation(value = "Get all preferences for the current semester", nickname = "getAllPreferences", notes = "", response = Preference.class, responseContainer = "List", tags={ "preferences", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Success", response = Preference.class, responseContainer = "List"),
         @ApiResponse(code = 400, message = "Invalid asurite supplied"),
@@ -60,7 +58,7 @@ public interface PreferencesApi {
     ResponseEntity<List<Preference>> getAllPreferences();
 
 
-    @ApiOperation(value = "Get the preferences by asurite", nickname = "getPreferences", notes = "", response = Preference.class, responseContainer = "List", tags={ "preferences", })
+    @ApiOperation(value = "Get the preferences by asurite for current semester", nickname = "getPreferences", notes = "", response = Preference.class, responseContainer = "List", tags={ "preferences", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Success", response = Preference.class, responseContainer = "List"),
         @ApiResponse(code = 400, message = "Invalid asurite supplied"),
