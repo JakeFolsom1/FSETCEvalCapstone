@@ -48,6 +48,11 @@ public class AssignmentsApiController implements AssignmentsApi {
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    /*
+     * Can simplify by making an assigment repository function called findAllByAssignmentId to limit the list you'll
+     * have to iterate through.
+     * Also need to return outside the while to get all of them.
+     */
     public ResponseEntity<Void> completeAssignment(@ApiParam(value = "",required=true) @PathVariable("assignmentId") Long assignmentId) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -79,6 +84,9 @@ public class AssignmentsApiController implements AssignmentsApi {
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
+    /*
+     * Should return HttpStatus.DELETED
+     */
     public ResponseEntity<Void> deleteAssignment(@ApiParam(value = "",required=true) @PathVariable("assignmentId") Long assignmentId) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -108,6 +116,9 @@ public class AssignmentsApiController implements AssignmentsApi {
         return new ResponseEntity<List<Assignment>>(HttpStatus.BAD_REQUEST);
     }
 
+    /*
+     * Can simplify by using a new repo function findAllByAsurite
+     */
     public ResponseEntity<List<Assignment>> getAllUserAssignments(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -126,7 +137,7 @@ public class AssignmentsApiController implements AssignmentsApi {
         return new ResponseEntity<List<Assignment>>(HttpStatus.BAD_REQUEST);
     }
 
-    @Override
+
     public ResponseEntity<List<Assignment>> getActiveUserAssignments(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite) {
         return null;
     }
