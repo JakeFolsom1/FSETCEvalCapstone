@@ -93,13 +93,17 @@ public class SemestersApiController implements SemestersApi {
 
     public ResponseEntity<String> getActiveSemester() {
         String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
+        if (accept != null && accept.contains("application/text")) {
             Semester semester = semesterRepository.findByIsActive(true);
             if (semester == null) {
                 return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
             }
             else {
-                return new ResponseEntity<String>(semester.getSemesterName(), HttpStatus.OK);
+                try {
+                    return new ResponseEntity<String>(objectMapper.readValue("\"" + semester.getSemesterName() + "\"", String.class), HttpStatus.OK);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
