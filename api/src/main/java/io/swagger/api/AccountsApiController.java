@@ -72,6 +72,7 @@ public class AccountsApiController implements AccountsApi {
             }
             else {
                 accountRepository.delete(asurite);
+                return new ResponseEntity<Void>(HttpStatus.OK);
             }
         }
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
