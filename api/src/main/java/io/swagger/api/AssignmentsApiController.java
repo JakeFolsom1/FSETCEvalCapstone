@@ -48,18 +48,14 @@ public class AssignmentsApiController implements AssignmentsApi {
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    /*
-     * Can simplify by making an assigment repository function called findAllByAssignmentId to limit the list you'll
-     * have to iterate through.
-     * Also need to return outside the while to get all of them.
-     */
+
     public ResponseEntity<Void> completeAssignment(@ApiParam(value = "",required=true) @PathVariable("assignmentId") Long assignmentId) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            Iterator<Assignment> accountById = assignmentRepository.findAllByAssignmentId(assignmentId).iterator();
-            while(accountById.hasNext())
+            Iterator<Assignment> assignmentIterator = assignmentRepository.findAllByAssignmentId(assignmentId).iterator();
+            while(assignmentIterator.hasNext())
             {
-                Assignment assignment = accountById.next();
+                Assignment assignment = assignmentIterator.next();
                 assignment.setIsComplete(true);
                 assignmentRepository.save(assignment);
             }
@@ -111,20 +107,16 @@ public class AssignmentsApiController implements AssignmentsApi {
         return new ResponseEntity<List<Assignment>>(HttpStatus.BAD_REQUEST);
     }
 
-    /*
-     * Can simplify by using a new repo function findAllByAsurite
-     */
+
     public ResponseEntity<List<Assignment>> getAllUserAssignments(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             List<Assignment> assignmentList = new ArrayList<Assignment>();
-            Iterator<Assignment> accountIterator = assignmentRepository.findAll().iterator();
+            Iterator<Assignment> accountIterator = assignmentRepository.findAllByAsurite(asurite).iterator();
             while(accountIterator.hasNext())
             {
                 Assignment assignment = accountIterator.next();
-                if(assignment.getAsurite().equals(asurite)) {
-                    assignmentList.add(assignment);
-                }
+                assignmentList.add(assignment);
             }
             return new ResponseEntity<List<Assignment>>(assignmentList, HttpStatus.OK);
         }
