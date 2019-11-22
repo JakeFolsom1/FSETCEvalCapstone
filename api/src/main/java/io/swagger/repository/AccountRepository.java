@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface AccountRepository extends CrudRepository<Account, String> {
     List<Account> findAccountsByIsActive(Boolean isActive);
-    List<Account> findAccountsByAccountType(String accountType);
+    List<Account> findAccountsByAccountTypeAndIsActive(String accountType, boolean isActive);
 }
