@@ -63,9 +63,10 @@ public class AssignmentsApiController implements AssignmentsApi {
                 if(assignment.getAssignmentId().equals(assignmentId)){
                     assignment.setIsComplete(true);
                     assignmentRepository.save(assignment);
-                    return new ResponseEntity<Void>(HttpStatus.OK);
+
                 }
             }
+            return new ResponseEntity<Void>(HttpStatus.OK);
         }
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
@@ -84,9 +85,6 @@ public class AssignmentsApiController implements AssignmentsApi {
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
-    /*
-     * Should return HttpStatus.DELETED
-     */
     public ResponseEntity<Void> deleteAssignment(@ApiParam(value = "",required=true) @PathVariable("assignmentId") Long assignmentId) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -95,7 +93,7 @@ public class AssignmentsApiController implements AssignmentsApi {
             }
             else {
                 assignmentRepository.delete(assignmentId);
-                return new ResponseEntity<Void>(HttpStatus.CREATED);
+                return new ResponseEntity<Void>(HttpStatus.OK);
             }
         }
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
