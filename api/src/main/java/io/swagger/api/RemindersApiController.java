@@ -57,15 +57,22 @@ public class RemindersApiController implements RemindersApi {
     }
 
     public ResponseEntity<Void> remindAll() {
-        String currentSemester = semesterRepository.findByIsActive(true).getSemesterName();
-        List<Assignment> incompleteAssignmentsDistinct = assignmentRepository.findDistinctByIsCompleteAndSemester(false, currentSemester);
-        if (incompleteAssignmentsDistinct.size() == 0) {
-            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-        }
-        for (Assignment assignment: incompleteAssignmentsDistinct) {
-            // should there be any checks done on the result?
-            remindUser(assignment.getAsurite());
-        }
+//        String currentSemester = semesterRepository.findByIsActive(true).getSemesterName();
+//        List<Assignment> incompleteAssignmentsDistinct = assignmentRepository.findDistinctByIsCompleteAndSemester(false, currentSemester);
+//        if (incompleteAssignmentsDistinct.size() == 0) {
+//            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+//        }
+//        for (Assignment assignment: incompleteAssignmentsDistinct) {
+//            // should there be any checks done on the result?
+//            remindUser(assignment.getAsurite());
+//        }
+//        return new ResponseEntity<Void>(HttpStatus.OK);
+        // test message
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo("jjbowma2@gmail.com");
+        message.setSubject("test");
+        message.setText("success!");
+        javaMailSender.send(message);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 

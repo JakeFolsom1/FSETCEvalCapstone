@@ -51,7 +51,7 @@ public interface SemestersApi {
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Success", response = String.class) })
     @RequestMapping(value = "/semesters/active",
-        produces = { "application/json" }, 
+        produces = { "application/text" },
         method = RequestMethod.GET)
     ResponseEntity<String> getActiveSemester();
 

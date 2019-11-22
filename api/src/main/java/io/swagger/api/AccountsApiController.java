@@ -4,6 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
 import io.swagger.model.Account;
 import io.swagger.repository.AccountRepository;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +23,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 
 @Controller
@@ -80,6 +92,36 @@ public class AccountsApiController implements AccountsApi {
         return new ResponseEntity<Account>(HttpStatus.BAD_REQUEST);
     }
 
+    public ResponseEntity<String> getMajorCluster(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite) {
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/text")) {
+            CredentialsProvider provider = new BasicCredentialsProvider();
+            UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("EVAL", "dbbac9ba-feeb-11e9-8f0b-362b9e155667");
+            provider.setCredentials(AuthScope.ANY, credentials);
+            HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
+            HttpGet request = new HttpGet("https://fsetc.asu.edu/tmsapi/staff?id=" + asurite);
+            request.setHeader("Accept", "application/json");
+            try {
+                HttpResponse response = client.execute(request);
+                InputStream stream = response.getEntity().getContent();
+                ObjectMapper mapper = new ObjectMapper();
+                Map<String, Object> responseMap = mapper.readValue(stream, Map.class);
+                if (!responseMap.get("status").equals("OK")) {
+                    return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+                }
+                List termsList = (List) responseMap.get("terms");
+                List<Map<String, Object>> staffList = (List<Map<String, Object>>) (((Map)termsList.get(0)).get("staff"));
+                String majorCluster = (String) staffList.get(0).get("cluster");
+                return new ResponseEntity<String>(objectMapper.readValue("\"" + majorCluster + "\"", String.class), HttpStatus.OK);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+    }
+
     public ResponseEntity<List<Account>> getAllActiveAccounts() {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -110,25 +152,42 @@ public class AccountsApiController implements AccountsApi {
         return new ResponseEntity<List<Account>>(HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<List<Account>> getAllActiveTutorsByMajor(@ApiParam(value = "",required=true) @PathVariable("major") String major) {
-//        String accept = request.getHeader("Accept");
-//        if (accept != null && accept.contains("application/json")) {
-//            CredentialsProvider provider = new BasicCredentialsProvider();
-//            UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("EVAL", "dbbac9ba-feeb-11e9-8f0b-362b9e155667");
-//            provider.setCredentials(AuthScope.ANY, credentials);
-//
-//            HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
-//
-//            List<Account> tutorAccountList = getAllActiveTutors().getBody();
-//            for(Account account: tutorAccountList) {
-//                HttpGet request = new HttpGet("https://fsetc.asu.edu/ps-data?id=" + account.getAsurite());
-//                try {
-//                    HttpResponse response = client.execute(request);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
+    // this will only work for the current semester, otherwise we'd need to map our semester names to Charles' term names
+    public ResponseEntity<List<Account>> getAllActiveTutorsByMajorCluster(@ApiParam(value = "",required=true) @PathVariable("majorCluster") String majorCluster) {
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            CredentialsProvider provider = new BasicCredentialsProvider();
+            UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("EVAL", "dbbac9ba-feeb-11e9-8f0b-362b9e155667");
+            provider.setCredentials(AuthScope.ANY, credentials);
+            HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
+            // get the staff for the active term
+            HttpGet request = new HttpGet("https://fsetc.asu.edu/tmsapi/staff");
+            request.setHeader("Accept", "application/json");
+            try {
+                HttpResponse response = client.execute(request);
+                InputStream stream = response.getEntity().getContent();
+                ObjectMapper mapper = new ObjectMapper();
+                Map<String, Object> responseMap = mapper.readValue(stream, Map.class);
+                if (!responseMap.get("status").equals("OK")) {
+                    return new ResponseEntity<List<Account>>(HttpStatus.NOT_FOUND);
+                }
+                List termsList = (List) responseMap.get("terms");
+                List<Map<String, Object>> staffList = (List<Map<String, Object>>) (((Map)termsList.get(0)).get("staff"));
+                List<Account> tutorList = new ArrayList<Account>();
+                for (Map<String, Object> staff : staffList) {
+                    if(staff.get("cluster").equals(majorCluster)) {
+                        Account tutor = accountRepository.findOne((String) staff.get("asurite"));
+                        if (tutor != null && tutor.getAccountType() == "tutor") {
+                            tutorList.add(tutor);
+                        }
+                    }
+                }
+                return new ResponseEntity<List<Account>>(tutorList, HttpStatus.OK);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         return new ResponseEntity<List<Account>>(HttpStatus.BAD_REQUEST);
     }
