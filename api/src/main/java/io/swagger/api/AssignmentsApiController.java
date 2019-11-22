@@ -56,15 +56,12 @@ public class AssignmentsApiController implements AssignmentsApi {
     public ResponseEntity<Void> completeAssignment(@ApiParam(value = "",required=true) @PathVariable("assignmentId") Long assignmentId) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            Iterator<Assignment> accountIterator = assignmentRepository.findAll().iterator();
-            while(accountIterator.hasNext())
+            Iterator<Assignment> accountById = assignmentRepository.findAllByAssignmentId(assignmentId).iterator();
+            while(accountById.hasNext())
             {
-                Assignment assignment = accountIterator.next();
-                if(assignment.getAssignmentId().equals(assignmentId)){
-                    assignment.setIsComplete(true);
-                    assignmentRepository.save(assignment);
-
-                }
+                Assignment assignment = accountById.next();
+                assignment.setIsComplete(true);
+                assignmentRepository.save(assignment);
             }
             return new ResponseEntity<Void>(HttpStatus.OK);
         }
