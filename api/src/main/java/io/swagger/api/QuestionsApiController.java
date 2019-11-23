@@ -61,13 +61,8 @@ public class QuestionsApiController implements QuestionsApi {
     public ResponseEntity<Void> createQuestion(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Question body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            if (questionRepository.exists(body.getQuestionId())) {
-                return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-            }
-            else {
-                questionRepository.save(body);
-                return new ResponseEntity<Void>(HttpStatus.CREATED);
-            }
+            questionRepository.save(body);
+            return new ResponseEntity<Void>(HttpStatus.CREATED);
         }
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }

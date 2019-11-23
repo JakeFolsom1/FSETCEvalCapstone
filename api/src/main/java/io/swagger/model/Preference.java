@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -14,8 +16,14 @@ import javax.validation.constraints.*;
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
-
+@Entity
+@Table(name = "PREFERENCE")
 public class Preference   {
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @JsonProperty("preferenceId")
+  private Long preferenceId = null;
+
   @JsonProperty("asurite")
   private String asurite = null;
 
@@ -24,6 +32,30 @@ public class Preference   {
 
   @JsonProperty("preferredAsurite")
   private String preferredAsurite = null;
+
+  @JsonProperty("semester")
+  private String semester = null;
+
+  public Preference preferenceId(Long preferenceId) {
+    this.preferenceId = preferenceId;
+    return this;
+  }
+
+  /**
+   * Get preferenceId
+   * @return preferenceId
+   **/
+  @ApiModelProperty(example = "1", value = "")
+  @NotNull
+
+
+  public Long getPreferenceId() {
+    return preferenceId;
+  }
+
+  public void setPreferenceId(Long preferenceId) {
+    this.preferenceId = preferenceId;
+  }
 
   public Preference asurite(String asurite) {
     this.asurite = asurite;
@@ -53,14 +85,11 @@ public class Preference   {
 
   /**
    * Get preferenceNumber
-   * minimum: 1
-   * maximum: 3
    * @return preferenceNumber
   **/
   @ApiModelProperty(example = "2", required = true, value = "")
   @NotNull
 
-@Min(1L) @Max(3L) 
   public Long getPreferenceNumber() {
     return preferenceNumber;
   }
@@ -90,6 +119,27 @@ public class Preference   {
     this.preferredAsurite = preferredAsurite;
   }
 
+  public Preference semester(String semester) {
+    this.semester = semester;
+    return this;
+  }
+
+  /**
+   * Get semester
+   * @return semester
+   **/
+  @ApiModelProperty(example = "Fall 2019", required = true, value = "")
+  @NotNull
+
+
+  public String getSemester() {
+    return semester;
+  }
+
+  public void setSemester(String semester) {
+    this.semester = semester;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -100,24 +150,28 @@ public class Preference   {
       return false;
     }
     Preference preference = (Preference) o;
-    return Objects.equals(this.asurite, preference.asurite) &&
-        Objects.equals(this.preferenceNumber, preference.preferenceNumber) &&
-        Objects.equals(this.preferredAsurite, preference.preferredAsurite);
+    return Objects.equals(this.preferenceId, preference.preferenceId) &&
+            Objects.equals(this.asurite, preference.asurite) &&
+            Objects.equals(this.preferenceNumber, preference.preferenceNumber) &&
+            Objects.equals(this.semester, preference.semester) &&
+            Objects.equals(this.preferredAsurite, preference.preferredAsurite);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(asurite, preferenceNumber, preferredAsurite);
+    return Objects.hash(preferenceId, asurite, preferenceNumber, semester, preferredAsurite);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Preference {\n");
-    
+
+    sb.append("    preferenceId: ").append(toIndentedString(preferenceId)).append("\n");
     sb.append("    asurite: ").append(toIndentedString(asurite)).append("\n");
     sb.append("    preferenceNumber: ").append(toIndentedString(preferenceNumber)).append("\n");
     sb.append("    preferredAsurite: ").append(toIndentedString(preferredAsurite)).append("\n");
+    sb.append("    semester: ").append(toIndentedString(semester)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -98,6 +98,16 @@ public interface AssignmentsApi {
         method = RequestMethod.GET)
     ResponseEntity<List<Assignment>> getAllUserAssignments(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite);
 
+    @ApiOperation(value = "Get all assignments for a user by asurite for the active semester", nickname = "getActiveUserAssignments", notes = "", response = Assignment.class, responseContainer = "List", tags={ "assignments", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = Assignment.class, responseContainer = "List"),
+            @ApiResponse(code = 400, message = "Invalid asurite supplied"),
+            @ApiResponse(code = 404, message = "User not found") })
+    @RequestMapping(value = "/assignments/active/{asurite}",
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<List<Assignment>> getActiveUserAssignments(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite);
+
 
     @ApiOperation(value = "Update an existing assignment", nickname = "updateAssignment", notes = "", tags={ "assignments", })
     @ApiResponses(value = { 
