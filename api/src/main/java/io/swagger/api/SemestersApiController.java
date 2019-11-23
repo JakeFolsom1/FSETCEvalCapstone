@@ -99,11 +99,7 @@ public class SemestersApiController implements SemestersApi {
                 return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
             }
             else {
-                try {
-                    return new ResponseEntity<String>(objectMapper.readValue("\"" + semester.getSemesterName() + "\"", String.class), HttpStatus.OK);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                return new ResponseEntity<String>(semester.getSemesterName(), HttpStatus.OK);
             }
         }
         return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
