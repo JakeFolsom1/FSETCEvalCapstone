@@ -112,7 +112,7 @@ public class AccountsApiController implements AccountsApi {
                 List termsList = (List) responseMap.get("terms");
                 List<Map<String, Object>> staffList = (List<Map<String, Object>>) (((Map)termsList.get(0)).get("staff"));
                 String majorCluster = (String) staffList.get(0).get("cluster");
-                return new ResponseEntity<String>(objectMapper.readValue("\"" + majorCluster + "\"", String.class), HttpStatus.OK);
+                return new ResponseEntity<String>(majorCluster, HttpStatus.OK);
 
             } catch (IOException e) {
                 e.printStackTrace();
