@@ -72,6 +72,7 @@ public class AccountsApiController implements AccountsApi {
             }
             else {
                 accountRepository.delete(asurite);
+                return new ResponseEntity<Void>(HttpStatus.OK);
             }
         }
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
@@ -141,7 +142,7 @@ public class AccountsApiController implements AccountsApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             List<Account> activeAccountList = new ArrayList<Account>();
-            Iterator<Account> accountIterator = accountRepository.findAccountsByAccountType("tutor").iterator();
+            Iterator<Account> accountIterator = accountRepository.findAccountsByAccountTypeAndIsActive("tutor", true).iterator();
             while(accountIterator.hasNext())
             {
                 activeAccountList.add(accountIterator.next());
