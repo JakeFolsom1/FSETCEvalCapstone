@@ -13,6 +13,8 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
+import static javax.persistence.EnumType.STRING;
+
 /**
  * Question
  */
@@ -20,7 +22,6 @@ import javax.validation.constraints.*;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 @Entity
 @Table(name = "question")
-@Check(constraints = "question_type in ('numeric','free-response','y/n') and eval_type in ('p2p','l2t','t2l')")
 public class Question   {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,7 +32,14 @@ public class Question   {
   private String questionPrompt = null;
 
   @JsonProperty("questionType")
-  private String questionType = null;
+  @Enumerated(STRING)
+  private QuestionType questionType = null;
+
+  public static enum QuestionType {
+    numeric,
+    freeResponse,
+    yesNo
+  }
 
   @JsonProperty("isActive")
   private Boolean isActive = null;
@@ -40,7 +48,14 @@ public class Question   {
   private Long questionNumber = null;
 
   @JsonProperty("evalType")
-  private String evalType = null;
+  @Enumerated(STRING)
+  private EvalType evalType = null;
+
+  public static enum EvalType {
+    p2p,
+    l2t,
+    t2l
+  }
 
   public Question questionId(Long questionId) {
     this.questionId = questionId;
@@ -83,7 +98,7 @@ public class Question   {
     this.questionPrompt = questionPrompt;
   }
 
-  public Question questionType(String questionType) {
+  public Question questionType(QuestionType questionType) {
     this.questionType = questionType;
     return this;
   }
@@ -92,15 +107,15 @@ public class Question   {
    * Get questionType
    * @return questionType
    **/
-  @ApiModelProperty(example = "free-response", required = true, value = "")
+  @ApiModelProperty(example = "freeResponse", required = true, value = "")
   @NotNull
 
 
-  public String getQuestionType() {
+  public QuestionType getQuestionType() {
     return questionType;
   }
 
-  public void setQuestionType(String questionType) {
+  public void setQuestionType(QuestionType questionType) {
     this.questionType = questionType;
   }
 
@@ -146,7 +161,7 @@ public class Question   {
     this.questionNumber = questionNumber;
   }
 
-  public Question evalType(String evalType) {
+  public Question evalType(EvalType evalType) {
     this.evalType = evalType;
     return this;
   }
@@ -159,11 +174,11 @@ public class Question   {
   @NotNull
 
 
-  public String getEvalType() {
+  public EvalType getEvalType() {
     return evalType;
   }
 
-  public void setEvalType(String evalType) {
+  public void setEvalType(EvalType evalType) {
     this.evalType = evalType;
   }
 

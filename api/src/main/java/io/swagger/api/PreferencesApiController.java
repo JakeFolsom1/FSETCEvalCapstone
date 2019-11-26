@@ -2,7 +2,9 @@ package io.swagger.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
+import io.swagger.model.Account;
 import io.swagger.model.Preference;
+import io.swagger.repository.AccountRepository;
 import io.swagger.repository.PreferenceRepository;
 import io.swagger.repository.SemesterRepository;
 import org.slf4j.Logger;
@@ -29,6 +31,9 @@ public class PreferencesApiController implements PreferencesApi {
     private PreferenceRepository preferenceRepository;
     @Autowired
     private SemesterRepository semesterRepository;
+    @Autowired
+    AccountRepository accountRepository;
+
     @org.springframework.beans.factory.annotation.Autowired
     public PreferencesApiController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
@@ -37,7 +42,18 @@ public class PreferencesApiController implements PreferencesApi {
     public ResponseEntity<Void> createPreference(@ApiParam(value = "Prefrence object that needs to be created in the database" ,required=true )  @Valid @RequestBody Preference body) {
         String accept = request.getHeader("Accept");
         if(accept != null && accept.contains("application/json")){
-            if(preferenceRepository.findByAsuriteAndPreferenceNumberAndSemester(body.getAsurite(), body.getPreferenceNumber(), body.getSemester()) != null){
+            Account tutor = accountRepository.findOne(body.getAsurite());
+            Account preferredTutor = accountRepository.findOne(body.getAsurite());
+            // ensure asurites are from valid accounts
+            if (tutor == null || preferredTutor == null) {
+                return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            }
+            // ensure preference does not already exist and both asurites are from active tutors
+            else if(preferenceRepository.findByAsuriteAndPreferenceNumberAndSemester(body.getAsurite(), body.getPreferenceNumber(), body.getSemester()) != null
+                || tutor.getAccountType() != Account.AccountType.tutor
+                || preferredTutor.getAccountType() != Account.AccountType.tutor
+                || !tutor.isIsActive()
+                || !preferredTutor.isIsActive()){
                 return new ResponseEntity<Void>(HttpStatus.CONFLICT);
             }else{
                 preferenceRepository.save(body);
@@ -102,6 +118,19 @@ public class PreferencesApiController implements PreferencesApi {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             }
             else {
+                Account tutor = accountRepository.findOne(body.getAsurite());
+                Account preferredTutor = accountRepository.findOne(body.getAsurite());
+                // ensure asurites are from valid accounts
+                if (tutor == null || preferredTutor == null) {
+                    return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+                }
+                // ensure both asurites are from active tutors
+                else if(tutor.getAccountType() != Account.AccountType.tutor
+                        || preferredTutor.getAccountType() != Account.AccountType.tutor
+                        || !tutor.isIsActive()
+                        || !preferredTutor.isIsActive()){
+                    return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+                }
                 preferenceRepository.save(body);
                 return new ResponseEntity<Void>(HttpStatus.OK);
             }

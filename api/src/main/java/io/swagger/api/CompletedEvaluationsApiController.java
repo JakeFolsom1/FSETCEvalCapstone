@@ -71,7 +71,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                     Question question = questionRepository.findOne(response.getQuestionId());
                     questionDetails.setQuestionNumber(question.getQuestionNumber());
                     questionDetails.setQuestionPrompt(question.getQuestionPrompt());
-                    questionDetails.setQuestionType(question.getQuestionType());
+                    questionDetails.setQuestionType(question.getQuestionType().name());
                     questionAndResponse.setQuestion(questionDetails);
                     questionAndResponse.setResponse(response.getResponse());
                     questionsAndResponses.add(questionAndResponse);
@@ -109,7 +109,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                         Question question = questionRepository.findOne(response.getQuestionId());
                         questionDetails.setQuestionNumber(question.getQuestionNumber());
                         questionDetails.setQuestionPrompt(question.getQuestionPrompt());
-                        questionDetails.setQuestionType(question.getQuestionType());
+                        questionDetails.setQuestionType(question.getQuestionType().name());
                         questionAndResponse.setQuestion(questionDetails);
                         questionAndResponse.setResponse(response.getResponse());
                         questionsAndResponses.add(questionAndResponse);
@@ -148,7 +148,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                     Question question = questionRepository.findOne(response.getQuestionId());
                     questionDetails.setQuestionNumber(question.getQuestionNumber());
                     questionDetails.setQuestionPrompt(question.getQuestionPrompt());
-                    questionDetails.setQuestionType(question.getQuestionType());
+                    questionDetails.setQuestionType(question.getQuestionType().name());
                     questionAndResponse.setQuestion(questionDetails);
                     questionAndResponse.setResponse(response.getResponse());
                     questionsAndResponses.add(questionAndResponse);
