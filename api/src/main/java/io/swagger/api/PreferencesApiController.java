@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
 import io.swagger.model.Account;
 import io.swagger.model.Preference;
+import io.swagger.model.Semester;
 import io.swagger.repository.AccountRepository;
 import io.swagger.repository.PreferenceRepository;
 import io.swagger.repository.SemesterRepository;
@@ -44,8 +45,9 @@ public class PreferencesApiController implements PreferencesApi {
         if(accept != null && accept.contains("application/json")){
             Account tutor = accountRepository.findOne(body.getAsurite());
             Account preferredTutor = accountRepository.findOne(body.getAsurite());
-            // ensure asurites are from valid accounts
-            if (tutor == null || preferredTutor == null) {
+            Semester semester = semesterRepository.findOne(body.getSemester());
+            // ensure asurites are from valid accounts and semester is a valid semester
+            if (tutor == null || preferredTutor == null || semester == null) {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             }
             // ensure preference does not already exist and both asurites are from active tutors
@@ -120,8 +122,9 @@ public class PreferencesApiController implements PreferencesApi {
             else {
                 Account tutor = accountRepository.findOne(body.getAsurite());
                 Account preferredTutor = accountRepository.findOne(body.getAsurite());
-                // ensure asurites are from valid accounts
-                if (tutor == null || preferredTutor == null) {
+                Semester semester = semesterRepository.findOne(body.getSemester());
+                // ensure asurites are from valid accounts and semester is a valid semester
+                if (tutor == null || preferredTutor == null || semester == null) {
                     return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
                 }
                 // ensure both asurites are from active tutors

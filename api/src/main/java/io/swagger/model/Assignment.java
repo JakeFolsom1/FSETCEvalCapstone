@@ -11,6 +11,8 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
+import static javax.persistence.EnumType.STRING;
+
 /**
  * Assignment
  */
@@ -37,7 +39,8 @@ public class Assignment   {
   private Boolean isComplete = null;
 
   @JsonProperty("evalType")
-  private String evalType = null;
+  @Enumerated(STRING)
+  private Question.EvalType evalType = null;
 
   public Assignment assignmentId(Long assignmentId) {
     this.assignmentId = assignmentId;
@@ -144,7 +147,7 @@ public class Assignment   {
     this.isComplete = isComplete;
   }
 
-  public Assignment evalType(String evalType) {
+  public Assignment evalType(Question.EvalType evalType) {
     this.evalType = evalType;
     return this;
   }
@@ -157,11 +160,11 @@ public class Assignment   {
   @NotNull
 
 
-  public String getEvalType() {
+  public Question.EvalType getEvalType() {
     return evalType;
   }
 
-  public void setEvalType(String evalType) {
+  public void setEvalType(Question.EvalType evalType) {
     this.evalType = evalType;
   }
 
