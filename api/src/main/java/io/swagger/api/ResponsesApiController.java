@@ -1,6 +1,7 @@
+package io.swagger.api;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
-import io.swagger.api.ResponsesApi;
 import io.swagger.model.Response;
 import io.swagger.repository.ResponseRepository;
 import org.slf4j.Logger;
@@ -17,8 +18,8 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-11-26T00:23:39.034Z")
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 @Controller
 public class ResponsesApiController implements ResponsesApi {
     private static final Logger log = LoggerFactory.getLogger(ResponsesApiController.class);

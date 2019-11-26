@@ -1,10 +1,11 @@
 package io.swagger.api;
 
-import io.swagger.model.TeamMember;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.annotations.*;
+import io.swagger.annotations.ApiParam;
+import io.swagger.model.Account;
+import io.swagger.model.TeamMember;
+import io.swagger.repository.AccountRepository;
 import io.swagger.repository.TeamMemberRepository;
-import org.apache.tomcat.util.http.parser.HttpParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.*;
-import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -39,6 +34,9 @@ public class TeamMembersApiController implements TeamMembersApi {
     @Autowired
     TeamMemberRepository teamMemberRepository;
 
+    @Autowired
+    AccountRepository accountRepository;
+
     @org.springframework.beans.factory.annotation.Autowired
     public TeamMembersApiController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
@@ -48,11 +46,21 @@ public class TeamMembersApiController implements TeamMembersApi {
     public ResponseEntity<Void> createTeamMember(@ApiParam(value = "" ,required=true )  @Valid @RequestBody TeamMember body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            if (teamMemberRepository.exists(body.getTutorAsurite())) {
+            Account tutor = accountRepository.findOne(body.getTutorAsurite());
+            Account lead = accountRepository.findOne(body.getLeadAsurite());
+            // ensure asurites are existing accounts
+            if (tutor == null || lead == null) {
+                return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            }
+            // ensure tutor asurite does not currently have a team member entry
+            // and tutor asurite belongs to a tutor
+            // and lead asurite belongs to a lead
+            else if (teamMemberRepository.exists(body.getTutorAsurite())
+                || tutor.getAccountType() != Account.AccountType.tutor
+                || lead.getAccountType() != Account.AccountType.lead) {
                 return new ResponseEntity<Void>(HttpStatus.CONFLICT);
             }
             else {
-                // should we verify if leadAsurite belongs to a lead?
                 teamMemberRepository.save(body);
                 return new ResponseEntity<Void>(HttpStatus.CREATED);
             }
@@ -106,19 +114,4 @@ public class TeamMembersApiController implements TeamMembersApi {
         }
         return new ResponseEntity<List<String>>(HttpStatus.BAD_REQUEST);
     }
-
-    public ResponseEntity<Void> updateTeamMember(@ApiParam(value = "" ,required=true )  @Valid @RequestBody TeamMember body) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            TeamMember teamMemberToUpdate = teamMemberRepository.findOne(body.getTutorAsurite());
-            if (teamMemberToUpdate == null) {
-                return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
-            }
-            teamMemberToUpdate.setLeadAsurite(body.getLeadAsurite());
-            teamMemberRepository.save(teamMemberToUpdate);
-            return new ResponseEntity<Void>(HttpStatus.OK);
-        }
-        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
-    }
-
 }

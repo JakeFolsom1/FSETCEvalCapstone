@@ -178,7 +178,7 @@ public class AccountsApiController implements AccountsApi {
                 for (Map<String, Object> staff : staffList) {
                     if(staff.get("cluster").equals(majorCluster)) {
                         Account tutor = accountRepository.findOne((String) staff.get("asurite"));
-                        if (tutor != null && tutor.getAccountType() == "tutor") {
+                        if (tutor != null && tutor.getAccountType() == Account.AccountType.tutor) {
                             tutorList.add(tutor);
                         }
                     }
