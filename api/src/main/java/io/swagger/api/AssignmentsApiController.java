@@ -3,7 +3,9 @@ package io.swagger.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
 import io.swagger.model.Assignment;
+import io.swagger.repository.AccountRepository;
 import io.swagger.repository.AssignmentRepository;
+import io.swagger.repository.SemesterRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ public class AssignmentsApiController implements AssignmentsApi {
 
     @Autowired
     private AssignmentRepository assignmentRepository;
+
+    @Autowired
+    private SemesterRepository semesterRepository;
 
     @org.springframework.beans.factory.annotation.Autowired
     public AssignmentsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -97,10 +102,10 @@ public class AssignmentsApiController implements AssignmentsApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             List<Assignment> assignmentList = new ArrayList<Assignment>();
-            Iterator<Assignment> accountIterator = assignmentRepository.findAll().iterator();
-            while(accountIterator.hasNext())
+            Iterator<Assignment> assignmentIterator = assignmentRepository.findAll().iterator();
+            while(assignmentIterator.hasNext())
             {
-                Assignment assignment = accountIterator.next();
+                Assignment assignment = assignmentIterator.next();
                 assignmentList.add(assignment);
             }
             return new ResponseEntity<List<Assignment>>(assignmentList, HttpStatus.OK);
@@ -113,10 +118,10 @@ public class AssignmentsApiController implements AssignmentsApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             List<Assignment> assignmentList = new ArrayList<Assignment>();
-            Iterator<Assignment> accountIterator = assignmentRepository.findAllByAsurite(asurite).iterator();
-            while(accountIterator.hasNext())
+            Iterator<Assignment> assignmentIterator = assignmentRepository.findAllByAsurite(asurite).iterator();
+            while(assignmentIterator.hasNext())
             {
-                Assignment assignment = accountIterator.next();
+                Assignment assignment = assignmentIterator.next();
                 assignmentList.add(assignment);
             }
             return new ResponseEntity<List<Assignment>>(assignmentList, HttpStatus.OK);
@@ -127,7 +132,21 @@ public class AssignmentsApiController implements AssignmentsApi {
 
 
     public ResponseEntity<List<Assignment>> getActiveUserAssignments(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite) {
-        return null;
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            String activeSemester = semesterRepository.findByIsActive(true).getSemesterName();
+            List<Assignment> assignmentList = new ArrayList<Assignment>();
+            Iterator<Assignment> assignmentIterator = assignmentRepository.findAll().iterator();
+            while(assignmentIterator.hasNext()) {
+                Assignment assignment = assignmentIterator.next();
+                if (assignment.getSemester().equals(activeSemester) && assignment.getAsurite().equals(asurite)) {
+                    assignmentList.add(assignment);
+                }
+            }
+            return new ResponseEntity<List<Assignment>>(assignmentList, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<List<Assignment>>(HttpStatus.BAD_REQUEST);
     }
     public ResponseEntity<Void> updateAssignment(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Assignment body) {
         String accept = request.getHeader("Accept");
