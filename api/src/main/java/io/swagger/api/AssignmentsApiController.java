@@ -2,7 +2,9 @@ package io.swagger.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
+import io.swagger.model.Account;
 import io.swagger.model.Assignment;
+import io.swagger.model.Semester;
 import io.swagger.repository.AccountRepository;
 import io.swagger.repository.AssignmentRepository;
 import io.swagger.repository.SemesterRepository;
@@ -33,6 +35,9 @@ public class AssignmentsApiController implements AssignmentsApi {
 
     @Autowired
     private AssignmentRepository assignmentRepository;
+
+    @Autowired
+    private AccountRepository accountRepository;
 
     @Autowired
     private SemesterRepository semesterRepository;
@@ -73,6 +78,14 @@ public class AssignmentsApiController implements AssignmentsApi {
     public ResponseEntity<Void> createAssignment(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Assignment body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
+            Account evaluator = accountRepository.findOne(body.getAsurite());
+            Account evaluatee = accountRepository.findOne(body.getAssignedAsurite());
+            Semester semester = semesterRepository.findOne(body.getSemester());
+            // ensure assignment has valid asurites and semester name
+            if (evaluator == null || evaluatee == null || semester == null) {
+                return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            }
+            // ensure no duplicates
             if (assignmentRepository.findByAsuriteAndAssignedAsuriteAndSemester(body.getAsurite(), body.getAssignedAsurite(), body.getSemester()) != null) {
                 return new ResponseEntity<Void>(HttpStatus.CONFLICT);
             }
@@ -151,6 +164,14 @@ public class AssignmentsApiController implements AssignmentsApi {
     public ResponseEntity<Void> updateAssignment(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Assignment body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
+            Account evaluator = accountRepository.findOne(body.getAsurite());
+            Account evaluatee = accountRepository.findOne(body.getAssignedAsurite());
+            Semester semester = semesterRepository.findOne(body.getSemester());
+            // ensure assignment has valid asurites and semester name
+            if (evaluator == null || evaluatee == null || semester == null) {
+                return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            }
+            // ensure assignmentId is from existing assignment
             if (assignmentRepository.findOne(body.getAssignmentId()) == null) {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             }
