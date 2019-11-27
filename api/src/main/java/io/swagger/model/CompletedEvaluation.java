@@ -123,19 +123,19 @@ public class CompletedEvaluation   {
   }
 
   /**
-   * Get questionAndResponse
-   * @return questionAndResponse
+   * Get questionsAndResponses
+   * @return questionsAndResponses
   **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
   @Valid
 
-  public List<QuestionAndResponse> getQuestionAndResponse() {
+  public List<QuestionAndResponse> getQuestionsAndResponses() {
     return questionsAndResponses;
   }
 
-  public void setQuestionAndResponse(List<QuestionAndResponse> questionAndResponse) {
+  public void setQuestionsAndResponses(List<QuestionAndResponse> questionsAndResponses) {
     this.questionsAndResponses = questionsAndResponses;
   }
 

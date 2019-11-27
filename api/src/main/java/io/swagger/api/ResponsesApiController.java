@@ -1,7 +1,12 @@
+package io.swagger.api;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
-import io.swagger.api.ResponsesApi;
+import io.swagger.model.Assignment;
+import io.swagger.model.Question;
 import io.swagger.model.Response;
+import io.swagger.repository.AssignmentRepository;
+import io.swagger.repository.QuestionRepository;
 import io.swagger.repository.ResponseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +22,8 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-11-26T00:23:39.034Z")
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 @Controller
 public class ResponsesApiController implements ResponsesApi {
     private static final Logger log = LoggerFactory.getLogger(ResponsesApiController.class);
@@ -26,6 +31,13 @@ public class ResponsesApiController implements ResponsesApi {
     private final HttpServletRequest request;
     @Autowired
     private ResponseRepository responseRepository;
+
+    @Autowired
+    private QuestionRepository questionRepository;
+
+    @Autowired
+    private AssignmentRepository assignmentRepository;
+
     @org.springframework.beans.factory.annotation.Autowired
     public ResponsesApiController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
@@ -34,8 +46,17 @@ public class ResponsesApiController implements ResponsesApi {
     public ResponseEntity<Void> createResponse(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Response body) {
         String accept = request.getHeader("Accept");
         if(accept != null && accept.contains("application/json")) {
+            Assignment assignment = assignmentRepository.findOne(body.getAssignmentId());
+            Question question = questionRepository.findOne(body.getQuestionId());
+            if (assignment == null || question == null) {
+                return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            }
             // ensure no other response exists with primary keys questionId and assignmentId
-            if (responseRepository.findByQuestionIdAndAssignmentId(body.getQuestionId(), body.getAssignmentId()) != null) {
+            // and evalTypes match from assignment and question
+            // and the question is active
+            else if (responseRepository.findByQuestionIdAndAssignmentId(body.getQuestionId(), body.getAssignmentId()) != null
+                || assignment.getEvalType() != question.getEvalType()
+                || !question.isIsActive()) {
                 return new ResponseEntity<Void>(HttpStatus.CONFLICT);
             }
             responseRepository.save(body);
@@ -73,7 +94,7 @@ public class ResponsesApiController implements ResponsesApi {
     public ResponseEntity<Response> getQuestionResponse(@ApiParam(value = "",required=true) @PathVariable("assignmentId") Long assignmentId, @ApiParam(value = "",required=true) @PathVariable("questionId") Long questionId) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            Response response = responseRepository.findByQuestionIdAndAssignmentId(assignmentId, questionId);
+            Response response = responseRepository.findByQuestionIdAndAssignmentId(questionId, assignmentId);
             if (response == null) {
                 return new ResponseEntity<Response>(HttpStatus.NOT_FOUND);
             }
@@ -81,6 +102,7 @@ public class ResponsesApiController implements ResponsesApi {
         }
         return new ResponseEntity<Response>(HttpStatus.BAD_REQUEST);
     }
+    // may be an unnecessary function
     public ResponseEntity<Void> updateQuestionResponse(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Response body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -88,6 +110,17 @@ public class ResponsesApiController implements ResponsesApi {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             }
             else {
+                Assignment assignment = assignmentRepository.findOne(body.getAssignmentId());
+                Question question = questionRepository.findOne(body.getQuestionId());
+                if (assignment == null || question == null) {
+                    return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+                }
+                // ensure new evalTypes match from assignment and question
+                // and the new question is active
+                else if (assignment.getEvalType() != question.getEvalType()
+                        || !question.isIsActive()) {
+                    return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+                }
                 responseRepository.save(body);
                 return new ResponseEntity<Void>(HttpStatus.OK);
             }

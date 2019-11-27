@@ -1,18 +1,17 @@
 package io.swagger.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
+
+import static javax.persistence.EnumType.STRING;
 
 /**
  * Account
@@ -34,7 +33,14 @@ public class Account   {
   private String lastName = null;
 
   @JsonProperty("accountType")
-  private String accountType = null;
+  @Enumerated(STRING)
+  private AccountType accountType = null;
+
+  public static enum AccountType {
+    tutor,
+    lead,
+    admin
+  }
 
   @JsonProperty("isActive")
   private Boolean isActive = null;
@@ -103,7 +109,7 @@ public class Account   {
   }
 
 
-  public Account accountType(String accountType) {
+  public Account accountType(AccountType accountType) {
     this.accountType = accountType;
     return this;
   }
@@ -116,11 +122,11 @@ public class Account   {
   @NotNull
 
 
-  public String getAccountType() {
+  public AccountType getAccountType() {
     return accountType;
   }
 
-  public void setAccountType(String accountType) {
+  public void setAccountType(AccountType accountType) {
     this.accountType = accountType;
   }
 

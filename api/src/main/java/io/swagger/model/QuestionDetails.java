@@ -76,7 +76,7 @@ public class QuestionDetails   {
    * Get questionType
    * @return questionType
   **/
-  @ApiModelProperty(example = "free-response", required = true, value = "")
+  @ApiModelProperty(example = "freeResponse", required = true, value = "")
   @NotNull
 
 
