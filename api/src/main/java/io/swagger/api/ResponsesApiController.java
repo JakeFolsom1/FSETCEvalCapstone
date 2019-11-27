@@ -94,7 +94,7 @@ public class ResponsesApiController implements ResponsesApi {
     public ResponseEntity<Response> getQuestionResponse(@ApiParam(value = "",required=true) @PathVariable("assignmentId") Long assignmentId, @ApiParam(value = "",required=true) @PathVariable("questionId") Long questionId) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            Response response = responseRepository.findByQuestionIdAndAssignmentId(assignmentId, questionId);
+            Response response = responseRepository.findByQuestionIdAndAssignmentId(questionId, assignmentId);
             if (response == null) {
                 return new ResponseEntity<Response>(HttpStatus.NOT_FOUND);
             }

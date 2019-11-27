@@ -63,14 +63,13 @@ public class AssignmentsApiController implements AssignmentsApi {
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
-    // assignmentId is auto-generated, so check asurite, assignedAsurite, and semester to see if it already exists
     // use an account repository to check if asurite and assigned asurite belong to active accounts
     // use a semester repository to check if semester is valid
     // see preferences create for a similar example
     public ResponseEntity<Void> createAssignment(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Assignment body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            if (assignmentRepository.exists(body.getAssignmentId())) {
+            if (assignmentRepository.findByAsuriteAndAssignedAsuriteAndSemester(body.getAsurite(), body.getAssignedAsurite(), body.getSemester()) != null) {
                 return new ResponseEntity<Void>(HttpStatus.CONFLICT);
             }
             else {

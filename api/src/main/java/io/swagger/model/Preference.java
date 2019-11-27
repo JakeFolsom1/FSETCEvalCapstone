@@ -46,7 +46,6 @@ public class Preference   {
    * @return preferenceId
    **/
   @ApiModelProperty(example = "1", value = "")
-  @NotNull
 
 
   public Long getPreferenceId() {

@@ -48,7 +48,6 @@ public class Response   {
    * @return responseId
    **/
   @ApiModelProperty(example = "1", value = "")
-  @NotNull
 
 
   public Long getResponseId() {

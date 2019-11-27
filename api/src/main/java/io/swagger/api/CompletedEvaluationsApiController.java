@@ -54,7 +54,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
             List<CompletedEvaluation> completedEvaluationList = new ArrayList<CompletedEvaluation>();
             for (Assignment assignment: completedAssignments) {
                 CompletedEvaluation completedEvaluation = new CompletedEvaluation();
-                completedEvaluation.setEvalType(assignment.getEvalType());
+                completedEvaluation.setEvalType(assignment.getEvalType().name());
                 Account evaluatorAccount = accountRepository.findOne(assignment.getAsurite());
                 completedEvaluation.setEvaluator(evaluatorAccount.getFirstName() + " " + evaluatorAccount.getLastName());
                 Account evaluateeAccount = accountRepository.findOne(assignment.getAssignedAsurite());
@@ -76,6 +76,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                     questionAndResponse.setResponse(response.getResponse());
                     questionsAndResponses.add(questionAndResponse);
                 }
+                completedEvaluation.setQuestionsAndResponses(questionsAndResponses);
                 completedEvaluationList.add(completedEvaluation);
             }
             return new ResponseEntity<List<CompletedEvaluation>>(completedEvaluationList, HttpStatus.OK);
@@ -96,7 +97,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                 }
                 if (responses.get(0).isIsShared()) {
                     CompletedEvaluation completedEvaluation = new CompletedEvaluation();
-                    completedEvaluation.setEvalType(assignment.getEvalType());
+                    completedEvaluation.setEvalType(assignment.getEvalType().name());
                     Account evaluatorAccount = accountRepository.findOne(assignment.getAsurite());
                     completedEvaluation.setEvaluator(evaluatorAccount.getFirstName() + " " + evaluatorAccount.getLastName());
                     Account evaluateeAccount = accountRepository.findOne(assignment.getAssignedAsurite());
@@ -114,6 +115,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                         questionAndResponse.setResponse(response.getResponse());
                         questionsAndResponses.add(questionAndResponse);
                     }
+                    completedEvaluation.setQuestionsAndResponses(questionsAndResponses);
                     completedEvaluationList.add(completedEvaluation);
                 }
 
@@ -135,7 +137,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
                 CompletedEvaluation completedEvaluation = new CompletedEvaluation();
-                completedEvaluation.setEvalType(assignment.getEvalType());
+                completedEvaluation.setEvalType(assignment.getEvalType().name());
                 Account evaluatorAccount = accountRepository.findOne(assignment.getAsurite());
                 completedEvaluation.setEvaluator(evaluatorAccount.getFirstName() + " " + evaluatorAccount.getLastName());
                 Account evaluateeAccount = accountRepository.findOne(assignment.getAssignedAsurite());
@@ -153,6 +155,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                     questionAndResponse.setResponse(response.getResponse());
                     questionsAndResponses.add(questionAndResponse);
                 }
+                completedEvaluation.setQuestionsAndResponses(questionsAndResponses);
                 completedEvaluationList.add(completedEvaluation);
 
             }

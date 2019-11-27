@@ -52,7 +52,6 @@ public class Assignment   {
    * @return assignmentId
   **/
   @ApiModelProperty(example = "54", value = "")
-  @NotNull
 
 
   public Long getAssignmentId() {
