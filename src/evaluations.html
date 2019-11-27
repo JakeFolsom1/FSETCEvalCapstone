@@ -1,94 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/general.css">
+    <link rel="stylesheet" href="../css/asu.css">
     <link rel="stylesheet" href="../css/primaryStyles.css">
+    <link href="https://use.fontawesome.com/9fb47689fa.css" rel="stylesheet">
+    <!---------- DATA TABLES ---------->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.js"></script>
+    <!-------------------------------->
     <script type="text/javascript" src="eval.js"></script>
+    <script src="../js/jquery-3.4.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/select-togglebutton.js"></script>
+    <script src="../js/jquery.tablesorter.min.js"></script>
+    <script src="../js/bootstrap-dialog.min.js"></script>
+    <script src="../js/utility.min.js"></script>
+    <script src="../js/navbar.min.js"></script>
+    <script src="../js/sidebar.min.js"></script>
+
     <meta charset="UTF-8">
 </head>
-<body>
-    <div class="topNav">
-        <a>Tutor Management System (TMS)</a>
+<body onload="dataTablesSetup()">
+    <div id="navbar">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+          <div id="header">
+              <img class="nav-logo" src="../public/tutoringCenterHeaderText.jpg">
+              <span style="position:fixed; top:10px; left:345px; background-color:transparent; color:#ccc; font-size:14pt">
+                Tutor Management System
+              </span>
+          </div>
+        </nav>
     </div>
-    <div class="sideNav">
-        <img class="sidePicture" src="../public/tutoringCenterHeaderText.jpg"/>
-        <button class ="buttons">Home</button>
-        <button class ="buttons">Question queue</button>
-        <button class = "buttons">Staff information</button>
-        <button class = "buttons">Shift Management</button>
-        <button class = "buttons">Update profile</button>
-        <button class = "buttons">Time Clock</button>
-        <button class = "buttons">Payroll</button>
-        <button class = "buttons">Inventory</button>
-        <button class = "buttons">Evaluations</button>
-        <button class="buttons">Logout</button>
-        <img class="sidePicture" src="../public/asu_fultonengineering.png"/>
-    </div>
-    <div class="midMenu">
-        <h1>
-            Evaluations
-        </h1>
-        <div class="menuTabs">
-            <button class="tabLink" onclick="openTab(event, 'viewShared')">View Shared</button>
-            <button class="tabLink" onclick="openTab(event, 'completeAssignments')">Complete Assignments</button>
-            <button class="tabLink" onclick="openTab(event, 'preferences')">Preferences</button>
-        </div>
-        <div id="viewShared" class="tabContent">
-            <div class = "tableContainer">
-                <table>
-                    <tr>
-                        <th>
-                            Semester
-                        </th>
-                        <th>
-                            Evaluator Name
-                        </th>
-                        <th>
-                            Lead
-                        </th>
-                        <th>
-                            Actions
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>
-                            Fall 2019
-                        </th>
-                        <th>
-                            Jedde Bowman
-                        </th>
-                        <th>
-                            <span class="dot"/>
-                        </th>
-                        <th>
-                            <button class="buttons" style="font-size: 12pt; size: 5pt;">View</button>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>
-                            Spring 2020
-                        </th>
-                        <th>
-                            Jacob Folsom
-                        </th>
-                        <th>
-
-                        </th>
-                        <th>
-                            <button class="buttons" style="font-size: 12pt; size: 5pt;">View</button>
-                        </th>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div id="completeAssignments" class="tabContent">
-            <h3>More tab data here</h3>
-        </div>
-        <div id="preferences" class="tabContent">
-            <h3>Even more tab data here</h3>
+    <div id="sidebar">
+        <div id="sidebar-main" style="padding-top:50px; position:absolute">
+            <a class="btn btn-primary navb" id="home" href="https://fsetc.asu.edu/tms/admin/manageStaff/public" role="button">Staff</a>
+            <a class="btn btn-primary navb" id="scheduler" href="https://fsetc.asu.edu/tms/admin/Scheduler/public" role="button">Scheduler</a>
+            <a class="btn btn-primary navb" id="courses" href="https://fsetc.asu.edu/tms/admin/CourseAdd/public" role="button">Courses</a>
+            <a class="btn btn-primary navb" id="requests" href="https://fsetc.asu.edu/tms/admin/Requests/public" role="button">Requests</a>
+            <a class="btn btn-primary navb" id="time" href="https://fsetc.asu.edu/tms/admin/Timesheet/public" role="button">Time Clock</a>
+            <a class="btn btn-primary navb" id="payroll" href="https://fsetc.asu.edu/tms/admin/Payroll/public" role="button">Payroll</a>
+            <a class="btn btn-primary navb" id="queues" href="/tms/admin/Queues" role="button">Queues</a>
+            <a class="btn btn-primary navb" id="other" href="https://fsetc.asu.edu/tms/admin/Other/public" role="button">Other</a>
+            <a class="btn btn-primary navb" id="terms" href="/tms/admin/Terms" role="button">Terms</a>
+            <a class="btn btn-primary navb" id="inventory" href="/tms/admin/Inventory" role="button">Inventory</a>
+            <a class="btn btn-primary navb" id="logout" href="/tms/logout" role="button">Logout</a>
+            <br>
+            <br>
+            <br>
+            <img class="img-responsive" style="display:block; position: absolute; bottom: 10px;" src="../public/asu_fultonengineering.png">
         </div>
     </div>
-    <main>
-        <p> Memes </p>
-    </main>
+    <div id="content-main" style="margin-top: 0;">
+        <div style="padding-top:70px;">
+            <ul class="nav nav-tabs" id="tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" id="viewSharedTab" data-toggle="tab" href="#viewShared" role="tab" aria-controls="teeth" onclick="openStuff()" aria-selected="false">View Shared</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="assignmentsTab" data-toggle="tab" href="#assignments" role="tab" aria-controls="profile" onclick="openStuff()" aria-selected="false">Complete Assignments</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="preferencesTab" data-toggle="tab" href="#preferences" onclick="openStuff()" role="tab" aria-controls="contact" aria-selected="false">Preferences</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="tab-content content-main">
+        <div class="tab-pane" id="viewShared" role="tabpanel" aria-labelledby="viewSharedTab">
+            <table id="example" class="table table-bordered striped-table" style="width:80%;">
+                <thead>
+                    <tr>
+                        <th>Semester</th>
+                        <th>Evaluator Name</th>
+                        <th>Lead</th>
+                        <th>Actions</th>
+                    </tr>
+                    <!-------Repeat for each person returned in the API ------>
+                    <tr>
+                        <th> Fall 2019</th>
+                        <th>Bob</th>
+                        <th> <div class="dot"></div></th>
+                        <th><button class="btn-primary btn">View</button></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="tab-pane" id="assignments" role="tabpanel" aria-labelledby="assignmentsTab">
+            <table id="example2" class="table striped-table table-bordered" style="width:80%;">
+                <thead>
+                <tr>
+                    <th>Tutor Name</th>
+                    <th>Lead</th>
+                    <th>Actions</th>
+                </tr>
+                <!-------Repeat for each person returned in the API ------>
+                <tr>
+                    <th>James</th>
+                    <th> <div class="dot"></div></th>
+                    <th><button class="btn-primary btn">Evaluate</button></th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="tab-pane" id="preferences" role="tabpanel" aria-labelledby="preferencesTab">
+            <table id="example3" class="table striped-table table-bordered" style="width:80%;">
+                <thead>
+                <tr>
+                    <th>Preference</th>
+                    <th>Tutor Name</th>
+                </tr>
+                <!-------Repeat for each person returned in the API ------>
+                <tr>
+                    <th>1</th>
+                    <th>
+                        <label>
+                            <select>
+                                <option value="Joe">Joe</option>
+                                <option value="Bob">Bob</option>
+                                <option value="Jonathon">Jonathon</option>
+                            </select>
+                        </label>
+                    </th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
 </body>
 </html>

@@ -1,8 +1,25 @@
+/*
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
     document.getElementById("main").style.marginLeft = "250px";
 }
+*/
+function dataTablesSetup(){
+    $(document).ready(function() {
+        $('#example').DataTable();
+    })
+}
 
+
+function openStuff() {
+    $('#myTabContent a').on('click', function(e){
+        e.preventDefault();
+        $(this).tab('show')
+    })
+}
+
+
+/*
 function openTab(e, tabName){
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabContent");
@@ -23,6 +40,7 @@ function openTab(e, tabName){
     document.getElementById(tabName).style.display = "block";
     e.currentTarget.className += "active";
 }
+*/
 
 function generateTable(document){
     //Foreach element in API call return, create a new <tr> element as well as <th> for every <tr>

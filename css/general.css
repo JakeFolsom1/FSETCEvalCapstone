@@ -1,358 +1,88 @@
-/*
-    asu.css
-    CSS styles for theming pages with ASU's official colors
-    Created on : Feb 27, 2017
-    Author     : Charles Phillips
-*/
-/*
-    Do not modify this file in any way for capstone it is ONLY for references
-    Created on: 11/4/2019
-    Author: Jacob Folsom
- */
-
-body {
-    font-family: 'Roboto', sans-serif;
-    font-size: 11pt;
+/*Bootstrap button outline override*/
+.btn-outline {
+    background-color: transparent;
+    color: inherit;
+    transition: all .5s;
 }
 
-/*
-    Override Boostrap3 default values
-*/
-
-.btn {
-    color: #000 !important;
+.btn-primary.btn-outline {
+    color: #428bca;
 }
 
-.btn-default {
-    color: #111 !important;
+.btn-success.btn-outline {
+    color: #5cb85c;
 }
 
-.btn-danger,
-.btn-success {
-    color: #fff !important;
+.btn-info.btn-outline {
+    color: #5bc0de;
 }
 
-.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
-    border-color: #8C1D40 !important;
-    background-color: #8C1D40 !important;
-    color: #ffffff !important;
-    font-weight: normal !important;
+.btn-warning.btn-outline {
+    color: #f0ad4e;
 }
 
-textarea:focus, select:focus, button:focus,
-input[type="text"]:focus,
-input[type="button"]:focus,
-input[type="password"]:focus,
-input[type="datetime"]:focus,
-input[type="datetime-local"]:focus,
-input[type="date"]:focus,
-input[type="month"]:focus,
-input[type="time"]:focus,
-input[type="week"]:focus,
-input[type="number"]:focus,
-input[type="email"]:focus,
-input[type="url"]:focus,
-input[type="search"]:focus,
-input[type="tel"]:focus,
-input[type="color"]:focus,
-.btn:focus, .form-control:focus,
-.select2-container--bootstrap.select2-container--focus .select2-selection,
-.uneditable-input:focus {
-    border-color: #FFC627;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px #FFC627;
-    outline: 0 none;
+.btn-danger.btn-outline {
+    color: #d9534f;
 }
 
-.bootstrap-dialog.type-info .modal-header {
-    background-color:#8c1d40 !important;
+.btn-default.btn-outline {
+    color: #c0c0c0;
 }
 
-.bootstrap-dialog.type-info .bootstrap-dialog-title {
-    color:#FFC627 !important;
+.btn-primary.btn-outline:hover,
+.btn-success.btn-outline:hover,
+.btn-info.btn-outline:hover,
+.btn-warning.btn-outline:hover,
+.btn-danger.btn-outline:hover {
+    color: #fff;
 }
 
-/*
-    Override Select2 default values
-*/
-.select2-drop-active {
-    border: 1px solid rgba(210, 100, 10, 1.8);
-    border-top: none;
+/*Application CSS*/
+.med-margin-top {
+  margin-top: 20px; 
 }
 
-.select2-drop.select2-drop-above.select2-drop-active {
-    border-top: 1px solid rgba(210, 100, 10, 1.8);
+.med-margin-bottom {
+  margin-bottom: 20px;
 }
 
-.select2-container-active .select2-choice,
-.select2-container-active .select2-choices {
-    border: 1px solid rgba(210, 100, 10, 1.8);
-    outline: none;
-    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px #FFC627!important;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px #FFC627!important;
-    /*
-    -webkit-box-shadow: 0 0 10px rgba(210, 100, 10, 1.8);
-            box-shadow: 0 0 10px rgba(210, 100, 10, 1.8);
-    */
+.small-margin-right { 
+  margin-right: 10px;
 }
 
-.select2-container *:focus {
-    border-color: #FFC627;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px #FFC627!important;
-    outline: 0 none;
+.xsmall-margin-left {
+  margin-left: 5px;
 }
 
-/*
-    Override the BootstrapDateTimePicker default values
-*/
-
-.datepicker table tr td.active,
-.datepicker table tr td.active:hover {
-    background: #8c1d40;
-    text-shadow: none;
+.small-margin-left { 
+  margin-left: 10px;
 }
 
-.bootstrap-datetimepicker-widget table td.today:before {
-    border-bottom-color: #8c1d40;
+.med-margin-left {
+  margin-left: 20px;
 }
 
-.bootstrap-datetimepicker-widget table td span.active {
-    background-color: #8c1d40;
+.large-margin-left {
+  margin-left: 35px;
 }
 
-.centered {
-    margin: 0 auto;
+.short { 
+  width: 100px !important; 
 }
 
-.scheduler-table td {
-    white-space: nowrap;
+/*Bootstrap nav overrides*/
+.navbar {
+    margin: 0;
+    padding: 0;
+    height: 50px;
 }
 
-#sidebar-main {
-    border-style: solid;
-    border-width: 1px;
-    background: gainsboro;
-    position: fixed;
-    float: left;
-    height: 100%;
+.nav-logo {
     width: 15%;
-    z-index: 5;
+    height: 50px;
+    object-fit: cover;
 }
 
-#sidebar-main a{
-    width: 75%;
-    overflow: hidden;
-    margin-top: 7%;
-    margin-left: 12%;
-    font-size: 16px;
-}
-
-#content-main {
-    margin-left: 20%;
-    position: relative;
-    margin-top: 50px;
-}
-
-#content-main h3 {
-    display: inline-block;
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-.nav-tabs > li > a {
-    color: #8C1D40 !important;
-}
-
-.nav-tabs > li > a:hover {
-    background-color: #FFF1CC !important;
-}
-
-.navbar .nav > li > a {
-    color: #8C1D40 !important;
-    font-weight: bold !important;
-}
-
-.table-container{
-    position: relative;
-    width: 70%;
-    display: inline-block;
-}
-
-.table-container table {
-    float: left;
-}
-
-.schedule-table {
-    border-spacing: 2px;
-    width: auto;
-    float: left;
-}
-
-.schedule-table td {
-    margin: 10px;
-    width: 10%;
-    height: 20px;
-    padding: 2px !important
-}
-
-.time-column {
-    border-spacing: 2px;
-    min-width: 170px;
-    width: 20%;
-    border-right: thick double #DDD;
-}
-
-.time-column td {
-    height: 20px;
-    padding: 2px !important;
-}
-
-.available {
-    background-color: #F0F0F0;
-    color: #5C6670;
-}
-
-.not-available {
-    color: #5C6670;
-}
-
-.scheduled {
-    background-color: #FFF1CC !important;
-    color: #8C1D40 !important;
-}
-
-.schedule-key {
-    margin-bottom: 50px;
-    margin-left: 30px;
-}
-
-.schedule-key td {
-    border:1px solid red;
-}
-
-.staff-table {
-    width: 90%;
-}
-
-.tab-content th {
-    cursor: pointer;
-}
-
-.glyphicon {
-    cursor: pointer;
-    margin-left: 5px;
-}
-
-.table-striped > tbody > tr:nth-child(odd) > td, .table-striped > tbody > tr:nth-child(odd) > th {
-    background-color: #FFF1CC;
-}
-
-.queue-table {
-    border: solid black 2px;
-}
-
-.queue-table thead {
-    background: #245269;
-    color: white
-}
-
-.queue-table tr:nth-child(even){
-    background-color: #E5ECF1;
-}
-
-.queue-table tr:nth-child(odd){
-    border: solid black 1.5px;
-}
-
-#times
-{
-    width:10%;
-    border: 1px black solid;
-    float:left;
-}
-
-.test table:last-child {
-    float: none !important
-}
-
-#popup{
-    position:fixed;
-    height:300px;
-    width:600px;
-    background: #ffffff;
-    left: 30%;
-    top: 30%;
-    z-index:100;
-    border: 2px black solid;
-}
-
-.bodycontainer { max-height: 550px; width: 100%; margin: 0; overflow-y: auto; }
-.table-scrollable { margin: 0; padding: 0; }
-.borderless td, .borderless th {
-    border: none !important;
-}
-
-.gold-border td, .gold-border th {
-    border-top: none !important;
-    border-bottom: #FFC627 solid 1px !important;
-}
-
-input[type=checkbox] {
-    /* oversized checkboxes */
-    -ms-transform: scale(1.5); /* IE */
-    -moz-transform: scale(1.5); /* FF */
-    -webkit-transform: scale(1.5); /* Safari and Chrome */
-    -o-transform: scale(1.5); /* Opera */
-    padding: 10px;
-}
-
-/* CURSOR ICON CLASSES */
-.default {
-    cursor: default;
-}
-
-.pointer {
-    cursor: pointer;
-}
-
-.nocursor {
-    cursor: none;
-}
-
-.ban {
-    cursor: not-allowed;
-}
-
-.caret {
-    cursor: text;
-}
-
-.crosshair {
-    cursor: crosshair;
-}
-
-.move {
-    cursor: move;
-}
-
-.wait {
-    cursor: wait;
-}
-
-.no-border {
-    border: none;
-}
-
-.noselect {
-    -webkit-user-select: none; /* Safari 3.1+ */
-    -moz-user-select: none; /* Firefox 2+ */
-    -ms-user-select: none; /* IE 10+ */
-    user-select:none;
-}
-
-.stripe-white {
-    background-color: #ffffff !important;
-}
-
-.stripe-gold {
-    background-color: #fff1cc !important;
+img {
+    vertical-align: inherit;
 }

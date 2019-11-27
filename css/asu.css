@@ -1,26 +1,20 @@
-/*
+/* 
     asu.css
     CSS styles for theming pages with ASU's official colors
     Created on : Feb 27, 2017
     Author     : Charles Phillips
 */
 
-/*
-NO changes will be made to this file, if you need a custom CSS put it into primaryStyles.css, this is for referencing ONLY
-Created on: November 4, 2019
-Author: Jacob Folsom
- */
-
 body {
     font-family: 'Roboto', sans-serif;
-    font-size: 11pt;
+    font-size: 11pt;  
 }
 
-/*
+/* 
     Override Boostrap3 default values
 */
 
-.btn-primary {
+.btn {
     color: #000 !important;
 }
 
@@ -34,9 +28,9 @@ body {
 }
 
 .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
-    border-color: #8C1D40 !important;
-    background-color: #8C1D40 !important;
-    color: #ffffff !important;
+    border-color: #8C1D40 !important; 
+    background-color: #8C1D40 !important; 
+    color: #ffffff !important;    
     font-weight: normal !important;
 }
 
@@ -56,15 +50,16 @@ input[type="url"]:focus,
 input[type="search"]:focus,
 input[type="tel"]:focus,
 input[type="color"]:focus,
-.btn-primary:focus, .form-control:focus,
+.btn:focus, .form-control:focus,
 .select2-container--bootstrap.select2-container--focus .select2-selection,
-.uneditable-input:focus {
-    border-color: #FFC627;
+.uneditable-input:focus {   
+    border-color: #FFC627; 
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px #FFC627;
     outline: 0 none;
 }
+
 .bootstrap-dialog.type-info .modal-header {
-    background-color:#8c1d40 !important;
+    background-color:#8c1d40 !important;                
 }
 
 .bootstrap-dialog.type-info .bootstrap-dialog-title {
@@ -88,7 +83,7 @@ input[type="color"]:focus,
     border: 1px solid rgba(210, 100, 10, 1.8);
     outline: none;
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px #FFC627!important;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px #FFC627!important;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px #FFC627!important;
     /*
     -webkit-box-shadow: 0 0 10px rgba(210, 100, 10, 1.8);
             box-shadow: 0 0 10px rgba(210, 100, 10, 1.8);
@@ -96,7 +91,7 @@ input[type="color"]:focus,
 }
 
 .select2-container *:focus {
-    border-color: #FFC627;
+    border-color: #FFC627; 
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px #FFC627!important;
     outline: 0 none;
 }
@@ -120,7 +115,7 @@ input[type="color"]:focus,
 }
 
 .centered {
-    margin: 0 auto;
+    margin: 0 auto;   
 }
 
 .scheduler-table td {
@@ -128,27 +123,27 @@ input[type="color"]:focus,
 }
 
 #sidebar-main {
-    border-style: solid;
-    border-width: 1px;
-    background: gainsboro;
-    position: fixed;
-    float: left;
-    height: 100%;
+    border-style: solid; 
+    border-width: 1px; 
+    background: gainsboro; 
+    position: fixed; 
+    float: left; 
+    height: 100%; 
     width: 15%;
-    z-index: 5;
+    z-index: 5;    
 }
 
 #sidebar-main a{
     width: 75%;
-    overflow: hidden;
+    overflow: hidden;    
     margin-top: 7%;
     margin-left: 12%;
     font-size: 16px;
 }
 
 #content-main {
-    margin-left: 20%;
-    position: relative;
+    margin-left: 20%; 
+    position: relative; 
     margin-top: 50px;
 }
 
@@ -159,14 +154,14 @@ input[type="color"]:focus,
 }
 
 .nav-tabs > li > a {
-    color: #8C1D40 !important;
+    color: #8C1D40 !important;  
 }
 
 .nav-tabs > li > a:hover {
-    background-color: #FFF1CC !important;
+    background-color: #FFF1CC !important;  
 }
-
-.navbar .nav > li > a {
+    
+.navbar .nav > li > a {      
     color: #8C1D40 !important;
     font-weight: bold !important;
 }
@@ -198,7 +193,7 @@ input[type="color"]:focus,
     border-spacing: 2px;
     min-width: 170px;
     width: 20%;
-    border-right: thick double #DDD;
+    border-right: thick double #DDD; 
 }
 
 .time-column td {
@@ -222,7 +217,7 @@ input[type="color"]:focus,
 
 .schedule-key {
     margin-bottom: 50px;
-    margin-left: 30px;
+    margin-left: 30px;    
 }
 
 .schedule-key td {
@@ -243,7 +238,7 @@ input[type="color"]:focus,
 }
 
 .table-striped > tbody > tr:nth-child(odd) > td, .table-striped > tbody > tr:nth-child(odd) > th {
-    background-color: #FFF1CC;
+    background-color: #FFF1CC;   
 }
 
 .queue-table {
@@ -251,7 +246,7 @@ input[type="color"]:focus,
 }
 
 .queue-table thead {
-    background: #245269;
+    background: #245269; 
     color: white
 }
 
@@ -264,7 +259,7 @@ input[type="color"]:focus,
 }
 
 #times
-{
+{	
     width:10%;
     border: 1px black solid;
     float:left;
@@ -275,10 +270,10 @@ input[type="color"]:focus,
 }
 
 #popup{
-    position:fixed;
-    height:300px;
-    width:600px;
-    background: #ffffff;
+    position:fixed;  
+    height:300px;  
+    width:600px;  
+    background: #ffffff;  
     left: 30%;
     top: 30%;
     z-index:100;
@@ -297,12 +292,12 @@ input[type="color"]:focus,
 }
 
 input[type=checkbox] {
-    /* oversized checkboxes */
-    -ms-transform: scale(1.5); /* IE */
-    -moz-transform: scale(1.5); /* FF */
-    -webkit-transform: scale(1.5); /* Safari and Chrome */
-    -o-transform: scale(1.5); /* Opera */
-    padding: 10px;
+  /* oversized checkboxes */
+  -ms-transform: scale(1.5); /* IE */
+  -moz-transform: scale(1.5); /* FF */
+  -webkit-transform: scale(1.5); /* Safari and Chrome */
+  -o-transform: scale(1.5); /* Opera */
+  padding: 10px;
 }
 
 /* CURSOR ICON CLASSES */
@@ -346,7 +341,7 @@ input[type=checkbox] {
     -webkit-user-select: none; /* Safari 3.1+ */
     -moz-user-select: none; /* Firefox 2+ */
     -ms-user-select: none; /* IE 10+ */
-    user-select:none;
+    user-select:none;    
 }
 
 .stripe-white {
