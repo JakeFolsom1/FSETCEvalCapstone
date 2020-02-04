@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+
+		<title>FSETC Evaluations</title>
+		<meta name="description" content="FSETC Evaluation Web Application" />
+
+		<link rel="stylesheet" href="../css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../css/asu.css" />
+		<link rel="stylesheet" href="../css/general.css" />
+		<!-- <link rel="stylesheet" href="css/primaryStyles.css" /> -->
+	</head>
+
+	<body>
+		<div id="navbar">
+			<nav class="navbar navbar-inverse navbar-fixed-top">
+				<div id="header">
+					<img
+						class="nav-logo"
+						src="../public/tutoringCenterHeaderText.jpg"
+						alt="FSETC logo"
+					/>
+					<span
+						style="position: fixed; top: 10px; left: 345px; background-color: transparent; color: #ccc; font-size: 14pt"
+					>
+						FSE Tutoring Centers Evaluations
+					</span>
+					<div class="navbar-header"></div>
+				</div>
+			</nav>
+		</div>
+
+		<div id="content-page" style="margin: 2rem">
+			<div id="page-header">
+				<h2 style="font-weight: bold; margin-top: 7rem;">Evaluations</h2>
+			</div>
+			<ul class="nav nav-tabs" id="adminTabs" role="tablist">
+				<li class="active">
+					<a data-toggle="tab" id="finishedTab" href="#finished"
+						>View Finished</a
+					>
+				</li>
+				<li>
+					<a data-toggle="tab" id="checkProgressTab" href="#checkProgress"
+						>Check Progress</a
+					>
+				</li>
+				<li>
+					<a data-toggle="tab" id="editTab" href="#edit">Edit Evaluations</a>
+				</li>
+				<li>
+					<a data-toggle="tab" id="assignTab" href="#assign">Assign</a>
+				</li>
+				<li>
+					<a data-toggle="tab" id="setSemesterTab" href="#setSemester"
+						>Set Semester</a
+					>
+				</li>
+			</ul>
+
+			<div class="tab-content" id="adminTabContent">
+				<div
+					class="tab-pane fade active in"
+					id="finished"
+					role="tabpanel"
+					aria-labelledby="finishedTab"
+				>
+					<h2>Search bar goes here</h2>
+					<h2>Finished evaluations table goes here</h2>
+				</div>
+				<div
+					class="tab-pane fade"
+					id="checkProgress"
+					role="tabpanel"
+					aria-labelledby="checkProgressTab"
+				>
+					<h2>Progress table goes here</h2>
+				</div>
+				<div
+					class="tab-pane fade"
+					id="edit"
+					role="tabpanel"
+					aria-labelledby="editTab"
+				>
+					<h2>Evaluation according goes here</h2>
+					<ul>
+						<li>Replace with peer evaluation</li>
+						<li>Replace with lead evaluation</li>
+						<li>Replace with team evaluation</li>
+					</ul>
+				</div>
+				<div
+					class="tab-pane fade"
+					id="assign"
+					role="tabpanel"
+					aria-labelledby="assignTab"
+				>
+					<h2>Assignments table goes here</h2>
+				</div>
+				<div
+					class="tab-pane fade"
+					id="setSemester"
+					role="tabpanel"
+					aria-labelledby="setSemesterTab"
+				>
+					<h2>Setting semesters table goes here</h2>
+				</div>
+			</div>
+		</div>
+
+		<script src="../js/jquery-3.4.1.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+	</body>
+</html>
