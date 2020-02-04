@@ -32,7 +32,7 @@
 			</nav>
 		</div>
 
-		<div id="content-page" style="margin: 2rem">
+		<div id="content-page" style="margin: 10rem">
 			<div id="page-header">
 				<h2 style="font-weight: bold; margin-top: 7rem;">Evaluations</h2>
 			</div>
@@ -84,12 +84,96 @@
 					role="tabpanel"
 					aria-labelledby="editTab"
 				>
-					<h2>Evaluation according goes here</h2>
-					<ul>
-						<li>Replace with peer evaluation</li>
-						<li>Replace with lead evaluation</li>
-						<li>Replace with team evaluation</li>
-					</ul>
+					<div id="accordion-wrapper">
+						<div class="panel-group" id="accordion">
+							<div class="panel panel-default">
+								<div class="panel-heading scheduled">
+									<h4 class="panel-title scheduled">
+										<a
+											data-toggle="collapse"
+											data-parent="#accordion"
+											href="#peerCollapse"
+											style="text-decoration: none;"
+										>
+											<strong>Peer Evaluation</strong>
+										</a>
+									</h4>
+								</div>
+								<div id="peerCollapse" class="panel-collapse collapse">
+									<div class="panel-body">
+										<button
+											type="button"
+											class="btn btn-primary"
+											style="float: right"
+										>
+											+
+										</button>
+										<h2>Peer Questions go here</h2>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="accordion-wrapper">
+						<div class="panel-group" id="accordion">
+							<div class="panel panel-default">
+								<div class="panel-heading scheduled">
+									<h4 class="panel-title scheduled">
+										<a
+											data-toggle="collapse"
+											data-parent="#accordion"
+											href="#t2lCollapse"
+											style="text-decoration: none;"
+										>
+											<strong>Lead Evaluations for Tutors</strong>
+										</a>
+									</h4>
+								</div>
+								<div id="t2lCollapse" class="panel-collapse collapse">
+									<div class="panel-body">
+										<button
+											type="button"
+											class="btn btn-primary"
+											style="float: right"
+										>
+											+
+										</button>
+										<h2>Lead Evaluations for Tutors Questions go here</h2>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="accordion-wrapper">
+						<div class="panel-group" id="accordion">
+							<div class="panel panel-default">
+								<div class="panel-heading scheduled">
+									<h4 class="panel-title scheduled">
+										<a
+											data-toggle="collapse"
+											data-parent="#accordion"
+											href="#l2tCollapse"
+											style="text-decoration: none;"
+										>
+											<strong>Team Evaluations for Leads</strong>
+										</a>
+									</h4>
+								</div>
+								<div id="l2tCollapse" class="panel-collapse collapse">
+									<div class="panel-body">
+										<button
+											type="button"
+											class="btn btn-primary"
+											style="float: right"
+										>
+											+
+										</button>
+										<h2>Team Evaluations for Leads Questions go here</h2>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div
 					class="tab-pane fade"
