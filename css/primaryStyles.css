@@ -9,7 +9,7 @@
 	padding-top: 10px;
 	padding-bottom: 10px;
 }
-
+/* 
 li {
 	font-size: 24pt;
 }
@@ -17,7 +17,7 @@ li {
 h2 {
 	font-family: "Segoe UI", sans-serif;
 	color: #080808;
-}
+} */
 
 .pageText {
 	font-size: 14pt;
@@ -44,7 +44,7 @@ h2 {
 
 .striped-table > tbody > tr:nth-child(odd) > td,
 .striped-table > tbody > tr:nth-child(odd) > th {
-	background-color: #ffc627;
+	background-color: #fff1cc;
 }
 
 .striped-table > tbody > tr:nth-child(even) > td,

@@ -1,3 +1,50 @@
+const semesters = [
+    ["Fall 2019", true],
+    ["Spring 2019", false],
+    ["Fall 2018", false]
+];
+
+$(document).ready(() => {
+    $('#completedEvaluationTable').DataTable();
+    $('#semesterTable').DataTable({
+        stripe: true,
+        paging: false,
+        searching: false,
+        info: false,
+        data: semesters,
+        columns: [
+            {
+                title: "Semester",
+            },
+            {
+                title: "Actions",
+                render: (data, _type, row) => {
+                    let actionButtons =
+                        `<button class="btn btn-primary" ${data ? "disabled" : ""} onclick="activateSemester('${row[0]}')">Set Active</button>
+                        <button class="btn btn-secondary" style="border-color: #8C1D40;" onclick="deleteSemester('${row[0]}')">Delete</button>`;
+                    return actionButtons;
+                }
+            }
+        ]
+    });
+    document.getElementById("newSemesterForm").addEventListener("submit", event => {
+        event.preventDefault();
+        const semesterName = document.getElementById("semesterNameInput").value;
+        console.log("Creating new semester: " + semesterName);
+        $('#addSemesterModal').modal('hide');
+    });
+});
+
+const activateSemester = semesterName => {
+    console.log("Activating semester: " + semesterName);
+};
+
+const deleteSemester = semesterName => {
+    console.log("TODO: Setup confirmation modal");
+    console.log("Deleting semester: " + semesterName);
+};
+
+
 // fetch these instead of sample data
 const evalQuestions = [
     {
@@ -130,6 +177,7 @@ const loadEvaluationQuestions = () => {
             const prompt = document.getElementById(`${type}QuestionPrompt`).value;
             const responseType = document.getElementById(`${type}ResponseType`).value;
             console.log(`Prompt: ${prompt}\nResponse Type: ${responseType}`)
+            $(`#add${type}QuestionModal`).modal('hide');
         });
     });
 
