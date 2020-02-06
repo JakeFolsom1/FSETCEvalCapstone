@@ -1,3 +1,10 @@
+// for checking progress and assigning create table
+// render the tutor name column as a <a> that toggles a collapse
+// after data table is constructed use inserAdjaceHTML('after-end', '<el></el>)
+// to insert the panel that will open up
+// add event handlers
+
+// fetch these instead of sample data
 const semesters = [
     ["Fall 2019", true],
     ["Spring 2019", false],
@@ -19,9 +26,51 @@ $(document).ready(() => {
             {
                 title: "Actions",
                 render: (data, _type, row) => {
+                    const modalKey = row[0].split(' ').join('');
                     let actionButtons =
                         `<button class="btn btn-primary" ${data ? "disabled" : ""} onclick="activateSemester('${row[0]}')">Set Active</button>
-                        <button class="btn btn-secondary" style="border-color: #8C1D40;" onclick="deleteSemester('${row[0]}')">Delete</button>`;
+                        <button 
+                        class="btn btn-secondary" 
+                        style="border-color: #8C1D40;" 
+						data-toggle="modal"
+						data-target="#delete${modalKey}Modal">Delete</button>
+                        <div
+                            class="modal fade"
+                            id="delete${modalKey}Modal"
+                            tabindex="-1"
+                            role="dialog"
+                            aria-labelledby="delete${modalKey}ModalLabel"
+                            aria-hidden="true"
+                        >
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title" id="delete${modalKey}ModalLabel">
+                                            Confirm Delete
+                                        </h3>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to delete '${row[0]}' and all related data? <strong>This cannot be undone.</strong></p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button
+                                            type="button"
+                                            class="btn btn-secondary"
+                                            data-dismiss="modal"
+                                        >
+                                            Close
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onclick="deleteSemester('${row[0]}')"
+                                            class="btn btn-primary"
+                                        >
+                                            Confirm
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
                     return actionButtons;
                 }
             }
@@ -40,8 +89,8 @@ const activateSemester = semesterName => {
 };
 
 const deleteSemester = semesterName => {
-    console.log("TODO: Setup confirmation modal");
     console.log("Deleting semester: " + semesterName);
+    $(`#delete${semesterName.split(' ').join('')}Modal`).modal('hide');
 };
 
 
@@ -169,6 +218,9 @@ const loadEvaluationQuestions = () => {
                 </div>
             </div>`;
     });
+
+    // apparently adding to innerHTML destroys child elements like event listeners
+    // so they need to be added after all innerHTML is changed
     ['p2p', 'l2t', 't2l'].forEach(type => {
         // add submission handlers for the new question forms
         document.getElementById(`new${type}QuestionForm`).addEventListener("submit", event => {
@@ -195,14 +247,14 @@ const loadEvaluationQuestions = () => {
                         <a 
                             data-toggle="collapse" 
                             data-parent="#${question.evalType}Questions" 
-                            href="#question${question.questionNumber}" 
+                            href="#question${question.questionId}" 
                             style="text-decoration: none;" 
                         > 
                             <strong>Question ${question.questionNumber}</strong> 
                         </a> 
                     </h4> 
                 </div> 
-                <div id="question${question.questionNumber}" class="panel-collapse collapse"> 
+                <div id="question${question.questionId}" class="panel-collapse collapse"> 
                     <div class="panel-body"> 
                         <form id="${question.evalType}Question${question.questionId}Form">
                             <div class="input-group" style="width: 100%">
@@ -251,7 +303,10 @@ const loadEvaluationQuestions = () => {
             default:
                 console.log("Error: Invalid evaluation type loaded.")
         }
+    });
 
+    // add submit handlers after all innerHTML is done loading
+    evalQuestions.forEach(question => {
         document.getElementById(`${question.evalType}Question${question.questionId}Form`).addEventListener("submit", event => {
             event.preventDefault();
             console.log("Saving question " + question.questionId);
