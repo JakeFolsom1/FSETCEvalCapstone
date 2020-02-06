@@ -3,6 +3,10 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
 
 		<title>FSETC Evaluations</title>
 		<meta name="description" content="FSETC Evaluation Web Application" />
@@ -10,10 +14,10 @@
 		<link rel="stylesheet" href="../css/bootstrap.min.css" />
 		<link rel="stylesheet" href="../css/asu.css" />
 		<link rel="stylesheet" href="../css/general.css" />
-		<!-- <link rel="stylesheet" href="css/primaryStyles.css" /> -->
+		<link rel="stylesheet" href="css/primaryStyles.css" />
 	</head>
 
-	<body>
+	<body onload="loadEvaluationQuestions()">
 		<div id="navbar">
 			<nav class="navbar navbar-inverse navbar-fixed-top">
 				<div id="header">
@@ -69,29 +73,52 @@
 				>
 					<h3>Search for tutor</h3>
 					<!-- Search form -->
-					<div style="display: flex; flex-direction: row; justify-content: left; align-items: center; padding-bottom: 20px">
-						<input class="form-control" type="text" placeholder="Enter tutor name..."  style="width: 30%; " aria-label="Search">
-						<a  class="btn btn-primary navb" id="home" role="button" style = "margin-left:10px;">Search</a>
+					<div
+						style="display: flex; flex-direction: row; justify-content: left; align-items: center; padding-bottom: 20px"
+					>
+						<input
+							class="form-control"
+							type="text"
+							placeholder="Enter tutor name..."
+							style="width: 30%; "
+							aria-label="Search"
+						/>
+						<a
+							class="btn btn-primary navb"
+							id="home"
+							role="button"
+							style="margin-left:10px;"
+							>Search</a
+						>
 					</div>
-					<div class="tab-pane" id="viewShared" role="tabpanel" aria-labelledby="viewSharedTab">
-						<table id="example" class="table table-bordered striped-table" style="width:80%;">
+					<div
+						class="tab-pane"
+						id="viewShared"
+						role="tabpanel"
+						aria-labelledby="viewSharedTab"
+					>
+						<table
+							id="example"
+							class="table table-bordered striped-table"
+							style="width:80%;"
+						>
 							<thead>
-							<tr>
-								<th>Semester</th>
-								<th>Evaluator Name</th>
-								<th>Lead</th>
-								<th>Actions</th>
-							</tr>
-							<!-------Repeat for each person returned in the API ------>
-							<tr>
-								<th> Fall 2019</th>
-								<th>Bob</th>
-								<th> <div class="dot"></div></th>
-								<th>
-									<button class="btn-primary btn">View</button>
-									<button class="btn-primary btn">Export</button>
-								</th>
-							</tr>
+								<tr>
+									<th>Semester</th>
+									<th>Evaluator Name</th>
+									<th>Lead</th>
+									<th>Actions</th>
+								</tr>
+								<!-------Repeat for each person returned in the API ------>
+								<tr>
+									<th>Fall 2019</th>
+									<th>Bob</th>
+									<th><div class="dot"></div></th>
+									<th>
+										<button class="btn-primary btn">View</button>
+										<button class="btn-primary btn">Export</button>
+									</th>
+								</tr>
 							</thead>
 						</table>
 					</div>
@@ -111,94 +138,12 @@
 					aria-labelledby="editTab"
 				>
 					<div id="accordion-wrapper">
-						<div class="panel-group" id="accordion">
-							<div class="panel panel-default">
-								<div class="panel-heading scheduled">
-									<h4 class="panel-title scheduled">
-										<a
-											data-toggle="collapse"
-											data-parent="#accordion"
-											href="#peerCollapse"
-											style="text-decoration: none;"
-										>
-											<strong>Peer Evaluation</strong>
-										</a>
-									</h4>
-								</div>
-								<div id="peerCollapse" class="panel-collapse collapse">
-									<div class="panel-body">
-										<button
-											type="button"
-											class="btn btn-primary"
-											style="float: right"
-										>
-											+
-										</button>
-										<h2>Peer Questions go here</h2>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div id="accordion-wrapper">
-						<div class="panel-group" id="accordion">
-							<div class="panel panel-default">
-								<div class="panel-heading scheduled">
-									<h4 class="panel-title scheduled">
-										<a
-											data-toggle="collapse"
-											data-parent="#accordion"
-											href="#t2lCollapse"
-											style="text-decoration: none;"
-										>
-											<strong>Lead Evaluations for Tutors</strong>
-										</a>
-									</h4>
-								</div>
-								<div id="t2lCollapse" class="panel-collapse collapse">
-									<div class="panel-body">
-										<button
-											type="button"
-											class="btn btn-primary"
-											style="float: right"
-										>
-											+
-										</button>
-										<h2>Lead Evaluations for Tutors Questions go here</h2>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div id="accordion-wrapper">
-						<div class="panel-group" id="accordion">
-							<div class="panel panel-default">
-								<div class="panel-heading scheduled">
-									<h4 class="panel-title scheduled">
-										<a
-											data-toggle="collapse"
-											data-parent="#accordion"
-											href="#l2tCollapse"
-											style="text-decoration: none;"
-										>
-											<strong>Team Evaluations for Leads</strong>
-										</a>
-									</h4>
-								</div>
-								<div id="l2tCollapse" class="panel-collapse collapse">
-									<div class="panel-body">
-										<button
-											type="button"
-											class="btn btn-primary"
-											style="float: right"
-										>
-											+
-										</button>
-										<h2>Team Evaluations for Leads Questions go here</h2>
-									</div>
-								</div>
-							</div>
-						</div>
+						<!--Auto populate this panel-group with questions from JS-->
+						<div
+							class="panel-group"
+							id="accordion"
+							style="width: 50%; align-self: center;"
+						></div>
 					</div>
 				</div>
 				<div
@@ -222,5 +167,6 @@
 
 		<script src="../js/jquery-3.4.1.min.js"></script>
 		<script src="../js/bootstrap.min.js"></script>
+		<script src="admin.js"></script>
 	</body>
 </html>
