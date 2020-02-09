@@ -54,9 +54,8 @@ $(document).ready(() => {
             },
             {
                 title: "Actions",
-                render: (data, _type, row) => {
-                    const modalKey = row[0].replace(/\s+/g, '');
-                    console.log(modalKey);
+                render: (data, _type) => {
+                    //Use data variable to pass the evaluation parameters to the evaluations page.
                     let viewButton =
                         `<button 
                         class="btn btn-secondary" 
