@@ -60,39 +60,10 @@ $(document).ready(() => {
                     let viewButton =
                         `<button 
                         class="btn btn-secondary" 
-                        style="border-color: #8C1D40;" 
-						data-toggle="modal"
-						data-target="#delete${modalKey}Modal">View</button>
-                        <div
-                            class="modal fade"
-                            id="delete${modalKey}Modal"
-                            tabindex="-1"
-                            role="dialog"
-                            aria-labelledby="delete${modalKey}ModalLabel"
-                            aria-hidden="true"
-                        >
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h3 class="modal-title" id="delete${modalKey}ModalLabel">
-                                            View Evaluation
-                                        </h3>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>Insert the completed evaluation for that specefic user</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button
-                                            type="button"
-                                            class="btn btn-secondary"
-                                            data-dismiss="modal"
-                                        >
-                                            Close
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>`;
+                        style="border-color: #8C1D40;"
+                        onclick="location.href = './evaluations.html';" id="myButton">
+                        View
+                        </button>`;
                     return viewButton;
                 }
             }
