@@ -11,8 +11,94 @@ const semesters = [
     ["Fall 2018", false]
 ];
 
+// dynamically display the finished evaluations
+const completedEvals = [
+    [
+        'Fall 2019',
+        'Bob',
+        'Jeff',
+    ],
+    [
+        'Spring 2019',
+        'Jedde',
+        'Steven',
+    ],
+    [
+        'Spring 2019',
+        'Cole',
+        'Prakhar',
+    ],
+    [
+        'Spring 2019',
+        'Dummy',
+        'Data',
+    ]
+]
+
 $(document).ready(() => {
-    $('#completedEvaluationTable').DataTable();
+    $('#completedEvaluationTable').DataTable({
+        stripe: true,
+        paging: false,
+        searching: false,
+        info: false,
+        data: completedEvals,
+        columns: [
+            {
+                title: "Semester"
+            },
+            {
+                title: "Evaluator Name"
+            },
+            {
+                title: "Evaluatee Name"
+            },
+            {
+                title: "Actions",
+                render: (data, _type, row) => {
+                    const modalKey = row[0].replace(/\s+/g, '');
+                    console.log(modalKey);
+                    let viewButton =
+                        `<button 
+                        class="btn btn-secondary" 
+                        style="border-color: #8C1D40;" 
+						data-toggle="modal"
+						data-target="#delete${modalKey}Modal">View</button>
+                        <div
+                            class="modal fade"
+                            id="delete${modalKey}Modal"
+                            tabindex="-1"
+                            role="dialog"
+                            aria-labelledby="delete${modalKey}ModalLabel"
+                            aria-hidden="true"
+                        >
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title" id="delete${modalKey}ModalLabel">
+                                            View Evaluation
+                                        </h3>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Insert the completed evaluation for that specefic user</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button
+                                            type="button"
+                                            class="btn btn-secondary"
+                                            data-dismiss="modal"
+                                        >
+                                            Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                    return viewButton;
+                }
+            }
+        ]
+
+});
     $('#semesterTable').DataTable({
         stripe: true,
         paging: false,
@@ -26,7 +112,7 @@ $(document).ready(() => {
             {
                 title: "Actions",
                 render: (data, _type, row) => {
-                    const modalKey = row[0].split(' ').join('');
+                    const modalKey = row[0].replace(/\s+/g, '');
                     let actionButtons =
                         `<button class="btn btn-primary" ${data ? "disabled" : ""} onclick="activateSemester('${row[0]}')">Set Active</button>
                         <button 
@@ -321,3 +407,9 @@ const deleteQuestion = (questionId) => {
     // delete question
     // reload question
 }
+
+
+
+
+
+
