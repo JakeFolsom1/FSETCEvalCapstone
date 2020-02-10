@@ -31,8 +31,8 @@ $(document).ready(() => {
         // make the panel and add question modal for each eval type
         accordion.innerHTML +=
             `<div class="card">
-                <div class="card-header">
-                    <h4 class="mb-0">
+                <div class="card-header bg-secondary">
+                    <h5 class="mb-0">
                         <button
                             class="btn btn-link"
                             data-toggle="collapse"
@@ -41,7 +41,7 @@ $(document).ready(() => {
                         >
                             <strong>${title}</strong>
                         </button>
-                    </h4>
+                    </h5>
                 </div>
                 <div id="${type}Collapse" class="collapse">
                     <div class="card-body">
@@ -82,7 +82,6 @@ $(document).ready(() => {
                                                     />
                                                 </div>
                                             </div>
-                                            <br />
                                             <div class="row">
                                                 <div class="col-4">
                                                     <label for="${type}ResponseType">Response Type:</label>
@@ -100,7 +99,7 @@ $(document).ready(() => {
                                     <div class="modal-footer">
                                         <button
                                             type="button"
-                                            class="btn btn-secondary"
+                                            class="btn btn-outline-primary"
                                             data-dismiss="modal"
                                         >
                                             Close
@@ -144,8 +143,8 @@ $(document).ready(() => {
         // generate the inner panels for each question of each eval type
         const innerHTML =
             `<div class="card">
-                <div class="card-header"> 
-                    <h4 class="mb-0"> 
+                <div class="card-header bg-secondary"> 
+                    <h5 class="mb-0"> 
                         <button
                             class="btn btn-link"
                             data-toggle="collapse" 
@@ -154,7 +153,7 @@ $(document).ready(() => {
                         > 
                             <strong>Question ${question.questionNumber}</strong> 
                         </button> 
-                    </h4> 
+                    </h5> 
                 </div> 
                 <div id="question${question.questionId}" class="collapse"> 
                     <div class="card-body m-2"> 
@@ -170,7 +169,6 @@ $(document).ready(() => {
                                     required
                                 />
                             </div>
-                            <br />
                             <div class="form-group row">
                                 <label for="question${question.questionId}ResponseType" class="col-form-label">Response Type:</label>
                                 <select id="question${question.questionId}ResponseType" class="form-control">
@@ -181,9 +179,8 @@ $(document).ready(() => {
                                     >
                                 </select>
                             </div>
-                            <br />
                             <div class="text-right">
-                                <button type="button" class="btn btn-secondary" onclick="deleteQuestion(${question.questionId})">Delete</button>
+                                <button type="button" class="btn btn-outline-primary" onclick="deleteQuestion(${question.questionId})">Delete</button>
                                 <button type="submit" class="btn btn-primary" >Save</button>
                             </div>
                         </form>

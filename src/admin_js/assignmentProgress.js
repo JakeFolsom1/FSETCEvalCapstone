@@ -34,6 +34,11 @@ const assignmentsProgress = [
 ];
 
 $(document).ready(() => {
+    // enable tooltips
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+
     // converting the assingment data to be an object with keys on the asurites with incomplete assignments
     // and values being an array of their incomplete assignment objects
     const assignmentMap = assignments.reduce((acc, value) => {
@@ -62,14 +67,18 @@ $(document).ready(() => {
         columns: [
             {
                 title: "Tutor Name",
-                render: (data, _type, _row) => {
-                    return `<a
-                                id="${data}Anchor"
-                                data-toggle="collapse"
-                                href="#${data}Collapse"
+                render: (data, _type, row) => {
+                    const ul = row[2].reduce((acc, value) => acc + `<li>${row[0]} needs to evaluate ${value}</li>`, '<ol>') + '</ol>'
+                    return `<button
+                                type="button"
+                                class="btn btn-link"
+                                data-toggle="tooltip"
+                                data-placement="right"
+                                data-html="true"
+                                title="${ul}"
                                 style="text-decoration: none; color: black;"
                             >${data}  <span>&#x1F6C8;</span>
-                            </a>`;
+                            </button>`;
                 }
             },
             {
@@ -86,17 +95,6 @@ $(document).ready(() => {
             }
         ]
     });
-    // the styling is slightly strange here consider redesigning this UI
-    const addCollapse = () => {
-        tableData.forEach(val => {
-            const ul = val[2].reduce((acc, value) => acc + `<li>${val[0]} needs to evaluate ${value}</li>`, '<ul>') + '</ul>'
-            const parentRow = document.getElementById(val[0] + 'Anchor').parentElement.parentElement;
-            parentRow.insertAdjacentHTML('afterend', `<div class="collapse" style="width: 100%;" id="${val[0]}Collapse"><div class="card card-body">${ul}</div></<div>`)
-        });
-    };
-    addCollapse();
-    // have to add the collapse targets again after a re-order destroys them
-    $('#progressTable').on('order.dt', addCollapse);
 });
 
 const remindEvaluator = evaluator => {

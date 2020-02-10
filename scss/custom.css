@@ -1,4 +1,16 @@
 @charset "UTF-8";
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #fff1cc !important;
+}
+
+.dot {
+  height: 25px;
+  width: 25px;
+  background-color: green;
+  border-radius: 50%;
+  display: inline-block;
+}
+
 /*!
  * Bootstrap v4.4.1 (https://getbootstrap.com/)
  * Copyright 2011-2019 The Bootstrap Authors

@@ -45,8 +45,7 @@ $(document).ready(() => {
                     //Use data variable to pass the evaluation parameters to the evaluations page.
                     let viewButton =
                         `<button 
-                        class="btn btn-secondary" 
-                        style="border-color: #8C1D40;"
+                        class="btn btn-primary"
                         onclick="location.href = './evaluations.html';" id="myButton">
                         View
                         </button>`;
