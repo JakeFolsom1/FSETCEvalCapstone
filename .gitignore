@@ -90,3 +90,6 @@ typings/
 # next.js build output
 .next
 7a2f0095a1e91eb3504037c86e885dcc59c88f9e
+
+# bootstrap files
+bootstrap-4.4.1/
