@@ -66,7 +66,6 @@ $(document).ready(() => {
                     return `<a
                                 id="${data}Anchor"
                                 data-toggle="collapse"
-                                data-parent="#progressTable"
                                 href="#${data}Collapse"
                                 style="text-decoration: none; color: black;"
                             >${data}  <span>&#x1F6C8;</span>
@@ -92,7 +91,7 @@ $(document).ready(() => {
         tableData.forEach(val => {
             const ul = val[2].reduce((acc, value) => acc + `<li>${val[0]} needs to evaluate ${value}</li>`, '<ul>') + '</ul>'
             const parentRow = document.getElementById(val[0] + 'Anchor').parentElement.parentElement;
-            parentRow.insertAdjacentHTML('afterend', `<tr id="${val[0]}Collapse" class="panel-collapse collapse"><td class="panel-body" style="width: 41%">${ul}</td><td/><td/></<tr>`)
+            parentRow.insertAdjacentHTML('afterend', `<div class="collapse" style="width: 100%;" id="${val[0]}Collapse"><div class="card card-body">${ul}</div></<div>`)
         });
     };
     addCollapse();

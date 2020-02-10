@@ -30,21 +30,21 @@ $(document).ready(() => {
 
         // make the panel and add question modal for each eval type
         accordion.innerHTML +=
-            `<div class="panel panel-default">
-                <div class="panel-heading scheduled">
-                    <h4 class="panel-title scheduled">
-                        <a
+            `<div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <button
+                            class="btn btn-link"
                             data-toggle="collapse"
-                            data-parent="#accordion"
-                            href="#${type}Collapse"
+                            data-target="#${type}Collapse"
                             style="text-decoration: none;"
                         >
                             <strong>${title}</strong>
-                        </a>
+                        </button>
                     </h4>
                 </div>
-                <div id="${type}Collapse" class="panel-collapse collapse">
-                    <div class="panel-body">
+                <div id="${type}Collapse" class="collapse">
+                    <div class="card-body">
                         <button
                             type="button"
                             class="btn btn-primary"
@@ -58,44 +58,42 @@ $(document).ready(() => {
                             class="modal fade"
                             id="add${type}QuestionModal"
                             tabindex="-1"
-                            role="dialog"
-                            aria-labelledby="add${type}QuestionModalLabel"
-                            aria-hidden="true"
                         >
-                            <div
-                                class="modal-dialog modal-dialog-centered"
-                                role="document"
-                            >
+                            <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h3 class="modal-title" id="add${type}QuestionModalLabel">
                                             Add New Question
                                         </h3>
                                     </div>
-                                    <div class="modal-body">
+                                    <div class="modal-body m-2">
                                         <form id="new${type}QuestionForm">
-                                            <div class="input-group" style="width: 100%">
-                                                <label for="${type}QuestionPrompt"
-                                                    >Question Prompt:</label
-                                                >
-                                                <input
-                                                    id="${type}QuestionPrompt"
-                                                    type="text"
-                                                    class="form-control"
-                                                    placeholder="Enter question here"
-                                                    required
-                                                />
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <label for="${type}QuestionPrompt">Question Prompt:</label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <input
+                                                        id="${type}QuestionPrompt"
+                                                        type="text"
+                                                        class="form-control"
+                                                        placeholder="Enter question here"
+                                                        required
+                                                    />
+                                                </div>
                                             </div>
                                             <br />
-                                            <div class="input-group" style="width: 100%">
-                                                <label for="${type}ResponseType">Response Type:</label>
-                                                <select id="${type}ResponseType" class="form-control" >
-                                                    <option value="numeric">Numeric</option>
-                                                    <option value="y/n">Yes/No</option>
-                                                    <option value="free-response"
-                                                        >Free Response</option
-                                                    >
-                                                </select>
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <label for="${type}ResponseType">Response Type:</label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <select id="${type}ResponseType" class="form-control" >
+                                                        <option value="numeric">Numeric</option>
+                                                        <option value="y/n">Yes/No</option>
+                                                        <option value="free-response">Free Response</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </form>
                                     </div>
@@ -118,7 +116,7 @@ $(document).ready(() => {
                                 </div>
                             </div>
                         </div>
-                        <div class="panel-group" id="${type}Questions"></div>
+                        <div id="${type}Questions"></div>
                     </div>
                 </div>
             </div>`;
@@ -145,26 +143,24 @@ $(document).ready(() => {
     evalQuestions.forEach(question => {
         // generate the inner panels for each question of each eval type
         const innerHTML =
-            `<div class="panel panel-default"> 
-                <div class="panel-heading scheduled"> 
-                    <h4 class="panel-title scheduled"> 
-                        <a 
+            `<div class="card">
+                <div class="card-header"> 
+                    <h4 class="mb-0"> 
+                        <button
+                            class="btn btn-link"
                             data-toggle="collapse" 
-                            data-parent="#${question.evalType}Questions" 
-                            href="#question${question.questionId}" 
+                            data-target="#question${question.questionId}" 
                             style="text-decoration: none;" 
                         > 
                             <strong>Question ${question.questionNumber}</strong> 
-                        </a> 
+                        </button> 
                     </h4> 
                 </div> 
-                <div id="question${question.questionId}" class="panel-collapse collapse"> 
-                    <div class="panel-body"> 
+                <div id="question${question.questionId}" class="collapse"> 
+                    <div class="card-body m-2"> 
                         <form id="${question.evalType}Question${question.questionId}Form">
-                            <div class="input-group" style="width: 100%">
-                                <label for="question${question.questionId}Prompt"
-                                    >Question Prompt:</label
-                                >
+                            <div class="form-group row">
+                                <label for="question${question.questionId}Prompt" class="col-form-label">Question Prompt:</label>
                                 <input
                                     id="question${question.questionId}Prompt"
                                     class="form-control"
@@ -175,8 +171,8 @@ $(document).ready(() => {
                                 />
                             </div>
                             <br />
-                            <div class="input-group" style="width: 100%">
-                                <label for="question${question.questionId}ResponseType">Response Type:</label>
+                            <div class="form-group row">
+                                <label for="question${question.questionId}ResponseType" class="col-form-label">Response Type:</label>
                                 <select id="question${question.questionId}ResponseType" class="form-control">
                                     <option value="numeric" ${question.questionType === "numeric" ? "selected" : ""}>Numeric</option>
                                     <option value="y/n" ${question.questionType === "y/n" ? "selected" : ""}>Yes/No</option>
@@ -192,7 +188,7 @@ $(document).ready(() => {
                             </div>
                         </form>
                     </div> 
-                </div> 
+                </div>
             </div>`;
         switch (question.evalType) {
             case "p2p":

@@ -11,58 +11,69 @@
 		<title>FSETC Evaluations</title>
 		<meta name="description" content="FSETC Evaluation Web Application" />
 
-		<link rel="stylesheet" href="../css/bootstrap.min.css" />
+		<link
+			rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+			integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+			crossorigin="anonymous"
+		/>
 		<link
 			rel="stylesheet"
 			href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"
 		/>
-		<link rel="stylesheet" href="../css/asu.css" />
-		<link rel="stylesheet" href="../css/general.css" />
-		<link rel="stylesheet" href="../css/primaryStyles.css" />
+		<!-- <link rel="stylesheet" href="../css/asu.css" /> -->
+		<!-- <link rel="stylesheet" href="../css/general.css" /> -->
+		<!-- <link rel="stylesheet" href="../css/primaryStyles.css" /> -->
 	</head>
 
 	<body>
-		<div id="navbar">
-			<nav class="navbar navbar-inverse navbar-fixed-top">
-				<div id="header">
-					<img
-						class="nav-logo"
-						src="../public/tutoringCenterHeaderText.jpg"
-						alt="FSETC logo"
-					/>
-					<span
-						style="position: fixed; top: 10px; left: 345px; background-color: transparent; color: #ccc; font-size: 14pt"
-					>
-						FSE Tutoring Centers Evaluations
-					</span>
-					<div class="navbar-header"></div>
-				</div>
-			</nav>
-		</div>
-
-		<div id="content-page" style="margin: 10rem">
-			<div id="page-header">
-				<h2 style="font-weight: bold; margin-top: 7rem;">Evaluations</h2>
+		<nav class="navbar navbar-dark bg-dark sticky-top">
+			<div class="navbar-brand">
+				<img
+					src="../public/tutoringCenterHeaderText.jpg"
+					alt="FSETC logo"
+					style="width: 30%; height: auto;"
+				/>
+				FSE Tutoring Centers Evaluation
 			</div>
-			<ul class="nav nav-tabs" id="adminTabs" role="tablist">
-				<li class="active">
-					<a data-toggle="tab" id="finishedTab" href="#finished"
+		</nav>
+		<div class="container">
+			<h2 style="font-weight: bold;">Evaluations</h2>
+			<ul class="nav nav-tabs">
+				<li class="nav-item">
+					<a
+						class="nav-link active"
+						data-toggle="tab"
+						id="finishedTab"
+						href="#finished"
 						>View Finished</a
 					>
 				</li>
-				<li>
-					<a data-toggle="tab" id="checkProgressTab" href="#checkProgress"
+				<li class="nav-item">
+					<a
+						class="nav-link"
+						data-toggle="tab"
+						id="checkProgressTab"
+						href="#checkProgress"
 						>Check Progress</a
 					>
 				</li>
-				<li>
-					<a data-toggle="tab" id="editTab" href="#edit">Edit Evaluations</a>
+				<li class="nav-item">
+					<a class="nav-link" data-toggle="tab" id="editTab" href="#edit"
+						>Edit Evaluations</a
+					>
 				</li>
-				<li>
-					<a data-toggle="tab" id="assignTab" href="#assign">Assign</a>
+				<li class="nav-item">
+					<a class="nav-link" data-toggle="tab" id="assignTab" href="#assign"
+						>Assign</a
+					>
 				</li>
-				<li>
-					<a data-toggle="tab" id="setSemesterTab" href="#setSemester"
+				<li class="nav-item">
+					<a
+						class="nav-link"
+						data-toggle="tab"
+						id="setSemesterTab"
+						href="#setSemester"
 						>Set Semester</a
 					>
 				</li>
@@ -70,7 +81,7 @@
 
 			<div class="tab-content" id="adminTabContent">
 				<div
-					class="tab-pane fade active in"
+					class="tab-pane fade show active"
 					id="finished"
 					role="tabpanel"
 					aria-labelledby="finishedTab"
@@ -88,7 +99,7 @@
 							aria-label="Search"
 						/>
 						<a
-							class="btn btn-primary navb"
+							class="btn btn-primary"
 							id="home"
 							role="button"
 							style="margin-left:10px;"
@@ -116,13 +127,13 @@
 				>
 					<table
 						id="progressTable"
-						class="striped-table cell-border"
+						class="table table-striped table-hover"
 						style="width: 100%"
 					></table>
 					<br />
 					<button
 						id="remindAllButton"
-						class="btn btn-primary text-right"
+						class="btn btn-primary"
 						onclick="remindAll()"
 						style="display: block; margin-left: auto; margin-bottom: 1rem;"
 					>
@@ -135,10 +146,8 @@
 					role="tabpanel"
 					aria-labelledby="editTab"
 				>
-					<div id="accordion-wrapper">
-						<!--Auto populate this panel-group with questions from JS-->
-						<div class="panel-group" id="accordion" style="width: 50%;"></div>
-					</div>
+					<!--Auto populate this panel-group with questions from JS-->
+					<div id="accordion"></div>
 				</div>
 				<div
 					class="tab-pane fade"
@@ -155,13 +164,13 @@
 							<input
 								id="numAssignments"
 								type="number"
-								class="form-control"
+								class="form-control ml-2"
 								placeholder="2"
 								required
 							/>
 							<button
 								id="numAssignmentsButton"
-								class="btn btn-primary"
+								class="btn btn-primary ml-2"
 								type="submit"
 							>
 								Save
@@ -171,7 +180,7 @@
 					<br />
 					<table
 						id="assignmentTable"
-						class="striped-table cell-border"
+						class="table table-striped table-hover"
 						style="width: 100%"
 					></table>
 					<br />
@@ -199,15 +208,8 @@
 					>
 						<span>&#43;</span>
 					</button>
-					<div
-						class="modal fade"
-						id="addSemesterModal"
-						tabindex="-1"
-						role="dialog"
-						aria-labelledby="addSemesterModalLabel"
-						aria-hidden="true"
-					>
-						<div class="modal-dialog modal-dialog-centered" role="document">
+					<div class="modal fade" id="addSemesterModal" tabindex="-1">
+						<div class="modal-dialog modal-dialog-centered">
 							<div class="modal-content">
 								<div class="modal-header">
 									<h3 class="modal-title" id="addSemesterModalLabel">
@@ -216,7 +218,7 @@
 								</div>
 								<div class="modal-body">
 									<form id="newSemesterForm">
-										<div class="input-group" style="width: 100%">
+										<div class="form-group">
 											<label for="semesterNameInput"
 												>Please enter a name for your new semester below:</label
 											>
@@ -252,16 +254,29 @@
 					</div>
 					<table
 						id="semesterTable"
-						class="striped-table cell-border"
+						class="table table-striped table-hover"
 						style="width: 100%"
 					></table>
 				</div>
 			</div>
 		</div>
 
-		<script src="../js/jquery-3.4.1.min.js"></script>
+		<script
+			src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+			integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+			integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+			integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+			crossorigin="anonymous"
+		></script>
 		<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-		<script src="../js/bootstrap.min.js"></script>
 		<script src="admin_js/completedEval.js"></script>
 		<script src="admin_js/assignmentProgress.js"></script>
 		<script src="admin_js/editEval.js"></script>

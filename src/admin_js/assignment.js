@@ -192,7 +192,6 @@ $(document).ready(() => {
                     return `<a
                                 id="${data}AssignAnchor"
                                 data-toggle="collapse"
-                                data-parent="#assignmentTable"
                                 href="#${data}AssignCollapse"
                                 style="text-decoration: none; color: black;"
                             >${data}  <span>&#x1F6C8;</span>
@@ -283,7 +282,7 @@ $(document).ready(() => {
             </form > `;
 
             const parentRow = document.getElementById(val[0] + 'AssignAnchor').parentElement.parentElement;
-            parentRow.insertAdjacentHTML('afterend', `<tr id = "${val[0]}AssignCollapse" class="panel-collapse collapse" > <td class="panel-body" style="width: 17%">${form}</td> <td /> <td /><td /><td /><td /></<tr>`)
+            parentRow.insertAdjacentHTML('afterend', `<div id="${val[0]}AssignCollapse" class="collapse" > <div class="card card-body">${form}</div></<div>`)
         });
 
         tableData.forEach(val => {

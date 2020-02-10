@@ -22,17 +22,13 @@ $(document).ready(() => {
                     let actionButtons =
                         `<button class="btn btn-primary" ${data ? "disabled" : ""} onclick="activateSemester('${row[0]}')">Set Active</button>
                         <button 
-                        class="btn btn-secondary" 
-                        style="border-color: #8C1D40;" 
+                        class="btn btn-outline-primary" 
 						data-toggle="modal"
 						data-target="#delete${modalKey}Modal">Delete</button>
                         <div
                             class="modal fade"
                             id="delete${modalKey}Modal"
                             tabindex="-1"
-                            role="dialog"
-                            aria-labelledby="delete${modalKey}ModalLabel"
-                            aria-hidden="true"
                         >
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
