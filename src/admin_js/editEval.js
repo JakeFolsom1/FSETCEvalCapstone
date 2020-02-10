@@ -29,7 +29,7 @@ $(document).ready(() => {
         const { type: type, title: title } = val;
 
         // make the panel and add question modal for each eval type
-        accordion.innerHTML +=
+        accordion.insertAdjacentHTML('beforeend',
             `<div class="panel panel-default">
                 <div class="panel-heading scheduled">
                     <h4 class="panel-title scheduled">
@@ -121,7 +121,7 @@ $(document).ready(() => {
                         <div class="panel-group" id="${type}Questions"></div>
                     </div>
                 </div>
-            </div>`;
+            </div>`);
     });
 
     // apparently adding to innerHTML destroys child elements like event listeners
@@ -196,13 +196,13 @@ $(document).ready(() => {
             </div>`;
         switch (question.evalType) {
             case "p2p":
-                p2pQuestions.innerHTML += innerHTML;
+                p2pQuestions.insertAdjacentHTML('beforeend', innerHTML);
                 break;
             case "l2t":
-                l2tQuestions.innerHTML += innerHTML;
+                l2tQuestions.insertAdjacentHTML('beforeend', innerHTML);
                 break;
             case "t2l":
-                t2lQuestions.innerHTML += innerHTML;
+                t2lQuestions.insertAdjacentHTML('beforeend', innerHTML);
                 break;
             default:
                 console.log("Error: Invalid evaluation type loaded.")
