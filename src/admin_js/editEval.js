@@ -1,99 +1,3 @@
-// for checking progress and assigning create table
-// render the tutor name column as a <a> that toggles a collapse
-// after data table is constructed use inserAdjaceHTML('after-end', '<el></el>)
-// to insert the panel that will open up
-// add event handlers
-
-// fetch these instead of sample data
-const semesters = [
-    ["Fall 2019", true],
-    ["Spring 2019", false],
-    ["Fall 2018", false]
-];
-
-$(document).ready(() => {
-    $('#completedEvaluationTable').DataTable();
-    $('#semesterTable').DataTable({
-        stripe: true,
-        paging: false,
-        searching: false,
-        info: false,
-        data: semesters,
-        columns: [
-            {
-                title: "Semester",
-            },
-            {
-                title: "Actions",
-                render: (data, _type, row) => {
-                    const modalKey = row[0].split(' ').join('');
-                    let actionButtons =
-                        `<button class="btn btn-primary" ${data ? "disabled" : ""} onclick="activateSemester('${row[0]}')">Set Active</button>
-                        <button 
-                        class="btn btn-secondary" 
-                        style="border-color: #8C1D40;" 
-						data-toggle="modal"
-						data-target="#delete${modalKey}Modal">Delete</button>
-                        <div
-                            class="modal fade"
-                            id="delete${modalKey}Modal"
-                            tabindex="-1"
-                            role="dialog"
-                            aria-labelledby="delete${modalKey}ModalLabel"
-                            aria-hidden="true"
-                        >
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h3 class="modal-title" id="delete${modalKey}ModalLabel">
-                                            Confirm Delete
-                                        </h3>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>Are you sure you want to delete '${row[0]}' and all related data? <strong>This cannot be undone.</strong></p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button
-                                            type="button"
-                                            class="btn btn-secondary"
-                                            data-dismiss="modal"
-                                        >
-                                            Close
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onclick="deleteSemester('${row[0]}')"
-                                            class="btn btn-primary"
-                                        >
-                                            Confirm
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>`;
-                    return actionButtons;
-                }
-            }
-        ]
-    });
-    document.getElementById("newSemesterForm").addEventListener("submit", event => {
-        event.preventDefault();
-        const semesterName = document.getElementById("semesterNameInput").value;
-        console.log("Creating new semester: " + semesterName);
-        $('#addSemesterModal').modal('hide');
-    });
-});
-
-const activateSemester = semesterName => {
-    console.log("Activating semester: " + semesterName);
-};
-
-const deleteSemester = semesterName => {
-    console.log("Deleting semester: " + semesterName);
-    $(`#delete${semesterName.split(' ').join('')}Modal`).modal('hide');
-};
-
-
 // fetch these instead of sample data
 const evalQuestions = [
     {
@@ -114,7 +18,8 @@ const evalQuestions = [
     }
 ]
 
-const loadEvaluationQuestions = () => {
+$(document).ready(() => {
+
     const accordion = document.getElementById("accordion");
     [
         { type: 'p2p', title: 'Peer Evaluation' },
@@ -234,7 +139,6 @@ const loadEvaluationQuestions = () => {
     });
 
 
-
     const p2pQuestions = document.getElementById("p2pQuestions");
     const l2tQuestions = document.getElementById("l2tQuestions");
     const t2lQuestions = document.getElementById("t2lQuestions");
@@ -314,7 +218,7 @@ const loadEvaluationQuestions = () => {
             // reload questions
         });
     });
-}
+});
 
 const deleteQuestion = (questionId) => {
     console.log("Deleting question " + questionId);

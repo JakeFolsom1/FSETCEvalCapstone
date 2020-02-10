@@ -21,7 +21,7 @@
 		<link rel="stylesheet" href="../css/primaryStyles.css" />
 	</head>
 
-	<body onload="loadEvaluationQuestions()">
+	<body>
 		<div id="navbar">
 			<nav class="navbar navbar-inverse navbar-fixed-top">
 				<div id="header">
@@ -135,7 +135,20 @@
 					role="tabpanel"
 					aria-labelledby="checkProgressTab"
 				>
-					<h2>Progress table goes here</h2>
+					<table
+						id="progressTable"
+						class="striped-table cell-border"
+						style="width: 100%"
+					></table>
+					<br />
+					<button
+						id="remindAllButton"
+						class="btn btn-primary text-right"
+						onclick="remindAll()"
+						style="display: block; margin-left: auto; margin-bottom: 1rem;"
+					>
+						Remind All
+					</button>
 				</div>
 				<div
 					class="tab-pane fade"
@@ -154,7 +167,43 @@
 					role="tabpanel"
 					aria-labelledby="assignTab"
 				>
-					<h2>Assignments table goes here</h2>
+					<br />
+					<form class="form-inline" id="numAssignmentsForm">
+						<div class="form-group">
+							<label for="numAssignments"
+								>Number of peer evaluations to assign:
+							</label>
+							<input
+								id="numAssignments"
+								type="number"
+								class="form-control"
+								placeholder="2"
+								required
+							/>
+							<button
+								id="numAssignmentsButton"
+								class="btn btn-primary"
+								type="submit"
+							>
+								Save
+							</button>
+						</div>
+					</form>
+					<br />
+					<table
+						id="assignmentTable"
+						class="striped-table cell-border"
+						style="width: 100%"
+					></table>
+					<br />
+					<button
+						id="autoAssignAllButton"
+						class="btn btn-primary"
+						onclick="autoAssignAll()"
+						style="display: block; margin-left: auto; margin-bottom: 1rem;"
+					>
+						Auto-Assign All
+					</button>
 				</div>
 				<div
 					class="tab-pane fade"
@@ -234,6 +283,10 @@
 		<script src="../js/jquery-3.4.1.min.js"></script>
 		<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 		<script src="../js/bootstrap.min.js"></script>
-		<script src="admin.js"></script>
+		<script src="admin_js/completedEval.js"></script>
+		<script src="admin_js/assignmentProgress.js"></script>
+		<script src="admin_js/editEval.js"></script>
+		<script src="admin_js/assignment.js"></script>
+		<script src="admin_js/semester.js"></script>
 	</body>
 </html>
