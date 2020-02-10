@@ -18,7 +18,7 @@ $(document).ready(() => {
             {
                 title: "Actions",
                 render: (data, _type, row) => {
-                    const modalKey = row[0].split(' ').join('');
+                    const modalKey = row[0].replace(/\s+/g, '');
                     let actionButtons =
                         `<button class="btn btn-primary" ${data ? "disabled" : ""} onclick="activateSemester('${row[0]}')">Set Active</button>
                         <button 
@@ -82,5 +82,5 @@ const activateSemester = semesterName => {
 
 const deleteSemester = semesterName => {
     console.log("Deleting semester: " + semesterName);
-    $(`#delete${semesterName.split(' ').join('')}Modal`).modal('hide');
+    $(`#delete${semesterName.replace(/\s+/g, '')}Modal`).modal('hide');
 };
