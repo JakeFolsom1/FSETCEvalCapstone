@@ -35,7 +35,7 @@ const assignmentsProgress = [
 
 $(document).ready(() => {
     // enable tooltips
-    $(function () {
+    $(() => {
         $('[data-toggle="tooltip"]').tooltip()
     })
 
@@ -99,22 +99,22 @@ $(document).ready(() => {
 
 const remindEvaluator = evaluator => {
     console.log("Reminding evaluator: " + evaluator);
-    const button = document.getElementById(`remind${evaluator}Button`);
-    button.setAttribute("disabled", "true");
-    button.innerHTML = "Reminded";
+    const button = $(`#remind${evaluator}Button`);
+    button.attr("disabled", "true");
+    button.text("Reminded");
     setTimeout(() => {
-        button.removeAttribute("disabled");
-        button.innerHTML = "Remind";
+        button.removeAttr("disabled");
+        button.text("Remind");
     }, 1000);
 };
 
 const remindAll = () => {
     console.log("Reminding all evaluators");
-    const button = document.getElementById('remindAllButton');
-    button.setAttribute("disabled", "true");
-    button.innerHTML = "Reminded All";
+    const button = $("#remindAllButton");
+    button.attr("disabled", "true");
+    button.text("Reminded All");
     setTimeout(() => {
-        button.removeAttribute("disabled");
-        button.innerHTML = "Remind All";
+        button.removeAttr("disabled");
+        button.text("Remind All");
     }, 1000);
 };

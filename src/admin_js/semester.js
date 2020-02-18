@@ -68,9 +68,9 @@ $(document).ready(() => {
             }
         ]
     });
-    document.getElementById("newSemesterForm").addEventListener("submit", event => {
+    $("#newSemesterForm").submit(event => {
         event.preventDefault();
-        const semesterName = document.getElementById("semesterNameInput").value;
+        const semesterName = $("#semesterNameInput").val();
         console.log("Creating new semester: " + semesterName);
         $('#addSemesterModal').modal('hide');
     });

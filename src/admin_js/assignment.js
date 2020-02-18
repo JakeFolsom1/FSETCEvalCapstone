@@ -146,18 +146,18 @@ const leadTeams = [
 ];
 
 $(document).ready(() => {
-    document.getElementById("numAssignments").value = numAssignments;
-
-    document.getElementById("numAssignmentsForm").addEventListener('submit', event => {
-        const num = document.getElementById("numAssignments").value;
+    $("#numAssignments").val(numAssignments);
+    $("#numAssignmentsForm").bind()
+    $("#numAssignmentsForm").submit(event => {
+        const num = $("#numAssignments").val();
         console.log("Setting number of assignments to " + num);
         numAssignments = num; // this is where you would post the new num
-        const button = document.getElementById('numAssignmentsButton');
-        button.setAttribute("disabled", "true");
-        button.innerHTML = "Saved";
+        const button = $("#numAssignmentsButton");
+        button.attr("disabled", "true");
+        button.text("Saved");
         setTimeout(() => {
-            button.removeAttribute("disabled");
-            button.innerHTML = "Save";
+            button.removeAttr("disabled");
+            button.text("Save");
         }, 1000);
     });
 
@@ -310,54 +310,50 @@ $(document).ready(() => {
 
     tableData.forEach(row => {
         const tutorName = row[0];
-        document.getElementById(`${tutorName}AssignForm`).addEventListener('submit', event => {
-            // lead form cannot currently be submitted as button is disabled
+        $(`#${tutorName}AssignForm`).submit(event => {
+            // lead form cannot currently be submitted as button is disabled (what if html is edited?)
             // if this changes, a lead submission needs to be considered
             event.preventDefault();
-            const values = Array.from(Array(numAssignments).keys()).map(value => document.getElementById(`${tutorName}Peer${value}`).value);
-            const button = document.getElementById(`${tutorName}SaveAssignButton`);
+            const values = Array.from(Array(numAssignments).keys()).map(value => $(`#${tutorName}Peer${value}`).val());
+
+            const button = $(`#${tutorName}SaveAssignButton`);
             let isValid = new Set(values).size === values.length;
             if (isValid) {
-                button.setAttribute("disabled", "true");
-                button.innerHTML = "Saved Assignments";
-                setTimeout(() => {
-                    button.removeAttribute("disabled");
-                    button.innerHTML = "Save Assignments";
-                }, 1000);
+                button.attr("disabled", "true");
+                button.text("Saved");
                 console.log("Saving assignments as: " + values);
             }
             else {
-                button.setAttribute("disabled", "true");
-                button.innerHTML = "Error: Duplicates found";
-                setTimeout(() => {
-                    button.removeAttribute("disabled");
-                    button.innerHTML = "Save Assignments";
-                }, 1000);
+                button.attr("disabled", "true");
+                button.text("Error: Duplicates found")
                 console.log("Duplicates found: " + values);
             }
-
-        })
+            setTimeout(() => {
+                button.removeAttr("disabled");
+                button.text("Save");
+            }, 1000);
+        });
     })
 });
 
 const autoAssign = asurite => {
     console.log("Auto-assigning: " + asurite);
-    const button = document.getElementById(`${asurite}AutoAssignButton`);
-    button.setAttribute("disabled", "true");
-    button.innerHTML = "Auto-Assigned";
+    const button = $(`#${asurite}AutoAssignButton`)
+    button.attr("disabled", "true");
+    button.text("Auto-Assigned");
     setTimeout(() => {
-        button.removeAttribute("disabled");
-        button.innerHTML = "Auto-Assign";
+        button.removeAttr("disabled");
+        button.text("Auto-Assign");
     }, 1000);
 };
 
 const autoAssignAll = () => {
     console.log("Auto-Assigning All");
-    const button = document.getElementById('autoAssignAllButton');
-    button.setAttribute("disabled", "true");
-    button.innerHTML = "Auto-Assigned All";
+    const button = $("#autoAssignAllButton");
+    button.attr("disabled", "true");
+    button.text("Auto-Assigned All");
     setTimeout(() => {
-        button.removeAttribute("disabled");
-        button.innerHTML = "Auto-Assign All";
+        button.removeAttr("disabled");
+        button.text("Auto-Assign All");
     }, 1000);
 };

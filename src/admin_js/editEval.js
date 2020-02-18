@@ -19,8 +19,7 @@ const evalQuestions = [
 ]
 
 $(document).ready(() => {
-
-    const accordion = document.getElementById("accordion");
+    const accordion = $("#accordion");
     [
         { type: 'p2p', title: 'Peer Evaluation' },
         { type: 't2l', title: "Lead Evaluations for Tutors" },
@@ -29,7 +28,7 @@ $(document).ready(() => {
         const { type: type, title: title } = val;
 
         // make the panel and add question modal for each eval type
-        accordion.insertAdjacentHTML('beforeend',
+        accordion.append(
             `<div class="panel panel-default">
                 <div class="panel-heading scheduled">
                     <h4 class="panel-title scheduled">
@@ -122,26 +121,19 @@ $(document).ready(() => {
                     </div>
                 </div>
             </div>`);
-    });
-
-    // apparently adding to innerHTML destroys child elements like event listeners
-    // so they need to be added after all innerHTML is changed
-    ['p2p', 'l2t', 't2l'].forEach(type => {
-        // add submission handlers for the new question forms
-        document.getElementById(`new${type}QuestionForm`).addEventListener("submit", event => {
+        $(`#new${val.type}QuestionForm`).submit(event => {
             event.preventDefault();
             console.log(`Adding new ${type} question `);
-            const prompt = document.getElementById(`${type}QuestionPrompt`).value;
-            const responseType = document.getElementById(`${type}ResponseType`).value;
+            const prompt = $(`#${type}QuestionPrompt`).val();
+            const responseType = $(`#${type}ResponseType`).val();
             console.log(`Prompt: ${prompt}\nResponse Type: ${responseType}`)
             $(`#add${type}QuestionModal`).modal('hide');
         });
     });
 
-
-    const p2pQuestions = document.getElementById("p2pQuestions");
-    const l2tQuestions = document.getElementById("l2tQuestions");
-    const t2lQuestions = document.getElementById("t2lQuestions");
+    const p2pQuestions = $("#p2pQuestions");
+    const l2tQuestions = $("#l2tQuestions");
+    const t2lQuestions = $("#t2lQuestions");
     evalQuestions.forEach(question => {
         // generate the inner panels for each question of each eval type
         const innerHTML =
@@ -196,13 +188,13 @@ $(document).ready(() => {
             </div>`;
         switch (question.evalType) {
             case "p2p":
-                p2pQuestions.insertAdjacentHTML('beforeend', innerHTML);
+                p2pQuestions.append(innerHTML);
                 break;
             case "l2t":
-                l2tQuestions.insertAdjacentHTML('beforeend', innerHTML);
+                l2tQuestions.append(innerHTML);
                 break;
             case "t2l":
-                t2lQuestions.insertAdjacentHTML('beforeend', innerHTML);
+                t2lQuestions.append(innerHTML);
                 break;
             default:
                 console.log("Error: Invalid evaluation type loaded.")
@@ -211,7 +203,7 @@ $(document).ready(() => {
 
     // add submit handlers after all innerHTML is done loading
     evalQuestions.forEach(question => {
-        document.getElementById(`${question.evalType}Question${question.questionId}Form`).addEventListener("submit", event => {
+        $(`#${question.evalType}Question${question.questionId}Form`).submit(event => {
             event.preventDefault();
             console.log("Saving question " + question.questionId);
             // save question
