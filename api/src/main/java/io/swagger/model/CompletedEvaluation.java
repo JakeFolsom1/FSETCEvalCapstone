@@ -30,6 +30,9 @@ public class CompletedEvaluation   {
   @JsonProperty("isShared")
   private Boolean isShared = null;
 
+  @JsonProperty("semester")
+  private String semester = null;
+
   @JsonProperty("questionsAndResponses")
   private List<QuestionAndResponse> questionsAndResponses = null;
 
@@ -100,6 +103,27 @@ public class CompletedEvaluation   {
     this.isShared = isShared;
     return this;
   }
+  /**
+   * Get semester
+   * @return semester
+   **/
+  @ApiModelProperty(example = "Fall 2019", required = true, value = "")
+  @NotNull
+
+
+  public String getSemester() {
+    return semester;
+  }
+
+  public void setSemester(String semester) {
+    this.semester = semester;
+  }
+
+  public CompletedEvaluation semester(String semester) {
+    this.semester = semester;
+    return this;
+  }
+
 
   /**
    * Get isShared

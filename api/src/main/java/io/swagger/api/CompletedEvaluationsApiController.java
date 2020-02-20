@@ -59,6 +59,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                 completedEvaluation.setEvaluator(evaluatorAccount.getAsurite());
                 Account evaluateeAccount = accountRepository.findOne(assignment.getAssignedAsurite());
                 completedEvaluation.setEvaluatee(evaluateeAccount.getAsurite());
+                completedEvaluation.setSemester(assignment.getSemester());
                 List<Response> responses = responseRepository.findAllByAssignmentIdOrderByQuestionIdAsc(assignment.getAssignmentId());
                 if (responses.isEmpty()) {
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
