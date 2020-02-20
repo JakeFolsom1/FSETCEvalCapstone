@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
+
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 
 @Api(value = "accounts", description = "the accounts API")
@@ -93,5 +95,13 @@ public interface AccountsApi {
         consumes = { "application/json" },
         method = RequestMethod.PUT)
     ResponseEntity<Void> updateAccount(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Account body);
+
+    @ApiOperation(value = "Get a asurite to name dictionary", nickname = "getNames", notes = "", response = Map.class, tags={ "accounts", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = Map.class) })
+    @RequestMapping(value = "/accounts/names",
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<Map<String, String>> getNames();
 
 }

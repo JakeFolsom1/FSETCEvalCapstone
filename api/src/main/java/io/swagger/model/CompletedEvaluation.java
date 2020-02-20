@@ -42,7 +42,7 @@ public class CompletedEvaluation   {
    * Get evaluator
    * @return evaluator
   **/
-  @ApiModelProperty(example = "Jedde", required = true, value = "")
+  @ApiModelProperty(example = "jjbowma2", required = true, value = "")
   @NotNull
 
 
@@ -63,7 +63,7 @@ public class CompletedEvaluation   {
    * Get evaluatee
    * @return evaluatee
   **/
-  @ApiModelProperty(example = "Steven", required = true, value = "")
+  @ApiModelProperty(example = "smurra11", required = true, value = "")
   @NotNull
 
 

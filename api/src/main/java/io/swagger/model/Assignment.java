@@ -26,6 +26,9 @@ public class Assignment   {
   @JsonProperty("assignmentId")
   private Long assignmentId = null;
 
+  @JsonProperty("assignmentNumber")
+  private Long assignmentNumber = null;
+
   @JsonProperty("asurite")
   private String asurite = null;
 
@@ -60,6 +63,26 @@ public class Assignment   {
 
   public void setAssignmentId(Long assignmentId) {
     this.assignmentId = assignmentId;
+  }
+
+  public Assignment assignmentNumber(Long assignmentNumber) {
+    this.assignmentNumber = assignmentNumber;
+    return this;
+  }
+
+  /**
+   * Get assignmentNumber
+   * @return assignmentNumber
+   **/
+  @ApiModelProperty(example = "1", required = true, value = "")
+
+
+  public Long getAssignmentNumber() {
+    return assignmentNumber;
+  }
+
+  public void setAssignmentNumber(Long assignmentNumber) {
+    this.assignmentNumber = assignmentNumber;
   }
 
   public Assignment asurite(String asurite) {

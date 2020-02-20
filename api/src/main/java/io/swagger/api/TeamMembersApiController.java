@@ -17,9 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 
 @Controller
@@ -113,5 +112,26 @@ public class TeamMembersApiController implements TeamMembersApi {
             return new ResponseEntity<List<String>>(teamMemberList, HttpStatus.OK);
         }
         return new ResponseEntity<List<String>>(HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    public ResponseEntity<Map<String, List<String>>> getAllTeams() {
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            Map<String, List<String>> teamMemberLists = new HashMap<String, List<String>>();
+            Iterator<Account> accountIterator = accountRepository.findAccountsByAccountTypeAndIsActive(Account.AccountType.lead, true).iterator();
+            while (accountIterator.hasNext()) {
+                String leadAsurite = accountIterator.next().getAsurite();
+                Iterator<TeamMember> teamMemberIterator = teamMemberRepository.findTeamMembersByLeadAsurite(leadAsurite).iterator();
+                List<String> teamMemberList = new ArrayList<String>();
+                while (teamMemberIterator.hasNext()) {
+                    teamMemberList.add(teamMemberIterator.next().getTutorAsurite());
+                }
+                teamMemberLists.put(leadAsurite, teamMemberList);
+            }
+
+            return new ResponseEntity<Map<String, List<String>>>(teamMemberLists, HttpStatus.OK);
+        }
+        return new ResponseEntity<Map<String, List<String>>>(HttpStatus.BAD_REQUEST);
     }
 }

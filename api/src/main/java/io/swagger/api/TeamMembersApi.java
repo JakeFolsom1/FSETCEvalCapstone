@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
+
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 
 @Api(value = "teamMembers", description = "the teamMembers API")
@@ -59,4 +61,12 @@ public interface TeamMembersApi {
         produces = { "application/json" }, 
         method = RequestMethod.GET)
     ResponseEntity<List<String>> getTeamMembers(@ApiParam(value = "",required=true) @PathVariable("leadAsurite") String leadAsurite);
+
+    @ApiOperation(value = "Get all current teams", nickname = "getAllTeams", notes = "", response = Map.class, tags={ "teamMembers", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = Map.class) })
+    @RequestMapping(value = "/teamMembers",
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<Map<String, List<String>>> getAllTeams();
 }

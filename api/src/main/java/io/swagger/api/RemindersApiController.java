@@ -108,7 +108,7 @@ public class RemindersApiController implements RemindersApi {
             String emailText = "Please complete evaluation(s) for:\n";
             for (Assignment assignment : incompleteAssignments) {
                 Account assignedAccount = accountRepository.findOne(assignment.getAssignedAsurite());
-                emailText += String.format("\t%s %s\n", assignedAccount.getFirstName(), assignedAccount.getLastName());
+                emailText += String.format("\t%s %s\n", (String) staffList.get(0).get("fname"), (String) staffList.get(0).get("lname"));
             }
             message.setText(emailText);
             javaMailSender.send(message);

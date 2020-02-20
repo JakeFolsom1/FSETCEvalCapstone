@@ -26,12 +26,6 @@ public class Account   {
   @JsonProperty("asurite")
   private String asurite = null;
 
-  @JsonProperty
-  private String firstName = null;
-
-  @JsonProperty
-  private String lastName = null;
-
   @JsonProperty("accountType")
   @Enumerated(STRING)
   private AccountType accountType = null;
@@ -64,48 +58,6 @@ public class Account   {
 
   public void setAsurite(String asurite) {
     this.asurite = asurite;
-  }
-
-  public Account firstName(String firstName) {
-    this.firstName = firstName;
-    return this;
-  }
-
-  /**
-   * Get firstName
-   * @return firstName
-   **/
-  @ApiModelProperty(example = "Jedde", required = true, value = "")
-  @NotNull
-
-
-  public String getFirstName() {
-    return firstName;
-  }
-
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
-  }
-
-  public Account lastName(String lastName) {
-    this.lastName = lastName;
-    return this;
-  }
-
-  /**
-   * Get lastName
-   * @return lastName
-   **/
-  @ApiModelProperty(example = "Bowman", required = true, value = "")
-  @NotNull
-
-
-  public String getLastName() {
-    return lastName;
-  }
-
-  public void setLastName(String lastName) {
-    this.lastName = lastName;
   }
 
 
@@ -162,15 +114,13 @@ public class Account   {
     }
     Account account = (Account) o;
     return Objects.equals(this.asurite, account.asurite) &&
-            Objects.equals(this.firstName, account.firstName) &&
-            Objects.equals(this.lastName, account.lastName) &&
             Objects.equals(this.accountType, account.accountType) &&
             Objects.equals(this.isActive, account.isActive);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(asurite, firstName, lastName, accountType, isActive);
+    return Objects.hash(asurite, accountType, isActive);
   }
 
   @Override
@@ -179,8 +129,6 @@ public class Account   {
     sb.append("class Account {\n");
     
     sb.append("    asurite: ").append(toIndentedString(asurite)).append("\n");
-    sb.append("    firstName: ").append(toIndentedString(firstName)).append("\n");
-    sb.append("    lastName: ").append(toIndentedString(lastName)).append("\n");
     sb.append("    accountType: ").append(toIndentedString(accountType)).append("\n");
     sb.append("    isActive: ").append(toIndentedString(isActive)).append("\n");
     sb.append("}");

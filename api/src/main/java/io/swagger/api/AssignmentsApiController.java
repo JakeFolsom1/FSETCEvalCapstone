@@ -295,7 +295,7 @@ public class AssignmentsApiController implements AssignmentsApi {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             }
             // ensure no duplicates
-            if (assignmentRepository.findByAsuriteAndAssignedAsuriteAndSemester(body.getAsurite(), body.getAssignedAsurite(), body.getSemester()) != null) {
+            if (assignmentRepository.findByAsuriteAndAssignmentNumberAndEvalTypeAndSemester(body.getAsurite(), body.getAssignmentNumber(), body.getEvalType(), body.getSemester()) != null) {
                 return new ResponseEntity<Void>(HttpStatus.CONFLICT);
             }
             else {

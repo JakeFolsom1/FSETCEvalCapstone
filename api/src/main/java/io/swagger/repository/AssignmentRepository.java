@@ -1,12 +1,13 @@
 package io.swagger.repository;
 
 import io.swagger.model.Assignment;
+import io.swagger.model.Question;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
 public interface AssignmentRepository extends CrudRepository<Assignment, Long> {
-    Assignment findByAsuriteAndAssignedAsuriteAndSemester(String asurite, String assignedAsurite, String semester);
+    Assignment findByAsuriteAndAssignmentNumberAndEvalTypeAndSemester(String asurite, Long assignmentNumber, Question.EvalType evalType, String semester);
     List<Assignment> findAllByAssignedAsuriteAndSemester(String assignedAsurite, String semester);
     List<Assignment> findDistinctByIsCompleteAndSemester(boolean isComplete, String semester);
     List<Assignment> findAllByIsCompleteAndAsuriteAndSemester(boolean isComplete, String asurite, String semester);
