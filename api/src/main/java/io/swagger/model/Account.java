@@ -39,11 +39,6 @@ public class Account   {
   @JsonProperty("isActive")
   private Boolean isActive = null;
 
-  public Account asurite(String asurite) {
-    this.asurite = asurite;
-    return this;
-  }
-
   /**
    * Get asurite
    * @return asurite
@@ -60,12 +55,6 @@ public class Account   {
     this.asurite = asurite;
   }
 
-
-  public Account accountType(AccountType accountType) {
-    this.accountType = accountType;
-    return this;
-  }
-
   /**
    * Get accountType
    * @return accountType
@@ -80,11 +69,6 @@ public class Account   {
 
   public void setAccountType(AccountType accountType) {
     this.accountType = accountType;
-  }
-
-  public Account isActive(Boolean isActive) {
-    this.isActive = isActive;
-    return this;
   }
 
   /**

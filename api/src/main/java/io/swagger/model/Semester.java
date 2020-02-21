@@ -1,17 +1,14 @@
 package io.swagger.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 /**
  * Semester
@@ -28,11 +25,6 @@ public class Semester   {
   @JsonProperty("isActive")
   private Boolean isActive = null;
 
-  public Semester semesterName(String semesterName) {
-    this.semesterName = semesterName;
-    return this;
-  }
-
   /**
    * Get semesterName
    * @return semesterName
@@ -47,11 +39,6 @@ public class Semester   {
 
   public void setSemesterName(String semesterName) {
     this.semesterName = semesterName;
-  }
-
-  public Semester isActive(Boolean isActive) {
-    this.isActive = isActive;
-    return this;
   }
 
   /**

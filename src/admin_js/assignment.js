@@ -3,29 +3,7 @@ $(document).ready(() => {
     let numAssignments = 3;
     let tutorList = [];
     let assignments = [];
-    let preferences = [
-        {
-            "asurite": "agupt207",
-            "preferenceId": 1,
-            "preferenceNumber": 1,
-            "preferredAsurite": "amevawal",
-            "semester": "Fall 2019"
-        },
-        {
-            "asurite": "agupt207",
-            "preferenceId": 3,
-            "preferenceNumber": 3,
-            "preferredAsurite": "bbvilleg",
-            "semester": "Fall 2019"
-        },
-        {
-            "asurite": "agupt207",
-            "preferenceId": 2,
-            "preferenceNumber": 2,
-            "preferredAsurite": "banand2",
-            "semester": "Fall 2019"
-        }
-    ];
+    let preferences = [];
     let leadTeams = [];
     $.when(
         // $.getJSON("url", // use for get num assignments
@@ -51,7 +29,6 @@ $(document).ready(() => {
         $.getJSON(apiUrl + "/preferences",
             function (preferencesJson) {
                 preferences = preferencesJson;
-                console.log(preferences);
             }
         ),
         $.getJSON(apiUrl + "/teamMembers",
@@ -90,7 +67,7 @@ $(document).ready(() => {
         const leadMap = Object.keys(leadTeams).map(val => [val, true, "", "", ""]);
 
         // sort or ensure data will be sorted by preference number
-        // Object.keys(prefMap).forEach((val) => { prefMap[val] = prefMap[val].sort((a, b) => a.preferenceNumber - b.preferenceNumber); });
+        Object.keys(prefMap).forEach((val) => { prefMap[val] = prefMap[val].sort((a, b) => a.preferenceNumber - b.preferenceNumber); });
 
         // you also need to figure out if they are a lead or not by calling the account api or if team member is redone
         const tableData = Object.keys(prefMap).map(val => [val, false, prefMap[val][0].preferredAsurite, prefMap[val][1].preferredAsurite, prefMap[val][2].preferredAsurite]).concat(leadMap);

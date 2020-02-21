@@ -1,15 +1,13 @@
 package io.swagger.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import io.swagger.model.QuestionAndResponse;
-import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * CompletedEvaluation
@@ -33,11 +31,6 @@ public class CompletedEvaluation   {
   @JsonProperty("questionsAndResponses")
   private List<QuestionAndResponse> questionsAndResponses = null;
 
-  public CompletedEvaluation evaluator(String evaluator) {
-    this.evaluator = evaluator;
-    return this;
-  }
-
   /**
    * Get evaluator
    * @return evaluator
@@ -52,11 +45,6 @@ public class CompletedEvaluation   {
 
   public void setEvaluator(String evaluator) {
     this.evaluator = evaluator;
-  }
-
-  public CompletedEvaluation evaluatee(String evaluatee) {
-    this.evaluatee = evaluatee;
-    return this;
   }
 
   /**
@@ -75,11 +63,6 @@ public class CompletedEvaluation   {
     this.evaluatee = evaluatee;
   }
 
-  public CompletedEvaluation evalType(String evalType) {
-    this.evalType = evalType;
-    return this;
-  }
-
   /**
    * Get evalType
    * @return evalType
@@ -96,11 +79,6 @@ public class CompletedEvaluation   {
     this.evalType = evalType;
   }
 
-  public CompletedEvaluation isShared(Boolean isShared) {
-    this.isShared = isShared;
-    return this;
-  }
-
   /**
    * Get isShared
    * @return isShared
@@ -115,11 +93,6 @@ public class CompletedEvaluation   {
 
   public void setIsShared(Boolean isShared) {
     this.isShared = isShared;
-  }
-
-  public CompletedEvaluation questionsAndResponses(List<QuestionAndResponse> questionsAndResponses) {
-    this.questionsAndResponses = questionsAndResponses;
-    return this;
   }
 
   /**

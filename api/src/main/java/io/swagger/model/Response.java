@@ -1,16 +1,12 @@
 package io.swagger.model;
 
-import java.io.Serializable;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 /**
  * Response
@@ -38,11 +34,6 @@ public class Response   {
   @JsonProperty("isShared")
   private Boolean isShared = null;
 
-  public Response responseId(Long responseId) {
-    this.responseId = responseId;
-    return this;
-  }
-
   /**
    * Get responseId
    * @return responseId
@@ -56,12 +47,6 @@ public class Response   {
 
   public void setResponseId(Long responseId) {
     this.responseId = responseId;
-  }
-
-
-  public Response assignmentId(Long assignmentId) {
-    this.assignmentId = assignmentId;
-    return this;
   }
 
   /**
@@ -80,11 +65,6 @@ public class Response   {
     this.assignmentId = assignmentId;
   }
 
-  public Response questionId(Long questionId) {
-    this.questionId = questionId;
-    return this;
-  }
-
   /**
    * Get questionId
    * @return questionId
@@ -101,11 +81,6 @@ public class Response   {
     this.questionId = questionId;
   }
 
-  public Response response(String response) {
-    this.response = response;
-    return this;
-  }
-
   /**
    * Get response
    * @return response
@@ -120,11 +95,6 @@ public class Response   {
 
   public void setResponse(String response) {
     this.response = response;
-  }
-
-  public Response isShared(Boolean isShared) {
-    this.isShared = isShared;
-    return this;
   }
 
   /**

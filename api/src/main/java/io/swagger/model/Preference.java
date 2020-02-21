@@ -1,15 +1,12 @@
 package io.swagger.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 /**
  * Preference
@@ -36,11 +33,6 @@ public class Preference   {
   @JsonProperty("semester")
   private String semester = null;
 
-  public Preference preferenceId(Long preferenceId) {
-    this.preferenceId = preferenceId;
-    return this;
-  }
-
   /**
    * Get preferenceId
    * @return preferenceId
@@ -54,11 +46,6 @@ public class Preference   {
 
   public void setPreferenceId(Long preferenceId) {
     this.preferenceId = preferenceId;
-  }
-
-  public Preference asurite(String asurite) {
-    this.asurite = asurite;
-    return this;
   }
 
   /**
@@ -77,11 +64,6 @@ public class Preference   {
     this.asurite = asurite;
   }
 
-  public Preference preferenceNumber(Long preferenceNumber) {
-    this.preferenceNumber = preferenceNumber;
-    return this;
-  }
-
   /**
    * Get preferenceNumber
    * @return preferenceNumber
@@ -95,11 +77,6 @@ public class Preference   {
 
   public void setPreferenceNumber(Long preferenceNumber) {
     this.preferenceNumber = preferenceNumber;
-  }
-
-  public Preference preferredAsurite(String preferredAsurite) {
-    this.preferredAsurite = preferredAsurite;
-    return this;
   }
 
   /**
@@ -116,11 +93,6 @@ public class Preference   {
 
   public void setPreferredAsurite(String preferredAsurite) {
     this.preferredAsurite = preferredAsurite;
-  }
-
-  public Preference semester(String semester) {
-    this.semester = semester;
-    return this;
   }
 
   /**

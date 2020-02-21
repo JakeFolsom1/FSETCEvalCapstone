@@ -1,15 +1,14 @@
 package io.swagger.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 
-import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 /**
  * TeamMember
@@ -26,11 +25,6 @@ public class TeamMember   {
   @JsonProperty("tutorAsurite")
   private String tutorAsurite = null;
 
-  public TeamMember leadAsurite(String leadAsurite) {
-    this.leadAsurite = leadAsurite;
-    return this;
-  }
-
   /**
    * Get leadAsurite
    * @return leadAsurite
@@ -45,11 +39,6 @@ public class TeamMember   {
 
   public void setLeadAsurite(String leadAsurite) {
     this.leadAsurite = leadAsurite;
-  }
-
-  public TeamMember tutorAsurite(String tutorAsurite) {
-    this.tutorAsurite = tutorAsurite;
-    return this;
   }
 
   /**

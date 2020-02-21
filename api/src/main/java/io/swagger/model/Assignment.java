@@ -1,15 +1,12 @@
 package io.swagger.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 import static javax.persistence.EnumType.STRING;
 
@@ -45,11 +42,6 @@ public class Assignment   {
   @Enumerated(STRING)
   private Question.EvalType evalType = null;
 
-  public Assignment assignmentId(Long assignmentId) {
-    this.assignmentId = assignmentId;
-    return this;
-  }
-
   /**
    * Get assignmentId
    * @return assignmentId
@@ -65,11 +57,6 @@ public class Assignment   {
     this.assignmentId = assignmentId;
   }
 
-  public Assignment assignmentNumber(Long assignmentNumber) {
-    this.assignmentNumber = assignmentNumber;
-    return this;
-  }
-
   /**
    * Get assignmentNumber
    * @return assignmentNumber
@@ -83,11 +70,6 @@ public class Assignment   {
 
   public void setAssignmentNumber(Long assignmentNumber) {
     this.assignmentNumber = assignmentNumber;
-  }
-
-  public Assignment asurite(String asurite) {
-    this.asurite = asurite;
-    return this;
   }
 
   /**
@@ -106,11 +88,6 @@ public class Assignment   {
     this.asurite = asurite;
   }
 
-  public Assignment assignedAsurite(String assignedAsurite) {
-    this.assignedAsurite = assignedAsurite;
-    return this;
-  }
-
   /**
    * Get assignedAsurite
    * @return assignedAsurite
@@ -125,11 +102,6 @@ public class Assignment   {
 
   public void setAssignedAsurite(String assignedAsurite) {
     this.assignedAsurite = assignedAsurite;
-  }
-
-  public Assignment semester(String semester) {
-    this.semester = semester;
-    return this;
   }
 
   /**
@@ -148,11 +120,6 @@ public class Assignment   {
     this.semester = semester;
   }
 
-  public Assignment isComplete(Boolean isComplete) {
-    this.isComplete = isComplete;
-    return this;
-  }
-
   /**
    * Get isComplete
    * @return isComplete
@@ -167,11 +134,6 @@ public class Assignment   {
 
   public void setIsComplete(Boolean isComplete) {
     this.isComplete = isComplete;
-  }
-
-  public Assignment evalType(Question.EvalType evalType) {
-    this.evalType = evalType;
-    return this;
   }
 
   /**
