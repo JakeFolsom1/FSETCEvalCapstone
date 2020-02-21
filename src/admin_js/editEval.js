@@ -19,7 +19,6 @@ const evalQuestions = [
 ]
 
 $(document).ready(() => {
-
     const accordion = document.getElementById("accordion");
     [
         { type: 'p2p', title: 'Peer Evaluation' },
