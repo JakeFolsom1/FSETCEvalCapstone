@@ -39,35 +39,62 @@ public class NumberOfAssignmentsApiController implements NumberOfAssignmentsApi 
     public ResponseEntity<Void> createNumAssignments(@ApiParam(value = "" ,required=true )  @Valid @RequestBody NumberOfAssignments body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-
+            if (numAssignmentsRepository.findOne(body.getSemesterName()) != null) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
+            else {
+                numAssignmentsRepository.save(body);
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            }
         }
-        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @Override
     public ResponseEntity<Void> deleteNumAssignments(@ApiParam(value = "",required=true) @PathVariable("semesterName") String semesterName) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-
+            NumberOfAssignments numberOfAssignments = numAssignmentsRepository.findOne(semesterName);
+            if (numberOfAssignments == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            else {
+                numAssignmentsRepository.delete(numberOfAssignments);
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
         }
-        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @Override
-    public ResponseEntity<Account> getNumAssignments(@ApiParam(value = "",required=true) @PathVariable("semesterName") String semesterName) {
+    public ResponseEntity<NumberOfAssignments> getNumAssignments(@ApiParam(value = "",required=true) @PathVariable("semesterName") String semesterName) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-
+            NumberOfAssignments numberOfAssignments = numAssignmentsRepository.findOne(semesterName);
+            if (numberOfAssignments == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            else {
+                return new ResponseEntity<>(numberOfAssignments, HttpStatus.OK);
+            }
         }
-        return new ResponseEntity<Account>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @Override
     public ResponseEntity<Void> updateNumAssignments(@ApiParam(value = "",required=true) @PathVariable("semesterName") String semesterName, @ApiParam(value = "",required=true) @PathVariable("numAssignments") Long numAssignments) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-
+            NumberOfAssignments numberOfAssignments = numAssignmentsRepository.findOne(semesterName);
+            if (numberOfAssignments == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            else {
+                numberOfAssignments.setNumAssignments(numAssignments);
+                numAssignmentsRepository.save(numberOfAssignments);
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
         }
-        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

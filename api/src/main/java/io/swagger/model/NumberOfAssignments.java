@@ -21,7 +21,7 @@ public class NumberOfAssignments {
     @JsonProperty("semesterName")
     private String semesterName = null;
 
-    @JsonProperty("numAssignmnets")
+    @JsonProperty("numAssignments")
     private Long numAssignments = null;
 
     /**

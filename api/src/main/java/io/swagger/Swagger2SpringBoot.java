@@ -40,7 +40,7 @@ public class Swagger2SpringBoot extends SpringBootServletInitializer {
         return new WebMvcConfigurerAdapter() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("*"); // change to client host after launch
+                registry.addMapping("/**").allowedOrigins("*").allowedMethods("*"); // change to client host after launch
             }
         };
     }

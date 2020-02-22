@@ -10,7 +10,7 @@ Completed Evaluations
 
 Semester
     On semester creation, all preferences need to be set for each tutor based off their major cluster, lead teams need to be created, then all l2t and t2l assignments will be made
-    An alternate idea is to drop the teamMembers services altogether and let admins make t2l and l2t assignments manually
+    An alternate idea is to drop the teamMembers services altogether and let admins make t2l and l2t assignments manually, and set numAssignments to a default val
 
 
 If Charles can't put role into the service, does Account need to be keyed on semester?

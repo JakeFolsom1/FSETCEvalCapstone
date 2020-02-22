@@ -27,7 +27,7 @@ public interface NumberOfAssignmentsApi {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully deleted"),
             @ApiResponse(code = 404, message = "Semester not found") })
-    @RequestMapping(value = "/numAssignments/{asurite}",
+    @RequestMapping(value = "/numAssignments/{semesterName}",
             produces = { "application/json" },
             method = RequestMethod.DELETE)
     ResponseEntity<Void> deleteNumAssignments(@ApiParam(value = "",required=true) @PathVariable("semesterName") String semesterName);
@@ -40,7 +40,7 @@ public interface NumberOfAssignmentsApi {
     @RequestMapping(value = "/numAssignments/{semesterName}",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<Account> getNumAssignments(@ApiParam(value = "",required=true) @PathVariable("semesterName") String semesterName);
+    ResponseEntity<NumberOfAssignments> getNumAssignments(@ApiParam(value = "",required=true) @PathVariable("semesterName") String semesterName);
 
     @ApiOperation(value = "Update an existing numAssignments", nickname = "updateNumAssignments", notes = "", tags={ "numAssignments", })
     @ApiResponses(value = {
@@ -48,7 +48,6 @@ public interface NumberOfAssignmentsApi {
             @ApiResponse(code = 404, message = "Semester not found")})
     @RequestMapping(value = "/numAssignments/{semesterName}/{numAssignments}",
             produces = { "application/json" },
-            consumes = { "application/json" },
             method = RequestMethod.PUT)
     ResponseEntity<Void> updateNumAssignments(@ApiParam(value = "" ,required=true )  @PathVariable("semesterName") String semesterName, @ApiParam(value = "" ,required=true )  @PathVariable("numAssignments") Long numAssignments);
 }

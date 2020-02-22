@@ -1,16 +1,28 @@
 $(document).ready(() => {
     let names = {};
-    let numAssignments = 3;
+    let numAssignments = 0;
     let tutorList = [];
     let assignments = [];
     let preferences = [];
     let leadTeams = [];
+    let activeSemester = "";
     $.when(
-        // $.getJSON("url", // use for get num assignments
-        //     function (data, textStatus, jqXHR) {
-
-        //     }
-        // ),
+        $.when(
+            $.ajax({
+                type: "GET",
+                url: apiUrl + "/semesters/active",
+                headers: { Accept: "application/text" },
+                success: function (activeSemesterRes) {
+                    activeSemester = activeSemesterRes;
+                }
+            })
+        ).then(function () {
+            $.getJSON(apiUrl + "/numAssignments/" + activeSemester,
+                function (numAssignmentsJson) {
+                    numAssignments = numAssignmentsJson.numAssignments;
+                }
+            )
+        }),
         $.getJSON(apiUrl + "/accounts/names",
             function (namesJson) {
                 names = namesJson;
@@ -40,16 +52,23 @@ $(document).ready(() => {
         $("#numAssignments").val(numAssignments);
         $("#numAssignmentsForm").bind()
         $("#numAssignmentsForm").submit(event => {
+            event.preventDefault();
             const num = $("#numAssignments").val();
-            console.log("Setting number of assignments to " + num);
-            numAssignments = num; // this is where you would post the new num
-            const button = $("#numAssignmentsButton");
-            button.attr("disabled", "true");
-            button.text("Saved");
-            setTimeout(() => {
-                button.removeAttr("disabled");
-                button.text("Save");
-            }, 1000);
+            $.ajax({
+                type: "PUT",
+                url: `${apiUrl}/numAssignments/${activeSemester}/${num}`,
+                headers: { Accept: "application/json" },
+                success: function () {
+                    const button = $("#numAssignmentsButton");
+                    button.attr("disabled", "true");
+                    button.text("Saved");
+                    setTimeout(() => {
+                        button.removeAttr("disabled");
+                        button.text("Save");
+                        location.reload();
+                    }, 500);
+                }
+            });
         });
 
         const prefMap = preferences.reduce((acc, val) => {
@@ -62,7 +81,6 @@ $(document).ready(() => {
             }
             return acc;
         }, {});
-        console.log(prefMap);
 
         const leadMap = Object.keys(leadTeams).map(val => [val, true, "", "", ""]);
 
@@ -117,7 +135,6 @@ $(document).ready(() => {
                     render: data => {
                         if (data) {
                             return names[data];
-                            // return names[data];
                         }
                         else {
                             return "N/A";
