@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import static javax.persistence.EnumType.STRING;
 
@@ -22,6 +23,7 @@ import static javax.persistence.EnumType.STRING;
 public class Question implements Serializable {
     @Id
     @GeneratedValue
+    @Column(name = "QUESTION_ID")
     @JsonProperty("questionId")
     private Long questionId = null;
 
@@ -60,7 +62,7 @@ public class Question implements Serializable {
     private Semester semester = null;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
-    private HashSet<Question> questions = new HashSet<Question>();
+    private Set<Response> responses = new HashSet<Response>();
 
     /**
      * Get questionId
@@ -174,12 +176,12 @@ public class Question implements Serializable {
         this.semester = semester;
     }
 
-    public HashSet<Question> getQuestions() {
-        return questions;
+    public Set<Response> getResponses() {
+        return responses;
     }
 
-    public void setQuestions(HashSet<Question> questions) {
-        this.questions = questions;
+    public void setResponses(Set<Response> responses) {
+        this.responses = responses;
     }
 
     @Override

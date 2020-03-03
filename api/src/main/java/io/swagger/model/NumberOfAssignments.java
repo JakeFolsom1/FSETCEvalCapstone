@@ -15,6 +15,7 @@ import java.util.Objects;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 @Entity
 @Table(name = "NUM_ASSIGNMENTS")
+@IdClass(Semester.class)
 public class NumberOfAssignments implements Serializable {
     @Id
     @JsonProperty("semester")

@@ -22,6 +22,7 @@ public class TeamMember implements Serializable {
 
   @Id
   @JsonProperty("tutorAsurite")
+  @Column(name = "TUTOR_ASURITE")
   private String tutorAsurite;
 
   @ManyToOne

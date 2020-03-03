@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import static javax.persistence.EnumType.STRING;
 
@@ -25,6 +26,7 @@ public class Assignment implements Serializable {
     @JsonProperty("assignmentId")
     private Long assignmentId = null;
 
+    @Column(name = "ASSIGNMENT_NUMBER")
     @JsonProperty("assignmentNumber")
     private Long assignmentNumber = null;
 
@@ -42,12 +44,13 @@ public class Assignment implements Serializable {
     @JsonProperty("isComplete")
     private Boolean isComplete = null;
 
+    @Column(name = "EVAL_TYPE")
     @JsonProperty("evalType")
     @Enumerated(STRING)
     private Question.EvalType evalType = null;
 
     @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL)
-    private HashSet<Response> responses = new HashSet<Response>();
+    private Set<Response> responses = new HashSet<Response>();
 
     /**
      * Get assignmentId
@@ -159,11 +162,11 @@ public class Assignment implements Serializable {
         this.evalType = evalType;
     }
 
-    public HashSet<Response> getResponses() {
+    public Set<Response> getResponses() {
         return responses;
     }
 
-    public void setResponses(HashSet<Response> responses) {
+    public void setResponses(Set<Response> responses) {
         this.responses = responses;
     }
 

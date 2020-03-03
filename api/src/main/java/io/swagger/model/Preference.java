@@ -25,6 +25,7 @@ public class Preference implements Serializable {
   @JsonProperty("asurite")
   private String asurite = null;
 
+  @Column(name = "PREFERENCE_NUMBER")
   @JsonProperty("preferenceNumber")
   private Long preferenceNumber = null;
 

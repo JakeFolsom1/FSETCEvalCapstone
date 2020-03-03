@@ -23,6 +23,12 @@ public class Response implements Serializable {
   @JsonProperty
   private Long responseId;
 
+  @JsonProperty("response")
+  private String response = null;
+
+  @JsonProperty("isShared")
+  private Boolean isShared = null;
+
   @ManyToOne
   @JoinColumn(name = "ASSIGNMENT_ID")
   @JsonProperty("assignment")
@@ -32,12 +38,6 @@ public class Response implements Serializable {
   @JoinColumn(name = "QUESTION_ID")
   @JsonProperty("question")
   private Question question = null;
-
-  @JsonProperty("response")
-  private String response = null;
-
-  @JsonProperty("isShared")
-  private Boolean isShared = null;
 
   /**
    * Get responseId

@@ -54,7 +54,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                 completedEvaluation.setEvaluator(assignment.getAsurite());
                 completedEvaluation.setEvaluatee(assignment.getAssignedAsurite());
                 completedEvaluation.setSemester(assignment.getSemester().getSemesterName());
-                List<Response> responses = responseRepository.findAllByAssignmentIdOrderByQuestionIdAsc(assignment.getAssignmentId());
+                List<Response> responses = responseRepository.findAllByAssignmentOrderByQuestionAsc(assignment);
                 if (responses.isEmpty()) {
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
@@ -86,7 +86,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
             List<Assignment> completedAssignments = assignmentRepository.findAllByIsCompleteAndAssignedAsurite(true, asurite);
             List<CompletedEvaluation> completedEvaluationList = new ArrayList<CompletedEvaluation>();
             for (Assignment assignment: completedAssignments) {
-                List<Response> responses = responseRepository.findAllByAssignmentIdOrderByQuestionIdAsc(assignment.getAssignmentId());
+                List<Response> responses = responseRepository.findAllByAssignmentOrderByQuestionAsc(assignment);
                 if (responses.isEmpty()) {
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
@@ -125,7 +125,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
             List<Assignment> completedAssignments = assignmentRepository.findAllByIsCompleteAndAssignedAsurite(true, asurite);
             List<CompletedEvaluation> completedEvaluationList = new ArrayList<CompletedEvaluation>();
             for (Assignment assignment: completedAssignments) {
-                List<Response> responses = responseRepository.findAllByAssignmentIdOrderByQuestionIdAsc(assignment.getAssignmentId());
+                List<Response> responses = responseRepository.findAllByAssignmentOrderByQuestionAsc(assignment);
                 if (responses.isEmpty()) {
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
