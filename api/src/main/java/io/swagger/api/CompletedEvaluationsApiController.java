@@ -53,8 +53,8 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                 completedEvaluation.setEvalType(assignment.getEvalType().name());
                 completedEvaluation.setEvaluator(assignment.getAsurite());
                 completedEvaluation.setEvaluatee(assignment.getAssignedAsurite());
-                completedEvaluation.setSemester(assignment.getSemester().getSemesterName());
-                List<Response> responses = responseRepository.findAllByAssignmentOrderByQuestionAsc(assignment);
+                completedEvaluation.setSemester(assignment.getSemesterName());
+                List<Response> responses = responseRepository.findAllByAssignmentIdOrderByQuestionIdAsc(assignment.getAssignmentId());
                 if (responses.isEmpty()) {
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
@@ -63,7 +63,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                 for (Response response: responses) {
                     QuestionAndResponse questionAndResponse = new QuestionAndResponse();
                     QuestionDetails questionDetails = new QuestionDetails();
-                    Question question = questionRepository.findOne(response.getQuestion().getQuestionId());
+                    Question question = questionRepository.findOne(response.getQuestionId());
                     questionDetails.setQuestionNumber(question.getQuestionNumber());
                     questionDetails.setQuestionPrompt(question.getQuestionPrompt());
                     questionDetails.setQuestionType(question.getQuestionType().name());
@@ -86,7 +86,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
             List<Assignment> completedAssignments = assignmentRepository.findAllByIsCompleteAndAssignedAsurite(true, asurite);
             List<CompletedEvaluation> completedEvaluationList = new ArrayList<CompletedEvaluation>();
             for (Assignment assignment: completedAssignments) {
-                List<Response> responses = responseRepository.findAllByAssignmentOrderByQuestionAsc(assignment);
+                List<Response> responses = responseRepository.findAllByAssignmentIdOrderByQuestionIdAsc(assignment.getAssignmentId());
                 if (responses.isEmpty()) {
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
@@ -100,7 +100,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                     for (Response response: responses) {
                         QuestionAndResponse questionAndResponse = new QuestionAndResponse();
                         QuestionDetails questionDetails = new QuestionDetails();
-                        Question question = questionRepository.findOne(response.getQuestion().getQuestionId());
+                        Question question = questionRepository.findOne(response.getQuestionId());
                         questionDetails.setQuestionNumber(question.getQuestionNumber());
                         questionDetails.setQuestionPrompt(question.getQuestionPrompt());
                         questionDetails.setQuestionType(question.getQuestionType().name());
@@ -125,7 +125,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
             List<Assignment> completedAssignments = assignmentRepository.findAllByIsCompleteAndAssignedAsurite(true, asurite);
             List<CompletedEvaluation> completedEvaluationList = new ArrayList<CompletedEvaluation>();
             for (Assignment assignment: completedAssignments) {
-                List<Response> responses = responseRepository.findAllByAssignmentOrderByQuestionAsc(assignment);
+                List<Response> responses = responseRepository.findAllByAssignmentIdOrderByQuestionIdAsc(assignment.getAssignmentId());
                 if (responses.isEmpty()) {
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
@@ -138,7 +138,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                 for (Response response: responses) {
                     QuestionAndResponse questionAndResponse = new QuestionAndResponse();
                     QuestionDetails questionDetails = new QuestionDetails();
-                    Question question = questionRepository.findOne(response.getQuestion().getQuestionId());
+                    Question question = questionRepository.findOne(response.getQuestionId());
                     questionDetails.setQuestionNumber(question.getQuestionNumber());
                     questionDetails.setQuestionPrompt(question.getQuestionPrompt());
                     questionDetails.setQuestionType(question.getQuestionType().name());

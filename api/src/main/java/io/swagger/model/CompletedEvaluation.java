@@ -28,8 +28,8 @@ public class CompletedEvaluation   {
   @JsonProperty("isShared")
   private Boolean isShared = null;
 
-  @JsonProperty("semester")
-  private String semester = null;
+  @JsonProperty("semesterName")
+  private String semesterName = null;
 
   @JsonProperty("questionsAndResponses")
   private List<QuestionAndResponse> questionsAndResponses = null;
@@ -91,11 +91,11 @@ public class CompletedEvaluation   {
 
 
   public String getSemester() {
-    return semester;
+    return semesterName;
   }
 
-  public void setSemester(String semester) {
-    this.semester = semester;
+  public void setSemester(String semesterName) {
+    this.semesterName = semesterName;
   }
 
 

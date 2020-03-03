@@ -46,13 +46,13 @@ public class PreferencesApiController implements PreferencesApi {
         if(accept != null && accept.contains("application/json")){
             Staff tutor = tmsApiHelper.getStaffByAsurite(body.getAsurite());
             Staff preferredTutor = tmsApiHelper.getStaffByAsurite(body.getAsurite());
-            Semester semester = semesterRepository.findOne(body.getSemester().getSemesterName());
+            Semester semester = semesterRepository.findOne(body.getSemesterName());
             // ensure asurites are from valid accounts and semester is a valid semester
             if (tutor == null || preferredTutor == null || semester == null) {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             }
             // ensure preference does not already exist and both asurites are from active tutors
-            else if(preferenceRepository.findByAsuriteAndPreferenceNumberAndSemester(body.getAsurite(), body.getPreferenceNumber(), body.getSemester()) != null
+            else if(preferenceRepository.findOne(new Preference.PreferencePK(body.getAsurite(), body.getSemesterName(), body.getPreferenceNumber())) != null
                 || tutor.getRole().equals("TUTOR") == false
                 || preferredTutor.getRole().equals("TUTOR") == false) {
                 return new ResponseEntity<Void>(HttpStatus.CONFLICT);
@@ -64,10 +64,11 @@ public class PreferencesApiController implements PreferencesApi {
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<Void> deletePreference(@ApiParam(value = "",required=true) @PathVariable("preferenceId") Long preferenceId) {
+    public ResponseEntity<Void> deletePreference(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite, @ApiParam(value = "",required=true) @PathVariable("preferenceNumber") Long preferenceNumber) {
         String accept = request.getHeader("Accept");
         if(accept != null && accept.contains("application/json")){
-            Preference preferenceToDelete = preferenceRepository.findOne(preferenceId);
+            String activeSemesterName = semesterRepository.findByIsActive(true).getSemesterName();
+            Preference preferenceToDelete = preferenceRepository.findOne(new Preference.PreferencePK(asurite, activeSemesterName, preferenceNumber));
             if(preferenceToDelete == null){
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             }else {
@@ -86,7 +87,7 @@ public class PreferencesApiController implements PreferencesApi {
             Iterator<Preference> preferenceIterator = preferenceRepository.findAll().iterator();
             while(preferenceIterator.hasNext()) {
                 Preference temp = preferenceIterator.next();
-                if (temp.getSemester().equals(currentSemester)) {
+                if (temp.getSemesterName().equals(currentSemester)) {
                     activePreferenceList.add(temp);
                 }
 
@@ -104,7 +105,7 @@ public class PreferencesApiController implements PreferencesApi {
             while(preferenceIterator.hasNext()) {
                 Preference preference = preferenceIterator.next();
                 String tempAsurite = preference.getAsurite();
-                if(tempAsurite.equals(asurite) && preference.getSemester().equals(currentSemester)){
+                if(tempAsurite.equals(asurite) && preference.getSemesterName().equals(currentSemester)){
                     activePreferenceList.add(preference);
                 }
             }
@@ -115,13 +116,13 @@ public class PreferencesApiController implements PreferencesApi {
     public ResponseEntity<Void> updatePreference(@ApiParam(value = "Preference object that needs to be updated in the database" ,required=true )  @Valid @RequestBody Preference body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            if (preferenceRepository.findOne(body.getPreferenceId()) == null) {
+            if (preferenceRepository.findOne(new Preference.PreferencePK(body.getAsurite(), body.getSemesterName(), body.getPreferenceNumber())) == null) {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             }
             else {
                 Staff tutor = tmsApiHelper.getStaffByAsurite(body.getAsurite());
                 Staff preferredTutor = tmsApiHelper.getStaffByAsurite(body.getAsurite());
-                Semester semester = semesterRepository.findOne(body.getSemester().getSemesterName());
+                Semester semester = semesterRepository.findOne(body.getSemesterName());
                 // ensure asurites are from valid accounts and semester is a valid semester
                 if (tutor == null || preferredTutor == null || semester == null) {
                     return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);

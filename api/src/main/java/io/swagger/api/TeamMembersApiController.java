@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
 import io.swagger.model.Staff;
 import io.swagger.model.TeamMember;
+import io.swagger.repository.SemesterRepository;
 import io.swagger.repository.TeamMemberRepository;
 import io.swagger.util.TmsApiHelper;
 import org.slf4j.Logger;
@@ -34,6 +35,9 @@ public class TeamMembersApiController implements TeamMembersApi {
     TeamMemberRepository teamMemberRepository;
 
     @Autowired
+    SemesterRepository semesterRepository;
+
+    @Autowired
     TmsApiHelper tmsApiHelper;
 
     @org.springframework.beans.factory.annotation.Autowired
@@ -54,7 +58,7 @@ public class TeamMembersApiController implements TeamMembersApi {
             // ensure tutor asurite does not currently have a team member entry
             // and tutor asurite belongs to a tutor
             // and lead asurite belongs to a lead
-            else if (teamMemberRepository.exists(body.getTutorAsurite())
+            else if (teamMemberRepository.findOne(new TeamMember.TeamMemberPK(body.getTutorAsurite(), body.getSemesterName())) != null
                 || tutor.getRole().equals("TUTOR") == false
                 || lead.getRole().equals("LEAD") == false) {
                 return new ResponseEntity<Void>(HttpStatus.CONFLICT);
@@ -70,7 +74,8 @@ public class TeamMembersApiController implements TeamMembersApi {
     public ResponseEntity<Void> deleteLeadTeam(@ApiParam(value = "",required=true) @PathVariable("leadAsurite") String leadAsurite) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            Iterator<TeamMember> teamMemberIterator = teamMemberRepository.findTeamMembersByLeadAsurite(leadAsurite).iterator();
+            String activeSemesterName = semesterRepository.findByIsActive(true).getSemesterName();
+            Iterator<TeamMember> teamMemberIterator = teamMemberRepository.findTeamMembersByLeadAsuriteAndSemesterName(leadAsurite, activeSemesterName).iterator();
 
             // if no teamMembers were found using the leadAsurite
             if (!teamMemberIterator.hasNext()) {
@@ -88,7 +93,8 @@ public class TeamMembersApiController implements TeamMembersApi {
     public ResponseEntity<Void> deleteTeamMember(@ApiParam(value = "",required=true) @PathVariable("tutorAsurite") String tutorAsurite) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            TeamMember teamMemberToDelete = teamMemberRepository.findOne(tutorAsurite);
+            String activeSemesterName = semesterRepository.findByIsActive(true).getSemesterName();
+            TeamMember teamMemberToDelete = teamMemberRepository.findOne(new TeamMember.TeamMemberPK(tutorAsurite, activeSemesterName));
             if (teamMemberToDelete == null) {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             }
@@ -102,7 +108,8 @@ public class TeamMembersApiController implements TeamMembersApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             List<String> teamMemberList = new ArrayList<String>();
-            Iterator<TeamMember> teamMemberIterator = teamMemberRepository.findTeamMembersByLeadAsurite(leadAsurite).iterator();
+            String activeSemesterName = semesterRepository.findByIsActive(true).getSemesterName();
+            Iterator<TeamMember> teamMemberIterator = teamMemberRepository.findTeamMembersByLeadAsuriteAndSemesterName(leadAsurite, activeSemesterName).iterator();
             if (!teamMemberIterator.hasNext()) {
                 return new ResponseEntity<List<String>>(HttpStatus.NOT_FOUND);
             }
@@ -119,10 +126,11 @@ public class TeamMembersApiController implements TeamMembersApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             Map<String, List<String>> teamMemberLists = new HashMap<String, List<String>>();
-            Iterator<Staff> accountIterator = tmsApiHelper.getAllStaffInCurrentSemester().iterator();
-            while (accountIterator.hasNext()) {
-                String leadAsurite = accountIterator.next().getAsurite();
-                Iterator<TeamMember> teamMemberIterator = teamMemberRepository.findTeamMembersByLeadAsurite(leadAsurite).iterator();
+            Iterator<Staff> staffIterator = tmsApiHelper.getStaffOfRoleInCurrentSemester("LEAD").iterator();
+            while (staffIterator.hasNext()) {
+                String leadAsurite = staffIterator.next().getAsurite();
+                String activeSemesterName = semesterRepository.findByIsActive(true).getSemesterName();
+                Iterator<TeamMember> teamMemberIterator = teamMemberRepository.findTeamMembersByLeadAsuriteAndSemesterName(leadAsurite, activeSemesterName).iterator();
                 List<String> teamMemberList = new ArrayList<String>();
                 while (teamMemberIterator.hasNext()) {
                     teamMemberList.add(teamMemberIterator.next().getTutorAsurite());

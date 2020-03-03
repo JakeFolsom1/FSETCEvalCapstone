@@ -23,7 +23,6 @@ import static javax.persistence.EnumType.STRING;
 public class Question implements Serializable {
     @Id
     @GeneratedValue
-    @Column(name = "QUESTION_ID")
     @JsonProperty("questionId")
     private Long questionId = null;
 
@@ -56,13 +55,9 @@ public class Question implements Serializable {
         t2l
     }
 
-    @ManyToOne
-    @JoinColumn(name = "SEMESTER_NAME")
-    @JsonProperty("semester")
-    private Semester semester = null;
+    @JsonProperty("semesterName")
+    private String semesterName = null;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
-    private Set<Response> responses = new HashSet<Response>();
 
     /**
      * Get questionId
@@ -168,20 +163,12 @@ public class Question implements Serializable {
     @NotNull
 
 
-    public Semester getSemester() {
-        return semester;
+    public String getSemesterName() {
+        return semesterName;
     }
 
-    public void setSemester(Semester semester) {
-        this.semester = semester;
-    }
-
-    public Set<Response> getResponses() {
-        return responses;
-    }
-
-    public void setResponses(Set<Response> responses) {
-        this.responses = responses;
+    public void setSemesterName(String semesterName) {
+        this.semesterName = semesterName;
     }
 
     @Override
@@ -198,7 +185,7 @@ public class Question implements Serializable {
                 Objects.equals(this.isActive, question.isActive) &&
                 Objects.equals(this.questionNumber, question.questionNumber) &&
                 Objects.equals(this.evalType, question.evalType) &&
-                Objects.equals(this.semester, question.semester);
+                Objects.equals(this.semesterName, question.semesterName);
     }
 
     @Override

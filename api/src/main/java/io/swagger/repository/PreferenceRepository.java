@@ -6,7 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface PreferenceRepository extends CrudRepository<Preference, Long> {
-    Preference findByAsuriteAndPreferenceNumberAndSemester(String asurite, Long preferenceNumber, Semester semester);
-    List<Preference> findAllByAsuriteAndSemesterOrderByPreferenceNumber(String asurite, Semester semester);
+public interface PreferenceRepository extends CrudRepository<Preference, Preference.PreferencePK> {
+    List<Preference> findAllByAsuriteAndSemesterNameOrderByPreferenceNumber(String asurite, String semesterName);
 }

@@ -8,14 +8,14 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface AssignmentRepository extends CrudRepository<Assignment, Long> {
-    Assignment findByAsuriteAndAssignmentNumberAndEvalTypeAndSemester(String asurite, Long assignmentNumber, Question.EvalType evalType, Semester semester);
-    List<Assignment> findAllByAssignedAsuriteAndSemester(String assignedAsurite, Semester semester);
-    List<Assignment> findDistinctByIsCompleteAndSemester(boolean isComplete, Semester semester);
-    List<Assignment> findAllByIsCompleteAndAsuriteAndSemester(boolean isComplete, String asurite, Semester semester);
+    Assignment findByAsuriteAndAssignmentNumberAndEvalTypeAndSemesterName(String asurite, Long assignmentNumber, Question.EvalType evalType, String semesterName);
+    List<Assignment> findAllByAssignedAsuriteAndSemesterName(String assignedAsurite, String semesterName);
+    List<Assignment> findDistinctByIsCompleteAndSemesterName(boolean isComplete, String semesterName);
+    List<Assignment> findAllByIsCompleteAndAsuriteAndSemesterName(boolean isComplete, String asurite, String semesterName);
     List<Assignment> findAllByIsComplete(boolean isComplete);
     List<Assignment> findAllByIsCompleteAndAssignedAsurite(boolean isComplete, String assignedAsurite);
     List<Assignment> findAllByAssignmentId(Long assignmentId);
     List<Assignment> findAllByAsurite(String asurite);
-    void deleteAllBySemester(Semester semester);
+    void deleteAllBySemesterName(String semesterName);
 
 }

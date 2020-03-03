@@ -46,15 +46,15 @@ public class ResponsesApiController implements ResponsesApi {
     public ResponseEntity<Void> createResponse(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Response body) {
         String accept = request.getHeader("Accept");
         if(accept != null && accept.contains("application/json")) {
-            Assignment assignment = assignmentRepository.findOne(body.getAssignment().getAssignmentId());
-            Question question = questionRepository.findOne(body.getQuestion().getQuestionId());
+            Assignment assignment = assignmentRepository.findOne(body.getAssignmentId());
+            Question question = questionRepository.findOne(body.getQuestionId());
             if (assignment == null || question == null) {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             }
             // ensure no other response exists with primary keys questionId and assignmentId
             // and evalTypes match from assignment and question
             // and the question is active
-            else if (responseRepository.findByQuestionAndAssignment(body.getQuestion(), body.getAssignment()) != null
+            else if (responseRepository.findOne(new Response.ResponsePK(body.getQuestionId(), body.getAssignmentId())) != null
                 || assignment.getEvalType() != question.getEvalType()
                 || !question.isIsActive()) {
                 return new ResponseEntity<Void>(HttpStatus.CONFLICT);
@@ -67,9 +67,7 @@ public class ResponsesApiController implements ResponsesApi {
     public ResponseEntity<Void> deleteQuestionResponse(@ApiParam(value = "",required=true) @PathVariable("assignmentId") Long assignmentId,@ApiParam(value = "",required=true) @PathVariable("questionId") Long questionId) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            Question question = questionRepository.findOne(questionId);
-            Assignment assignment = assignmentRepository.findOne(assignmentId);
-            Response responseToDelete = responseRepository.findByQuestionAndAssignment(question, assignment);
+            Response responseToDelete = responseRepository.findOne(new Response.ResponsePK(questionId, assignmentId));
             if (responseToDelete == null) {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             }
@@ -85,7 +83,7 @@ public class ResponsesApiController implements ResponsesApi {
             Iterator<Response> preferenceIterator = responseRepository.findAll().iterator();
             while(preferenceIterator.hasNext()) {
                 Response response = preferenceIterator.next();
-                if(response.getAssignment().getAssignmentId() == assignmentId){
+                if(response.getAssignmentId() == assignmentId){
                     responseList.add(response);
                 }
             }
@@ -96,9 +94,7 @@ public class ResponsesApiController implements ResponsesApi {
     public ResponseEntity<Response> getQuestionResponse(@ApiParam(value = "",required=true) @PathVariable("assignmentId") Long assignmentId, @ApiParam(value = "",required=true) @PathVariable("questionId") Long questionId) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            Question question = questionRepository.findOne(questionId);
-            Assignment assignment = assignmentRepository.findOne(assignmentId);
-            Response response = responseRepository.findByQuestionAndAssignment(question, assignment);
+            Response response = responseRepository.findOne(new Response.ResponsePK(questionId, assignmentId));
             if (response == null) {
                 return new ResponseEntity<Response>(HttpStatus.NOT_FOUND);
             }
@@ -110,12 +106,12 @@ public class ResponsesApiController implements ResponsesApi {
     public ResponseEntity<Void> updateQuestionResponse(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Response body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            if (responseRepository.findByQuestionAndAssignment(body.getQuestion(), body.getAssignment()) == null) {
+            if (responseRepository.findOne(new Response.ResponsePK(body.getQuestionId(), body.getAssignmentId())) == null) {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             }
             else {
-                Assignment assignment = assignmentRepository.findOne(body.getAssignment().getAssignmentId());
-                Question question = questionRepository.findOne(body.getQuestion().getQuestionId());
+                Assignment assignment = assignmentRepository.findOne(body.getAssignmentId());
+                Question question = questionRepository.findOne(body.getQuestionId());
                 if (assignment == null || question == null) {
                     return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
                 }

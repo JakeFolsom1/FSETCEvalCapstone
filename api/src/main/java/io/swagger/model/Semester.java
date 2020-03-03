@@ -26,19 +26,6 @@ public class Semester implements Serializable {
   @JsonProperty("isActive")
   private Boolean isActive = null;
 
-
-  @OneToMany(mappedBy = "semester", cascade = CascadeType.ALL)
-  private Set<TeamMember> teamMembers = new HashSet<TeamMember>();
-
-  @OneToMany(mappedBy = "semester", cascade = CascadeType.ALL)
-  private Set<Preference> preferences = new HashSet<Preference>();
-
-  @OneToMany(mappedBy = "semester", cascade = CascadeType.ALL)
-  private Set<Assignment> assignments = new HashSet<Assignment>();
-
-  @OneToOne(mappedBy = "semester", cascade = CascadeType.ALL)
-  private NumberOfAssignments numberOfAssignments;
-
   /**
    * Get semesterName
    * @return semesterName
@@ -69,38 +56,6 @@ public class Semester implements Serializable {
 
   public void setIsActive(Boolean isActive) {
     this.isActive = isActive;
-  }
-
-  public Set<TeamMember> getTeamMembers() {
-    return teamMembers;
-  }
-
-  public void setTeamMembers(Set<TeamMember> teamMembers) {
-    this.teamMembers = teamMembers;
-  }
-
-  public Set<Preference> getPreferences() {
-    return preferences;
-  }
-
-  public void setPreferences(Set<Preference> preferences) {
-    this.preferences = preferences;
-  }
-
-  public Set<Assignment> getAssignments() {
-    return assignments;
-  }
-
-  public void setAssignments(Set<Assignment> assignments) {
-    this.assignments = assignments;
-  }
-
-  public NumberOfAssignments getNumberOfAssignments() {
-    return numberOfAssignments;
-  }
-
-  public void setNumberOfAssignments(NumberOfAssignments numberOfAssignments) {
-    this.numberOfAssignments = numberOfAssignments;
   }
 
   @Override

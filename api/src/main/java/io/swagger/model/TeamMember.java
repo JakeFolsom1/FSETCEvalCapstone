@@ -15,109 +15,150 @@ import java.util.Objects;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 @Entity
-@Table(name = "TEAM_MEMBER", uniqueConstraints = {@UniqueConstraint(columnNames = {"TUTOR_ASURITE", "SEMESTER_NAME"})})
+@Table(name = "TEAM_MEMBER")
+@IdClass(TeamMember.TeamMemberPK.class)
 public class TeamMember implements Serializable {
-  @JsonProperty("leadAsurite")
-  private String leadAsurite;
+    public static class TeamMemberPK implements Serializable {
+        private String tutorAsurite;
+        private String semesterName;
 
-  @Id
-  @JsonProperty("tutorAsurite")
-  @Column(name = "TUTOR_ASURITE")
-  private String tutorAsurite;
+        public TeamMemberPK() {}
 
-  @ManyToOne
-  @JoinColumn(name = "SEMESTER_NAME")
-  @JsonProperty("semester")
-  private Semester semester;
+        public TeamMemberPK(String tutorAsurite, String semesterName) {
+            this.tutorAsurite = tutorAsurite;
+            this.semesterName = semesterName;
+        }
 
-  /**
-   * Get leadAsurite
-   * @return leadAsurite
-  **/
-  @ApiModelProperty(example = "smurra11", required = true, value = "")
-  @NotNull
+        public String getTutorAsurite() {
+            return tutorAsurite;
+        }
 
+        public void setTutorAsurite(String tutorAsurite) {
+            this.tutorAsurite = tutorAsurite;
+        }
 
-  public String getLeadAsurite() {
-    return leadAsurite;
-  }
+        public String getSemesterName() {
+            return semesterName;
+        }
 
-  public void setLeadAsurite(String leadAsurite) {
-    this.leadAsurite = leadAsurite;
-  }
+        public void setSemesterName(String semesterName) {
+            this.semesterName = semesterName;
+        }
 
-  /**
-   * Get tutorAsurite
-   * @return tutorAsurite
-  **/
-  @ApiModelProperty(example = "jjbowma2", required = true, value = "")
-  @NotNull
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            TeamMemberPK that = (TeamMemberPK) o;
+            return Objects.equals(tutorAsurite, that.tutorAsurite) &&
+                    Objects.equals(semesterName, that.semesterName);
+        }
 
-
-  public String getTutorAsurite() {
-    return tutorAsurite;
-  }
-
-  public void setTutorAsurite(String tutorAsurite) {
-    this.tutorAsurite = tutorAsurite;
-  }
-
-
-  /**
-   * Get semester
-   * @return semester
-   **/
-  @ApiModelProperty(example = "fall19", required = true, value = "")
-  @NotNull
-
-
-  public Semester getSemester() {
-    return semester;
-  }
-
-  public void setSemester(Semester semester) {
-    this.semester = semester;
-  }
-
-
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
+        @Override
+        public int hashCode() {
+            return Objects.hash(tutorAsurite, semesterName);
+        }
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+
+    @JsonProperty("leadAsurite")
+    private String leadAsurite;
+
+    @Id
+    @JsonProperty("tutorAsurite")
+    private String tutorAsurite;
+
+    @Id
+    @JsonProperty("semesterName")
+    private String semesterName;
+
+    /**
+     * Get leadAsurite
+     * @return leadAsurite
+     **/
+    @ApiModelProperty(example = "smurra11", required = true, value = "")
+    @NotNull
+
+
+    public String getLeadAsurite() {
+        return leadAsurite;
     }
-    TeamMember teamMember = (TeamMember) o;
-    return Objects.equals(this.tutorAsurite, teamMember.tutorAsurite) &&
-            Objects.equals(this.semester, teamMember.semester);
-  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(leadAsurite, tutorAsurite);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class TeamMember {\n");
-    
-    sb.append("    leadAsurite: ").append(toIndentedString(leadAsurite)).append("\n");
-    sb.append("    tutorAsurite: ").append(toIndentedString(tutorAsurite)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
+    public void setLeadAsurite(String leadAsurite) {
+        this.leadAsurite = leadAsurite;
     }
-    return o.toString().replace("\n", "\n    ");
-  }
+
+    /**
+     * Get tutorAsurite
+     * @return tutorAsurite
+     **/
+    @ApiModelProperty(example = "jjbowma2", required = true, value = "")
+    @NotNull
+
+
+    public String getTutorAsurite() {
+        return tutorAsurite;
+    }
+
+    public void setTutorAsurite(String tutorAsurite) {
+        this.tutorAsurite = tutorAsurite;
+    }
+
+
+    /**
+     * Get semester
+     * @return semester
+     **/
+    @ApiModelProperty(example = "fall19", required = true, value = "")
+    @NotNull
+
+
+    public String getSemesterName() {
+        return semesterName;
+    }
+
+    public void setSemesterName(String semesterName) {
+        this.semesterName = semesterName;
+    }
+
+
+    @Override
+    public boolean equals(java.lang.Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        TeamMember teamMember = (TeamMember) o;
+        return Objects.equals(this.tutorAsurite, teamMember.tutorAsurite) &&
+                Objects.equals(this.semesterName, teamMember.semesterName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(leadAsurite, tutorAsurite);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class TeamMember {\n");
+
+        sb.append("    leadAsurite: ").append(toIndentedString(leadAsurite)).append("\n");
+        sb.append("    tutorAsurite: ").append(toIndentedString(tutorAsurite)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(java.lang.Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 }
 

@@ -52,7 +52,7 @@ public class RemindersApiController implements RemindersApi {
 
     public ResponseEntity<Void> remindAll() {
         Semester currentSemester = semesterRepository.findByIsActive(true);
-        List<Assignment> incompleteAssignmentsDistinct = assignmentRepository.findDistinctByIsCompleteAndSemester(false, currentSemester);
+        List<Assignment> incompleteAssignmentsDistinct = assignmentRepository.findDistinctByIsCompleteAndSemesterName(false, currentSemester.getSemesterName());
         if (incompleteAssignmentsDistinct.size() == 0) {
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
         }
@@ -65,7 +65,7 @@ public class RemindersApiController implements RemindersApi {
 
     public ResponseEntity<Void> remindUser(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite) {
         Semester currentSemester = semesterRepository.findByIsActive(true);
-        List<Assignment> incompleteAssignments = assignmentRepository.findAllByIsCompleteAndAsuriteAndSemester(false, asurite, currentSemester);
+        List<Assignment> incompleteAssignments = assignmentRepository.findAllByIsCompleteAndAsuriteAndSemesterName(false, asurite, currentSemester.getSemesterName());
         if (incompleteAssignments.size() == 0) {
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
         }

@@ -30,8 +30,6 @@ public class NumberOfAssignmentsApiController implements NumberOfAssignmentsApi 
     @Autowired
     private NumberOfAssignmentsRepository numAssignmentsRepository;
 
-    @Autowired
-    private SemesterRepository semesterRepository;
 
     @org.springframework.beans.factory.annotation.Autowired
     public NumberOfAssignmentsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -43,7 +41,7 @@ public class NumberOfAssignmentsApiController implements NumberOfAssignmentsApi 
     public ResponseEntity<Void> createNumAssignments(@ApiParam(value = "" ,required=true )  @Valid @RequestBody NumberOfAssignments body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            if (numAssignmentsRepository.findOne(body.getSemester()) != null) {
+            if (numAssignmentsRepository.findOne(body.getSemesterName()) != null) {
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
             else {
@@ -58,8 +56,7 @@ public class NumberOfAssignmentsApiController implements NumberOfAssignmentsApi 
     public ResponseEntity<Void> deleteNumAssignments(@ApiParam(value = "",required=true) @PathVariable("semesterName") String semesterName) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            Semester semester = semesterRepository.findOne(semesterName);
-            NumberOfAssignments numberOfAssignments = numAssignmentsRepository.findOne(semester);
+            NumberOfAssignments numberOfAssignments = numAssignmentsRepository.findOne(semesterName);
             if (numberOfAssignments == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -75,8 +72,7 @@ public class NumberOfAssignmentsApiController implements NumberOfAssignmentsApi 
     public ResponseEntity<NumberOfAssignments> getNumAssignments(@ApiParam(value = "",required=true) @PathVariable("semesterName") String semesterName) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            Semester semester = semesterRepository.findOne(semesterName);
-            NumberOfAssignments numberOfAssignments = numAssignmentsRepository.findOne(semester);
+            NumberOfAssignments numberOfAssignments = numAssignmentsRepository.findOne(semesterName);
             if (numberOfAssignments == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -91,8 +87,7 @@ public class NumberOfAssignmentsApiController implements NumberOfAssignmentsApi 
     public ResponseEntity<Void> updateNumAssignments(@ApiParam(value = "",required=true) @PathVariable("semesterName") String semesterName, @ApiParam(value = "",required=true) @PathVariable("numAssignments") Long numAssignments) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            Semester semester = semesterRepository.findOne(semesterName);
-            NumberOfAssignments numberOfAssignments = numAssignmentsRepository.findOne(semester);
+            NumberOfAssignments numberOfAssignments = numAssignmentsRepository.findOne(semesterName);
             if (numberOfAssignments == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }

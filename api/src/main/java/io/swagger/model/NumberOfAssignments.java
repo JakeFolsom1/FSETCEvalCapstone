@@ -15,13 +15,10 @@ import java.util.Objects;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 @Entity
 @Table(name = "NUM_ASSIGNMENTS")
-@IdClass(Semester.class)
 public class NumberOfAssignments implements Serializable {
     @Id
-    @JsonProperty("semester")
-    @OneToOne
-    @JoinColumn(name = "SEMESTER_NAME")
-    private Semester semester = null;
+    @JsonProperty("semesterName")
+    private String semesterName = null;
 
     @JsonProperty("numAssignments")
     private Long numAssignments = null;
@@ -31,12 +28,12 @@ public class NumberOfAssignments implements Serializable {
      * @return semesterName
      **/
     @ApiModelProperty(example = "fall19", required = true, value = "")
-    public Semester getSemester() {
-        return semester;
+    public String getSemesterName() {
+        return semesterName;
     }
 
-    public void setSemester(Semester semester) {
-        this.semester = semester;
+    public void setSemesterName(String semesterName) {
+        this.semesterName = semesterName;
     }
 
     /**
@@ -57,13 +54,13 @@ public class NumberOfAssignments implements Serializable {
         if (this == o) return true;
         if (!(o instanceof NumberOfAssignments)) return false;
         NumberOfAssignments that = (NumberOfAssignments) o;
-        return Objects.equals(getSemester(), that.getSemester()) &&
+        return Objects.equals(getSemesterName(), that.getSemesterName()) &&
                 Objects.equals(getNumAssignments(), that.getNumAssignments());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSemester(), getNumAssignments());
+        return Objects.hash(getSemesterName(), getNumAssignments());
     }
 
     @Override
@@ -71,7 +68,7 @@ public class NumberOfAssignments implements Serializable {
         StringBuilder sb = new StringBuilder();
         sb.append("class NumberOfAssignments {\n");
 
-        sb.append("    semesterName: ").append(toIndentedString(semester)).append("\n");
+        sb.append("    semesterName: ").append(toIndentedString(semesterName)).append("\n");
         sb.append("    numAssignments: ").append(toIndentedString(numAssignments)).append("\n");
         sb.append("}");
         return sb.toString();

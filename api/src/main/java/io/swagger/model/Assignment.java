@@ -36,10 +36,9 @@ public class Assignment implements Serializable {
     @JsonProperty("assignedAsurite")
     private String assignedAsurite = null;
 
-    @ManyToOne
-    @JoinColumn(name = "SEMESTER_NAME")
-    @JsonProperty("semester")
-    private Semester semester = null;
+    @JsonProperty("semesterName")
+    @Column(name = "SEMESTER_NAME")
+    private String semesterName = null;
 
     @JsonProperty("isComplete")
     private Boolean isComplete = null;
@@ -48,9 +47,6 @@ public class Assignment implements Serializable {
     @JsonProperty("evalType")
     @Enumerated(STRING)
     private Question.EvalType evalType = null;
-
-    @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL)
-    private Set<Response> responses = new HashSet<Response>();
 
     /**
      * Get assignmentId
@@ -122,12 +118,12 @@ public class Assignment implements Serializable {
     @NotNull
 
 
-    public Semester getSemester() {
-        return semester;
+    public String getSemesterName() {
+        return semesterName;
     }
 
-    public void setSemester(Semester semester) {
-        this.semester = semester;
+    public void setSemesterName(String semesterName) {
+        this.semesterName = semesterName;
     }
 
     /**
@@ -162,14 +158,6 @@ public class Assignment implements Serializable {
         this.evalType = evalType;
     }
 
-    public Set<Response> getResponses() {
-        return responses;
-    }
-
-    public void setResponses(Set<Response> responses) {
-        this.responses = responses;
-    }
-
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {
@@ -182,14 +170,14 @@ public class Assignment implements Serializable {
         return Objects.equals(this.assignmentId, assignment.assignmentId) &&
                 Objects.equals(this.asurite, assignment.asurite) &&
                 Objects.equals(this.assignedAsurite, assignment.assignedAsurite) &&
-                Objects.equals(this.semester, assignment.semester) &&
+                Objects.equals(this.semesterName, assignment.semesterName) &&
                 Objects.equals(this.isComplete, assignment.isComplete) &&
                 Objects.equals(this.evalType, assignment.evalType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(assignmentId, asurite, assignedAsurite, semester, isComplete, evalType);
+        return Objects.hash(assignmentId, asurite, assignedAsurite, semesterName, isComplete, evalType);
     }
 
     @Override
@@ -200,7 +188,7 @@ public class Assignment implements Serializable {
         sb.append("    assignmentId: ").append(toIndentedString(assignmentId)).append("\n");
         sb.append("    asurite: ").append(toIndentedString(asurite)).append("\n");
         sb.append("    assignedAsurite: ").append(toIndentedString(assignedAsurite)).append("\n");
-        sb.append("    semester: ").append(toIndentedString(semester)).append("\n");
+        sb.append("    semester: ").append(toIndentedString(semesterName)).append("\n");
         sb.append("    isComplete: ").append(toIndentedString(isComplete)).append("\n");
         sb.append("    evalType: ").append(toIndentedString(evalType)).append("\n");
         sb.append("}");
