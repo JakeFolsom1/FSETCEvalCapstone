@@ -6,6 +6,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -14,10 +15,10 @@ import java.util.Objects;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 @Entity
-@Table(name = "PREFERENCE")
-public class Preference   {
+@Table(name = "PREFERENCE", uniqueConstraints = {@UniqueConstraint(columnNames = {"ASURITE", "SEMESTER_NAME", "PREFERENCE_NUMBER"})})
+public class Preference implements Serializable {
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue
   @JsonProperty("preferenceId")
   private Long preferenceId = null;
 
@@ -30,8 +31,10 @@ public class Preference   {
   @JsonProperty("preferredAsurite")
   private String preferredAsurite = null;
 
+  @ManyToOne
+  @JoinColumn(name = "SEMESTER_NAME")
   @JsonProperty("semester")
-  private String semester = null;
+  private Semester semester = null;
 
   /**
    * Get preferenceId
@@ -99,15 +102,15 @@ public class Preference   {
    * Get semester
    * @return semester
    **/
-  @ApiModelProperty(example = "Fall 2019", required = true, value = "")
+  @ApiModelProperty(example = "fall19", required = true, value = "")
   @NotNull
 
 
-  public String getSemester() {
+  public Semester getSemester() {
     return semester;
   }
 
-  public void setSemester(String semester) {
+  public void setSemester(Semester semester) {
     this.semester = semester;
   }
 

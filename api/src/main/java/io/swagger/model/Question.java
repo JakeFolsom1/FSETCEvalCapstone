@@ -6,6 +6,8 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
 
 import static javax.persistence.EnumType.STRING;
@@ -17,9 +19,9 @@ import static javax.persistence.EnumType.STRING;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 @Entity
 @Table(name = "question")
-public class Question   {
+public class Question implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     @JsonProperty("questionId")
     private Long questionId = null;
 
@@ -51,6 +53,14 @@ public class Question   {
         l2t,
         t2l
     }
+
+    @ManyToOne
+    @JoinColumn(name = "SEMESTER_NAME")
+    @JsonProperty("semester")
+    private Semester semester = null;
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    private HashSet<Question> questions = new HashSet<Question>();
 
     /**
      * Get questionId
@@ -148,6 +158,30 @@ public class Question   {
     }
 
 
+    /**
+     * Get semester
+     * @return semester
+     **/
+    @ApiModelProperty(example = "fall19", required = true, value = "")
+    @NotNull
+
+
+    public Semester getSemester() {
+        return semester;
+    }
+
+    public void setSemester(Semester semester) {
+        this.semester = semester;
+    }
+
+    public HashSet<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(HashSet<Question> questions) {
+        this.questions = questions;
+    }
+
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {
@@ -161,7 +195,8 @@ public class Question   {
                 Objects.equals(this.questionPrompt, question.questionPrompt) &&
                 Objects.equals(this.isActive, question.isActive) &&
                 Objects.equals(this.questionNumber, question.questionNumber) &&
-                Objects.equals(this.evalType, question.evalType);
+                Objects.equals(this.evalType, question.evalType) &&
+                Objects.equals(this.semester, question.semester);
     }
 
     @Override

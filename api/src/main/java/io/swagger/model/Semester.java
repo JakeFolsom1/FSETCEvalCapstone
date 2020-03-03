@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Semester
@@ -17,13 +18,26 @@ import java.util.Objects;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 @Entity
 @Table(name = "SEMESTER")
-public class Semester   {
+public class Semester implements Serializable {
   @Id
   @JsonProperty("semesterName")
   private String semesterName = null;
 
   @JsonProperty("isActive")
   private Boolean isActive = null;
+
+
+  @OneToMany(mappedBy = "semester", cascade = CascadeType.ALL)
+  private Set<TeamMember> teamMembers = new HashSet<TeamMember>();
+
+  @OneToMany(mappedBy = "semester", cascade = CascadeType.ALL)
+  private Set<Preference> preferences = new HashSet<Preference>();
+
+  @OneToMany(mappedBy = "semester", cascade = CascadeType.ALL)
+  private Set<Assignment> assignments = new HashSet<Assignment>();
+
+  @OneToOne(mappedBy = "semester", cascade = CascadeType.ALL)
+  private NumberOfAssignments numberOfAssignments;
 
   /**
    * Get semesterName
@@ -57,6 +71,37 @@ public class Semester   {
     this.isActive = isActive;
   }
 
+  public Set<TeamMember> getTeamMembers() {
+    return teamMembers;
+  }
+
+  public void setTeamMembers(Set<TeamMember> teamMembers) {
+    this.teamMembers = teamMembers;
+  }
+
+  public Set<Preference> getPreferences() {
+    return preferences;
+  }
+
+  public void setPreferences(Set<Preference> preferences) {
+    this.preferences = preferences;
+  }
+
+  public Set<Assignment> getAssignments() {
+    return assignments;
+  }
+
+  public void setAssignments(Set<Assignment> assignments) {
+    this.assignments = assignments;
+  }
+
+  public NumberOfAssignments getNumberOfAssignments() {
+    return numberOfAssignments;
+  }
+
+  public void setNumberOfAssignments(NumberOfAssignments numberOfAssignments) {
+    this.numberOfAssignments = numberOfAssignments;
+  }
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -67,8 +112,7 @@ public class Semester   {
       return false;
     }
     Semester semester = (Semester) o;
-    return Objects.equals(this.semesterName, semester.semesterName) &&
-        Objects.equals(this.isActive, semester.isActive);
+    return Objects.equals(this.semesterName, semester.semesterName);
   }
 
   @Override

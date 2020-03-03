@@ -46,15 +46,15 @@ public class ResponsesApiController implements ResponsesApi {
     public ResponseEntity<Void> createResponse(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Response body) {
         String accept = request.getHeader("Accept");
         if(accept != null && accept.contains("application/json")) {
-            Assignment assignment = assignmentRepository.findOne(body.getAssignmentId());
-            Question question = questionRepository.findOne(body.getQuestionId());
+            Assignment assignment = assignmentRepository.findOne(body.getAssignment().getAssignmentId());
+            Question question = questionRepository.findOne(body.getQuestion().getQuestionId());
             if (assignment == null || question == null) {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             }
             // ensure no other response exists with primary keys questionId and assignmentId
             // and evalTypes match from assignment and question
             // and the question is active
-            else if (responseRepository.findByQuestionIdAndAssignmentId(body.getQuestionId(), body.getAssignmentId()) != null
+            else if (responseRepository.findByQuestionIdAndAssignmentId(body.getQuestion().getQuestionId(), body.getAssignment().getAssignmentId()) != null
                 || assignment.getEvalType() != question.getEvalType()
                 || !question.isIsActive()) {
                 return new ResponseEntity<Void>(HttpStatus.CONFLICT);
@@ -83,7 +83,7 @@ public class ResponsesApiController implements ResponsesApi {
             Iterator<Response> preferenceIterator = responseRepository.findAll().iterator();
             while(preferenceIterator.hasNext()) {
                 Response response = preferenceIterator.next();
-                if(response.getAssignmentId() == assignmentId){
+                if(response.getAssignment().getAssignmentId() == assignmentId){
                     responseList.add(response);
                 }
             }
@@ -106,12 +106,12 @@ public class ResponsesApiController implements ResponsesApi {
     public ResponseEntity<Void> updateQuestionResponse(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Response body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            if (responseRepository.findByQuestionIdAndAssignmentId(body.getQuestionId(), body.getAssignmentId()) == null) {
+            if (responseRepository.findByQuestionIdAndAssignmentId(body.getQuestion().getQuestionId(), body.getAssignment().getAssignmentId()) == null) {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             }
             else {
-                Assignment assignment = assignmentRepository.findOne(body.getAssignmentId());
-                Question question = questionRepository.findOne(body.getQuestionId());
+                Assignment assignment = assignmentRepository.findOne(body.getAssignment().getAssignmentId());
+                Question question = questionRepository.findOne(body.getQuestion().getQuestionId());
                 if (assignment == null || question == null) {
                     return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
                 }

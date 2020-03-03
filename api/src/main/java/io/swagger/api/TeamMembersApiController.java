@@ -2,10 +2,10 @@ package io.swagger.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
-import io.swagger.model.Account;
+import io.swagger.model.Staff;
 import io.swagger.model.TeamMember;
-import io.swagger.repository.AccountRepository;
 import io.swagger.repository.TeamMemberRepository;
+import io.swagger.util.TmsApiHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class TeamMembersApiController implements TeamMembersApi {
     TeamMemberRepository teamMemberRepository;
 
     @Autowired
-    AccountRepository accountRepository;
+    TmsApiHelper tmsApiHelper;
 
     @org.springframework.beans.factory.annotation.Autowired
     public TeamMembersApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -45,8 +45,8 @@ public class TeamMembersApiController implements TeamMembersApi {
     public ResponseEntity<Void> createTeamMember(@ApiParam(value = "" ,required=true )  @Valid @RequestBody TeamMember body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            Account tutor = accountRepository.findOne(body.getTutorAsurite());
-            Account lead = accountRepository.findOne(body.getLeadAsurite());
+            Staff tutor = tmsApiHelper.getStaffByAsurite(body.getTutorAsurite());
+            Staff lead = tmsApiHelper.getStaffByAsurite(body.getLeadAsurite());
             // ensure asurites are existing accounts
             if (tutor == null || lead == null) {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
@@ -55,8 +55,8 @@ public class TeamMembersApiController implements TeamMembersApi {
             // and tutor asurite belongs to a tutor
             // and lead asurite belongs to a lead
             else if (teamMemberRepository.exists(body.getTutorAsurite())
-                || tutor.getAccountType() != Account.AccountType.tutor
-                || lead.getAccountType() != Account.AccountType.lead) {
+                || tutor.getRole().equals("TUTOR") == false
+                || lead.getRole().equals("LEAD") == false) {
                 return new ResponseEntity<Void>(HttpStatus.CONFLICT);
             }
             else {
@@ -119,7 +119,7 @@ public class TeamMembersApiController implements TeamMembersApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             Map<String, List<String>> teamMemberLists = new HashMap<String, List<String>>();
-            Iterator<Account> accountIterator = accountRepository.findAccountsByAccountTypeAndIsActive(Account.AccountType.lead, true).iterator();
+            Iterator<Staff> accountIterator = tmsApiHelper.getAllStaffInCurrentSemester().iterator();
             while (accountIterator.hasNext()) {
                 String leadAsurite = accountIterator.next().getAsurite();
                 Iterator<TeamMember> teamMemberIterator = teamMemberRepository.findTeamMembersByLeadAsurite(leadAsurite).iterator();

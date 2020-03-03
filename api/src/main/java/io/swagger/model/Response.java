@@ -6,6 +6,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -15,18 +16,22 @@ import java.util.Objects;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 
 @Entity
-@Table(name = "RESPONSE")
-public class Response   {
+@Table(name = "RESPONSE", uniqueConstraints = {@UniqueConstraint(columnNames = {"QUESTION_ID", "ASSIGNMENT_ID"})})
+public class Response implements Serializable {
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue
   @JsonProperty
   private Long responseId;
 
-  @JsonProperty("assignmentId")
-  private Long assignmentId = null;
+  @ManyToOne
+  @JoinColumn(name = "ASSIGNMENT_ID")
+  @JsonProperty("assignment")
+  private Assignment assignment = null;
 
-  @JsonProperty("questionId")
-  private Long questionId = null;
+  @ManyToOne
+  @JoinColumn(name = "QUESTION_ID")
+  @JsonProperty("question")
+  private Question question = null;
 
   @JsonProperty("response")
   private String response = null;
@@ -57,12 +62,12 @@ public class Response   {
   @NotNull
 
 
-  public Long getAssignmentId() {
-    return assignmentId;
+  public Assignment getAssignment() {
+    return assignment;
   }
 
-  public void setAssignmentId(Long assignmentId) {
-    this.assignmentId = assignmentId;
+  public void setAssignment(Assignment assignment) {
+    this.assignment = assignment;
   }
 
   /**
@@ -73,12 +78,12 @@ public class Response   {
   @NotNull
 
 
-  public Long getQuestionId() {
-    return questionId;
+  public Question getQuestion() {
+    return question;
   }
 
-  public void setQuestionId(Long questionId) {
-    this.questionId = questionId;
+  public void setQuestion(Question question) {
+    this.question = question;
   }
 
   /**
@@ -124,15 +129,15 @@ public class Response   {
     }
     Response response = (Response) o;
     return Objects.equals(this.responseId, response.responseId) &&
-            Objects.equals(this.assignmentId, response.assignmentId) &&
-            Objects.equals(this.questionId, response.questionId) &&
+            Objects.equals(this.assignment, response.assignment) &&
+            Objects.equals(this.question, response.question) &&
             Objects.equals(this.response, response.response) &&
             Objects.equals(this.isShared, response.isShared);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(responseId, assignmentId, questionId, response, isShared);
+    return Objects.hash(responseId, assignment, question, response, isShared);
   }
 
   @Override
@@ -141,8 +146,8 @@ public class Response   {
     sb.append("class Response {\n");
 
     sb.append("    responseId: ").append(toIndentedString(responseId)).append("\n");
-    sb.append("    assignmentId: ").append(toIndentedString(assignmentId)).append("\n");
-    sb.append("    questionId: ").append(toIndentedString(questionId)).append("\n");
+    sb.append("    assignmentId: ").append(toIndentedString(assignment)).append("\n");
+    sb.append("    questionId: ").append(toIndentedString(question)).append("\n");
     sb.append("    response: ").append(toIndentedString(response)).append("\n");
     sb.append("    isShared: ").append(toIndentedString(isShared)).append("\n");
     sb.append("}");

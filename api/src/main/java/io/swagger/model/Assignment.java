@@ -6,6 +6,8 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
 
 import static javax.persistence.EnumType.STRING;
@@ -16,189 +18,201 @@ import static javax.persistence.EnumType.STRING;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 @Entity
-@Table(name = "ASSIGNMENT")
-public class Assignment   {
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @JsonProperty("assignmentId")
-  private Long assignmentId = null;
+@Table(name = "ASSIGNMENT", uniqueConstraints = {@UniqueConstraint(columnNames = {"ASURITE", "SEMESTER_NAME", "ASSIGNMENT_NUMBER", "EVAL_TYPE"})})
+public class Assignment implements Serializable {
+    @Id
+    @GeneratedValue
+    @JsonProperty("assignmentId")
+    private Long assignmentId = null;
 
-  @JsonProperty("assignmentNumber")
-  private Long assignmentNumber = null;
+    @JsonProperty("assignmentNumber")
+    private Long assignmentNumber = null;
 
-  @JsonProperty("asurite")
-  private String asurite = null;
+    @JsonProperty("asurite")
+    private String asurite = null;
 
-  @JsonProperty("assignedAsurite")
-  private String assignedAsurite = null;
+    @JsonProperty("assignedAsurite")
+    private String assignedAsurite = null;
 
-  @JsonProperty("semester")
-  private String semester = null;
+    @ManyToOne
+    @JoinColumn(name = "SEMESTER_NAME")
+    @JsonProperty("semester")
+    private Semester semester = null;
 
-  @JsonProperty("isComplete")
-  private Boolean isComplete = null;
+    @JsonProperty("isComplete")
+    private Boolean isComplete = null;
 
-  @JsonProperty("evalType")
-  @Enumerated(STRING)
-  private Question.EvalType evalType = null;
+    @JsonProperty("evalType")
+    @Enumerated(STRING)
+    private Question.EvalType evalType = null;
 
-  /**
-   * Get assignmentId
-   * @return assignmentId
-  **/
-  @ApiModelProperty(example = "54", value = "")
+    @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL)
+    private HashSet<Response> responses = new HashSet<Response>();
 
-
-  public Long getAssignmentId() {
-    return assignmentId;
-  }
-
-  public void setAssignmentId(Long assignmentId) {
-    this.assignmentId = assignmentId;
-  }
-
-  /**
-   * Get assignmentNumber
-   * @return assignmentNumber
-   **/
-  @ApiModelProperty(example = "1", required = true, value = "")
+    /**
+     * Get assignmentId
+     * @return assignmentId
+     **/
+    @ApiModelProperty(example = "54", value = "")
 
 
-  public Long getAssignmentNumber() {
-    return assignmentNumber;
-  }
-
-  public void setAssignmentNumber(Long assignmentNumber) {
-    this.assignmentNumber = assignmentNumber;
-  }
-
-  /**
-   * Get asurite
-   * @return asurite
-  **/
-  @ApiModelProperty(example = "jjbowma2", required = true, value = "")
-  @NotNull
-
-
-  public String getAsurite() {
-    return asurite;
-  }
-
-  public void setAsurite(String asurite) {
-    this.asurite = asurite;
-  }
-
-  /**
-   * Get assignedAsurite
-   * @return assignedAsurite
-  **/
-  @ApiModelProperty(example = "smurra11", required = true, value = "")
-  @NotNull
-
-
-  public String getAssignedAsurite() {
-    return assignedAsurite;
-  }
-
-  public void setAssignedAsurite(String assignedAsurite) {
-    this.assignedAsurite = assignedAsurite;
-  }
-
-  /**
-   * Get semester
-   * @return semester
-  **/
-  @ApiModelProperty(example = "Fall 2019", required = true, value = "")
-  @NotNull
-
-
-  public String getSemester() {
-    return semester;
-  }
-
-  public void setSemester(String semester) {
-    this.semester = semester;
-  }
-
-  /**
-   * Get isComplete
-   * @return isComplete
-  **/
-  @ApiModelProperty(example = "false", required = true, value = "")
-  @NotNull
-
-
-  public Boolean isIsComplete() {
-    return isComplete;
-  }
-
-  public void setIsComplete(Boolean isComplete) {
-    this.isComplete = isComplete;
-  }
-
-  /**
-   * Get evalType
-   * @return evalType
-  **/
-  @ApiModelProperty(example = "p2p", required = true, value = "")
-  @NotNull
-
-
-  public Question.EvalType getEvalType() {
-    return evalType;
-  }
-
-  public void setEvalType(Question.EvalType evalType) {
-    this.evalType = evalType;
-  }
-
-
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
+    public Long getAssignmentId() {
+        return assignmentId;
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+
+    public void setAssignmentId(Long assignmentId) {
+        this.assignmentId = assignmentId;
     }
-    Assignment assignment = (Assignment) o;
-    return Objects.equals(this.assignmentId, assignment.assignmentId) &&
-        Objects.equals(this.asurite, assignment.asurite) &&
-        Objects.equals(this.assignedAsurite, assignment.assignedAsurite) &&
-        Objects.equals(this.semester, assignment.semester) &&
-        Objects.equals(this.isComplete, assignment.isComplete) &&
-        Objects.equals(this.evalType, assignment.evalType);
-  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(assignmentId, asurite, assignedAsurite, semester, isComplete, evalType);
-  }
+    /**
+     * Get assignmentNumber
+     * @return assignmentNumber
+     **/
+    @ApiModelProperty(example = "1", required = true, value = "")
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class Assignment {\n");
-    
-    sb.append("    assignmentId: ").append(toIndentedString(assignmentId)).append("\n");
-    sb.append("    asurite: ").append(toIndentedString(asurite)).append("\n");
-    sb.append("    assignedAsurite: ").append(toIndentedString(assignedAsurite)).append("\n");
-    sb.append("    semester: ").append(toIndentedString(semester)).append("\n");
-    sb.append("    isComplete: ").append(toIndentedString(isComplete)).append("\n");
-    sb.append("    evalType: ").append(toIndentedString(evalType)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
+    public Long getAssignmentNumber() {
+        return assignmentNumber;
     }
-    return o.toString().replace("\n", "\n    ");
-  }
+
+    public void setAssignmentNumber(Long assignmentNumber) {
+        this.assignmentNumber = assignmentNumber;
+    }
+
+    /**
+     * Get asurite
+     * @return asurite
+     **/
+    @ApiModelProperty(example = "jjbowma2", required = true, value = "")
+    @NotNull
+
+
+    public String getAsurite() {
+        return asurite;
+    }
+
+    public void setAsurite(String asurite) {
+        this.asurite = asurite;
+    }
+
+    /**
+     * Get assignedAsurite
+     * @return assignedAsurite
+     **/
+    @ApiModelProperty(example = "smurra11", required = true, value = "")
+    @NotNull
+
+
+    public String getAssignedAsurite() {
+        return assignedAsurite;
+    }
+
+    public void setAssignedAsurite(String assignedAsurite) {
+        this.assignedAsurite = assignedAsurite;
+    }
+
+    /**
+     * Get semester
+     * @return semester
+     **/
+    @ApiModelProperty(example = "fall19", required = true, value = "")
+    @NotNull
+
+
+    public Semester getSemester() {
+        return semester;
+    }
+
+    public void setSemester(Semester semester) {
+        this.semester = semester;
+    }
+
+    /**
+     * Get isComplete
+     * @return isComplete
+     **/
+    @ApiModelProperty(example = "false", required = true, value = "")
+    @NotNull
+
+
+    public Boolean isIsComplete() {
+        return isComplete;
+    }
+
+    public void setIsComplete(Boolean isComplete) {
+        this.isComplete = isComplete;
+    }
+
+    /**
+     * Get evalType
+     * @return evalType
+     **/
+    @ApiModelProperty(example = "p2p", required = true, value = "")
+    @NotNull
+
+
+    public Question.EvalType getEvalType() {
+        return evalType;
+    }
+
+    public void setEvalType(Question.EvalType evalType) {
+        this.evalType = evalType;
+    }
+
+    public HashSet<Response> getResponses() {
+        return responses;
+    }
+
+    public void setResponses(HashSet<Response> responses) {
+        this.responses = responses;
+    }
+
+    @Override
+    public boolean equals(java.lang.Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Assignment assignment = (Assignment) o;
+        return Objects.equals(this.assignmentId, assignment.assignmentId) &&
+                Objects.equals(this.asurite, assignment.asurite) &&
+                Objects.equals(this.assignedAsurite, assignment.assignedAsurite) &&
+                Objects.equals(this.semester, assignment.semester) &&
+                Objects.equals(this.isComplete, assignment.isComplete) &&
+                Objects.equals(this.evalType, assignment.evalType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(assignmentId, asurite, assignedAsurite, semester, isComplete, evalType);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class Assignment {\n");
+
+        sb.append("    assignmentId: ").append(toIndentedString(assignmentId)).append("\n");
+        sb.append("    asurite: ").append(toIndentedString(asurite)).append("\n");
+        sb.append("    assignedAsurite: ").append(toIndentedString(assignedAsurite)).append("\n");
+        sb.append("    semester: ").append(toIndentedString(semester)).append("\n");
+        sb.append("    isComplete: ").append(toIndentedString(isComplete)).append("\n");
+        sb.append("    evalType: ").append(toIndentedString(evalType)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(java.lang.Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 }
 

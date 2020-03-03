@@ -3,7 +3,6 @@ package io.swagger.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
 import io.swagger.model.*;
-import io.swagger.repository.AccountRepository;
 import io.swagger.repository.AssignmentRepository;
 import io.swagger.repository.QuestionRepository;
 import io.swagger.repository.ResponseRepository;
@@ -36,9 +35,6 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
     private ResponseRepository responseRepository;
 
     @Autowired
-    private AccountRepository accountRepository;
-
-    @Autowired
     private QuestionRepository questionRepository;
 
     @org.springframework.beans.factory.annotation.Autowired
@@ -55,11 +51,9 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
             for (Assignment assignment: completedAssignments) {
                 CompletedEvaluation completedEvaluation = new CompletedEvaluation();
                 completedEvaluation.setEvalType(assignment.getEvalType().name());
-                Account evaluatorAccount = accountRepository.findOne(assignment.getAsurite());
-                completedEvaluation.setEvaluator(evaluatorAccount.getAsurite());
-                Account evaluateeAccount = accountRepository.findOne(assignment.getAssignedAsurite());
-                completedEvaluation.setEvaluatee(evaluateeAccount.getAsurite());
-                completedEvaluation.setSemester(assignment.getSemester());
+                completedEvaluation.setEvaluator(assignment.getAsurite());
+                completedEvaluation.setEvaluatee(assignment.getAssignedAsurite());
+                completedEvaluation.setSemester(assignment.getSemester().getSemesterName());
                 List<Response> responses = responseRepository.findAllByAssignmentIdOrderByQuestionIdAsc(assignment.getAssignmentId());
                 if (responses.isEmpty()) {
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -69,7 +63,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                 for (Response response: responses) {
                     QuestionAndResponse questionAndResponse = new QuestionAndResponse();
                     QuestionDetails questionDetails = new QuestionDetails();
-                    Question question = questionRepository.findOne(response.getQuestionId());
+                    Question question = questionRepository.findOne(response.getQuestion().getQuestionId());
                     questionDetails.setQuestionNumber(question.getQuestionNumber());
                     questionDetails.setQuestionPrompt(question.getQuestionPrompt());
                     questionDetails.setQuestionType(question.getQuestionType().name());
@@ -99,16 +93,14 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                 if (responses.get(0).isIsShared()) {
                     CompletedEvaluation completedEvaluation = new CompletedEvaluation();
                     completedEvaluation.setEvalType(assignment.getEvalType().name());
-                    Account evaluatorAccount = accountRepository.findOne(assignment.getAsurite());
-                    completedEvaluation.setEvaluator(evaluatorAccount.getAsurite());
-                    Account evaluateeAccount = accountRepository.findOne(assignment.getAssignedAsurite());
-                    completedEvaluation.setEvaluatee(evaluateeAccount.getAsurite());
+                    completedEvaluation.setEvaluator(assignment.getAsurite());
+                    completedEvaluation.setEvaluatee(assignment.getAssignedAsurite());
                     completedEvaluation.setIsShared(responses.get(0).isIsShared());
                     List<QuestionAndResponse> questionsAndResponses = new ArrayList<QuestionAndResponse>();
                     for (Response response: responses) {
                         QuestionAndResponse questionAndResponse = new QuestionAndResponse();
                         QuestionDetails questionDetails = new QuestionDetails();
-                        Question question = questionRepository.findOne(response.getQuestionId());
+                        Question question = questionRepository.findOne(response.getQuestion().getQuestionId());
                         questionDetails.setQuestionNumber(question.getQuestionNumber());
                         questionDetails.setQuestionPrompt(question.getQuestionPrompt());
                         questionDetails.setQuestionType(question.getQuestionType().name());
@@ -139,16 +131,14 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                 }
                 CompletedEvaluation completedEvaluation = new CompletedEvaluation();
                 completedEvaluation.setEvalType(assignment.getEvalType().name());
-                Account evaluatorAccount = accountRepository.findOne(assignment.getAsurite());
-                completedEvaluation.setEvaluator(evaluatorAccount.getAsurite());
-                Account evaluateeAccount = accountRepository.findOne(assignment.getAssignedAsurite());
-                completedEvaluation.setEvaluatee(evaluateeAccount.getAsurite());
+                completedEvaluation.setEvaluator(assignment.getAsurite());
+                completedEvaluation.setEvaluatee(assignment.getAssignedAsurite());
                 completedEvaluation.setIsShared(responses.get(0).isIsShared());
                 List<QuestionAndResponse> questionsAndResponses = new ArrayList<QuestionAndResponse>();
                 for (Response response: responses) {
                     QuestionAndResponse questionAndResponse = new QuestionAndResponse();
                     QuestionDetails questionDetails = new QuestionDetails();
-                    Question question = questionRepository.findOne(response.getQuestionId());
+                    Question question = questionRepository.findOne(response.getQuestion().getQuestionId());
                     questionDetails.setQuestionNumber(question.getQuestionNumber());
                     questionDetails.setQuestionPrompt(question.getQuestionPrompt());
                     questionDetails.setQuestionType(question.getQuestionType().name());
