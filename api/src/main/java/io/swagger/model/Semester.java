@@ -30,7 +30,7 @@ public class Semester implements Serializable {
    * Get semesterName
    * @return semesterName
   **/
-  @ApiModelProperty(example = "Fall 2019", required = true, value = "")
+  @ApiModelProperty(example = "spring20", required = true, value = "")
   @NotNull
 
 

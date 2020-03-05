@@ -55,8 +55,8 @@ public class Question implements Serializable {
         t2l
     }
 
-    @JsonProperty("semesterName")
-    private String semesterName = null;
+//    @JsonProperty("semesterName")
+//    private String semesterName = null;
 
 
     /**
@@ -163,13 +163,13 @@ public class Question implements Serializable {
     @NotNull
 
 
-    public String getSemesterName() {
-        return semesterName;
-    }
-
-    public void setSemesterName(String semesterName) {
-        this.semesterName = semesterName;
-    }
+//    public String getSemesterName() {
+//        return semesterName;
+//    }
+//
+//    public void setSemesterName(String semesterName) {
+//        this.semesterName = semesterName;
+//    }
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -184,8 +184,9 @@ public class Question implements Serializable {
                 Objects.equals(this.questionPrompt, question.questionPrompt) &&
                 Objects.equals(this.isActive, question.isActive) &&
                 Objects.equals(this.questionNumber, question.questionNumber) &&
-                Objects.equals(this.evalType, question.evalType) &&
-                Objects.equals(this.semesterName, question.semesterName);
+                Objects.equals(this.evalType, question.evalType);
+//                &&
+//                Objects.equals(this.semesterName, question.semesterName);
     }
 
     @Override

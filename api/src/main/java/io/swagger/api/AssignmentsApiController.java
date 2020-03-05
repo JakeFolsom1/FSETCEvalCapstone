@@ -155,10 +155,10 @@ public class AssignmentsApiController implements AssignmentsApi {
 
             // assign tutors
             // for each major Cluster
-            Set<String> majorClusters = tmsApiHelper.getAllMajorClusters();
-            for (String majorCluster: majorClusters) {
-                // get preferences
-                Map<String, List<String>> preferenceTable = getPreferenceTableForMajorCluster(majorCluster);
+            Map<String, List<String>> clusterToTutorsMap = tmsApiHelper.getMapFromClusterToTutors();
+            for (String majorCluster: clusterToTutorsMap.keySet()) {
+                // get preferences for all the students in a major cluster
+                Map<String, List<String>> preferenceTable = getPreferenceTableForMajorCluster(clusterToTutorsMap.get(majorCluster));
                 StableMatch stableMatch = new StableMatch(preferenceTable);
                 for (int i = 0; i < NUM_ASSIGNMENTS; i++) {
                     Map<String, String> matches = stableMatch.getMatches();
@@ -181,19 +181,16 @@ public class AssignmentsApiController implements AssignmentsApi {
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
-    private Map<String, List<String>> getPreferenceTableForMajorCluster(String majorCluster) {
+    private Map<String, List<String>> getPreferenceTableForMajorCluster(List<String> tutorsInCluster) {
         Map<String, List<String>> preferenceTable = new HashMap<>();
         Semester activeSemester = semesterRepository.findByIsActive(true);
-        List<Staff> tutors = tmsApiHelper.getTutorsByMajorCluster(majorCluster);
-        if (tutors != null) {
-            for (Staff tutor : tutors) {
-                List<Preference> tutorPreferenceList = preferenceRepository.findAllByAsuriteAndSemesterNameOrderByPreferenceNumber(tutor.getAsurite(), activeSemester.getSemesterName());
-                List<String> preferenceRow = new ArrayList<>();
-                for (Preference preference : tutorPreferenceList) {
-                    preferenceRow.add(preference.getPreferredAsurite());
-                }
-                preferenceTable.put(tutor.getAsurite(), preferenceRow);
+        for (String tutor : tutorsInCluster) {
+            List<Preference> tutorPreferenceList = preferenceRepository.findAllByAsuriteAndSemesterNameOrderByPreferenceNumber(tutor, activeSemester.getSemesterName());
+            List<String> preferenceRow = new ArrayList<>();
+            for (Preference preference : tutorPreferenceList) {
+                preferenceRow.add(preference.getPreferredAsurite());
             }
+            preferenceTable.put(tutor, preferenceRow);
         }
         return preferenceTable;
     }

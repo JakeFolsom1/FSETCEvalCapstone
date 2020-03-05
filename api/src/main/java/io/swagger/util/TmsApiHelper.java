@@ -20,8 +20,9 @@ import java.util.*;
 
 @Component
 public class TmsApiHelper {
+
     @Autowired
-    public SemesterRepository semesterRepository;
+    SemesterRepository semesterRepository;
 
     public List<Staff> getAllStaffInCurrentSemester() {
         CredentialsProvider provider = new BasicCredentialsProvider();
@@ -29,7 +30,7 @@ public class TmsApiHelper {
         provider.setCredentials(AuthScope.ANY, credentials);
         HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
         // get the staff for the active term
-        HttpGet request = new HttpGet("https://fsetc.asu.edu/tmsapi/staff?term=" + semesterRepository.findByIsActive(true).getSemesterName());
+        HttpGet request = new HttpGet("https://fsetc.asu.edu/tmsapi/staff");
         request.setHeader("Accept", "application/json");
         try {
             HttpResponse response = client.execute(request);
@@ -53,13 +54,18 @@ public class TmsApiHelper {
         return null;
     }
 
-    public Staff getStaffByAsurite(String asurite) {
+    public Staff getStaffByAsuriteAndSemester(String asurite, String semester) {
         CredentialsProvider provider = new BasicCredentialsProvider();
         UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("EVAL", "dbbac9ba-feeb-11e9-8f0b-362b9e155667");
         provider.setCredentials(AuthScope.ANY, credentials);
         HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
         // get the staff for the active term
-        HttpGet request = new HttpGet("https://fsetc.asu.edu/tmsapi/staff?id=" + asurite + "&term=" + semesterRepository.findByIsActive(true).getSemesterName());
+        String activeSemester = semesterRepository.findByIsActive(true).getSemesterName();
+        String url = "https://fsetc.asu.edu/tmsapi/staff?id=" + asurite;
+        if (activeSemester.equals(semester) == false) {
+            url += "term=" + semester;
+        }
+        HttpGet request = new HttpGet(url);
         request.setHeader("Accept", "application/json");
         try {
             HttpResponse response = client.execute(request);
@@ -79,11 +85,17 @@ public class TmsApiHelper {
         return null;
     }
 
+    public Staff getStaffByAsurite(String asurite) {
+        return getStaffByAsuriteAndSemester(asurite, semesterRepository.findByIsActive(true).getSemesterName());
+    }
+
     public List<Staff> getStaffOfRoleInCurrentSemester(String role) {
         List<Staff> staffList = getAllStaffInCurrentSemester();
-        for(Staff staff : staffList) {
-            if (staff.getRole().equals(role) == false) {
-                staffList.remove(staff);
+        if (staffList != null) {
+            for (int i = 0; i < staffList.size(); i++) {
+                if (staffList.get(i).getRole().equals(role) == false) {
+                    staffList.remove(i--);
+                }
             }
         }
         return staffList;
@@ -92,29 +104,52 @@ public class TmsApiHelper {
     public Map<String, Staff> getStaffMap() {
         List<Staff> staffList = getAllStaffInCurrentSemester();
         Map<String, Staff> staffMap = new HashMap<>();
-        for (Staff staff : staffList) {
-            staffMap.put(staff.getAsurite(), staff);
+        if (staffList != null) {
+            for (Staff staff : staffList) {
+                staffMap.put(staff.getAsurite(), staff);
+            }
         }
         return staffMap;
     }
 
 
-    public Set getAllMajorClusters() {
-        List<Staff> staffList = getAllStaffInCurrentSemester();
-        Set<String> majorClusters = new HashSet<>();
-        for (Staff staff : staffList) {
-            majorClusters.add(staff.getCluster());
-        }
-        return majorClusters;
-    }
+//    public Set getAllMajorClusters() {
+//        List<Staff> staffList = getAllStaffInCurrentSemester();
+//        Set<String> majorClusters = new HashSet<>();
+//        if (staffList != null) {
+//            for (Staff staff : staffList) {
+//                majorClusters.add(staff.getCluster());
+//            }
+//        }
+//        return majorClusters;
+//    }
 
-    public List<Staff> getTutorsByMajorCluster(String cluster) {
+    public Map<String, List<String>> getMapFromClusterToTutors() {
         List<Staff> staffList = getAllStaffInCurrentSemester();
-        for (Staff staff : staffList) {
-            if (staff.getRole().equals("TUTOR") == false || staff.getCluster().equals(cluster) == false) {
-                staffList.remove(staff);
+        Map<String, List<String>> clusterToTutors = new HashMap<>();
+        if (staffList != null) {
+            for (Staff staff : staffList) {
+                if (clusterToTutors.containsKey(staff.getCluster()) == false) {
+                    clusterToTutors.put(staff.getCluster(), new ArrayList());
+                }
+                if (staff.getRole().equals("TUTOR")) {
+                    clusterToTutors.get(staff.getCluster()).add(staff.getAsurite());
+                }
             }
         }
-        return staffList;
+        return clusterToTutors;
     }
+
+//    public List<Staff> getTutorsByMajorCluster(String cluster) {
+//        List<Staff> staffList = getAllStaffInCurrentSemester();
+//        if (staffList != null) {
+//            for (int i = 0; i < staffList.size(); i++) {
+//                Staff staff = staffList.get(i);
+//                if (staff.getRole().equals("TUTOR") == false || staff.getCluster().equals(cluster) == false) {
+//                    staffList.remove(i--);
+//                }
+//            }
+//        }
+//        return staffList;
+//    }
 }

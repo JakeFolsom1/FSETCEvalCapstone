@@ -2,8 +2,12 @@ package io.swagger.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
+import io.swagger.model.NumberOfAssignments;
+import io.swagger.model.Preference;
 import io.swagger.model.Semester;
-import io.swagger.repository.SemesterRepository;
+import io.swagger.model.Staff;
+import io.swagger.repository.*;
+import io.swagger.util.TmsApiHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +18,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 
 @Controller
@@ -32,12 +39,28 @@ public class SemestersApiController implements SemestersApi {
     @Autowired
     private SemesterRepository semesterRepository;
 
+    @Autowired
+    private TeamMemberRepository teamMemberRepository;
+
+    @Autowired
+    private PreferenceRepository preferenceRepository;
+
+    @Autowired
+    private AssignmentRepository assignmentRepository;
+
+    @Autowired
+    private NumberOfAssignmentsRepository numberOfAssignmentsRepository;
+
+    @Autowired
+    private TmsApiHelper tmsApiHelper;
+
     @org.springframework.beans.factory.annotation.Autowired
     public SemestersApiController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
         this.request = request;
     }
 
+    @Transactional
     public ResponseEntity<Void> createSemester(@ApiParam(value = "Semester object that needs to be created in the database" ,required=true )  @Valid @RequestBody Semester body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -53,12 +76,35 @@ public class SemestersApiController implements SemestersApi {
                     }
                 }
                 semesterRepository.save(body);
+
+                // create preferences for all tutors
+                List<Staff> tutorList = tmsApiHelper.getStaffOfRoleInCurrentSemester("TUTOR");
+                if (tutorList != null) {
+                    Map<String, List<String>> clusterToTutors = tmsApiHelper.getMapFromClusterToTutors();
+                    for (Staff tutor : tutorList) {
+                        List<String> peers = new ArrayList<>(clusterToTutors.get(tutor.getCluster()));
+                        peers.remove(tutor.getAsurite());
+                        for (int i = 0; i < peers.size(); i++) {
+                            Preference newPreference = new Preference();
+                            newPreference.setAsurite(tutor.getAsurite());
+                            newPreference.setPreferenceNumber(new Long(i + 1));
+                            newPreference.setPreferredAsurite(peers.get(i));
+                            newPreference.setSemesterName(body.getSemesterName());
+                            preferenceRepository.save(newPreference);
+                        }
+                    }
+                }
+                NumberOfAssignments numberOfAssignments = new NumberOfAssignments();
+                numberOfAssignments.setNumAssignments(new Long(3)); // default
+                numberOfAssignments.setSemesterName(body.getSemesterName());
+                numberOfAssignmentsRepository.save(numberOfAssignments);
                 return new ResponseEntity<Void>(HttpStatus.CREATED);
             }
         }
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
+    @Transactional
     public ResponseEntity<Void> deleteSemester(@ApiParam(value = "name of the semester to delete from the database",required=true) @PathVariable("semesterName") String semesterName) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -68,6 +114,9 @@ public class SemestersApiController implements SemestersApi {
             }
             else {
                 semesterRepository.delete(semesterToDelete);
+                teamMemberRepository.deleteAllBySemesterName(semesterName);
+                preferenceRepository.deleteAllBySemesterName(semesterName);
+                assignmentRepository.deleteAllBySemesterName(semesterName);
 
                 // if this semester was active
                 if (semesterToDelete.isIsActive()) {

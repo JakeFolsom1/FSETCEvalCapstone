@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface PreferenceRepository extends CrudRepository<Preference, Preference.PreferencePK> {
     List<Preference> findAllByAsuriteAndSemesterNameOrderByPreferenceNumber(String asurite, String semesterName);
+    void deleteAllBySemesterName(String semesterName);
 }

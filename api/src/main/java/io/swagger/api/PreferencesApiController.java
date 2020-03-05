@@ -82,12 +82,15 @@ public class PreferencesApiController implements PreferencesApi {
     public ResponseEntity<List<Preference>> getAllPreferences() {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            String currentSemester = semesterRepository.findByIsActive(true).getSemesterName();
+            Semester currentSemester = semesterRepository.findByIsActive(true);
+            if (currentSemester == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
             List<Preference> activePreferenceList = new ArrayList<>();
             Iterator<Preference> preferenceIterator = preferenceRepository.findAll().iterator();
             while(preferenceIterator.hasNext()) {
                 Preference temp = preferenceIterator.next();
-                if (temp.getSemesterName().equals(currentSemester)) {
+                if (temp.getSemesterName().equals(currentSemester.getSemesterName())) {
                     activePreferenceList.add(temp);
                 }
 

@@ -2,6 +2,7 @@ package io.swagger.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
+import io.swagger.model.Semester;
 import io.swagger.model.Staff;
 import io.swagger.model.TeamMember;
 import io.swagger.repository.SemesterRepository;
@@ -125,12 +126,15 @@ public class TeamMembersApiController implements TeamMembersApi {
     public ResponseEntity<Map<String, List<String>>> getAllTeams() {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
+            Semester currentSemester = semesterRepository.findByIsActive(true);
+            if (currentSemester == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
             Map<String, List<String>> teamMemberLists = new HashMap<String, List<String>>();
             Iterator<Staff> staffIterator = tmsApiHelper.getStaffOfRoleInCurrentSemester("LEAD").iterator();
             while (staffIterator.hasNext()) {
                 String leadAsurite = staffIterator.next().getAsurite();
-                String activeSemesterName = semesterRepository.findByIsActive(true).getSemesterName();
-                Iterator<TeamMember> teamMemberIterator = teamMemberRepository.findTeamMembersByLeadAsuriteAndSemesterName(leadAsurite, activeSemesterName).iterator();
+                Iterator<TeamMember> teamMemberIterator = teamMemberRepository.findTeamMembersByLeadAsuriteAndSemesterName(leadAsurite, currentSemester.getSemesterName()).iterator();
                 List<String> teamMemberList = new ArrayList<String>();
                 while (teamMemberIterator.hasNext()) {
                     teamMemberList.add(teamMemberIterator.next().getTutorAsurite());

@@ -6,6 +6,7 @@ import io.swagger.model.*;
 import io.swagger.repository.AssignmentRepository;
 import io.swagger.repository.QuestionRepository;
 import io.swagger.repository.ResponseRepository;
+import io.swagger.util.TmsApiHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,9 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
     @Autowired
     private QuestionRepository questionRepository;
 
+    @Autowired
+    private TmsApiHelper tmsApiHelper;
+
     @org.springframework.beans.factory.annotation.Autowired
     public CompletedEvaluationsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
@@ -51,8 +55,11 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
             for (Assignment assignment: completedAssignments) {
                 CompletedEvaluation completedEvaluation = new CompletedEvaluation();
                 completedEvaluation.setEvalType(assignment.getEvalType().name());
-                completedEvaluation.setEvaluator(assignment.getAsurite());
-                completedEvaluation.setEvaluatee(assignment.getAssignedAsurite());
+                // Need to get the staff from the TMS API from the term it was completed
+                Staff evaluator = tmsApiHelper.getStaffByAsuriteAndSemester(assignment.getAsurite(), assignment.getSemesterName());
+                Staff evaluatee = tmsApiHelper.getStaffByAsuriteAndSemester(assignment.getAssignedAsurite(), assignment.getSemesterName());
+                completedEvaluation.setEvaluator(evaluator.getFname() + " " + evaluator.getLname());
+                completedEvaluation.setEvaluatee(evaluatee.getFname() + " " + evaluatee.getLname());
                 completedEvaluation.setSemester(assignment.getSemesterName());
                 List<Response> responses = responseRepository.findAllByAssignmentIdOrderByQuestionIdAsc(assignment.getAssignmentId());
                 if (responses.isEmpty()) {
@@ -93,8 +100,10 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                 if (responses.get(0).isIsShared()) {
                     CompletedEvaluation completedEvaluation = new CompletedEvaluation();
                     completedEvaluation.setEvalType(assignment.getEvalType().name());
-                    completedEvaluation.setEvaluator(assignment.getAsurite());
-                    completedEvaluation.setEvaluatee(assignment.getAssignedAsurite());
+                    Staff evaluator = tmsApiHelper.getStaffByAsuriteAndSemester(assignment.getAsurite(), assignment.getSemesterName());
+                    Staff evaluatee = tmsApiHelper.getStaffByAsuriteAndSemester(assignment.getAssignedAsurite(), assignment.getSemesterName());
+                    completedEvaluation.setEvaluator(evaluator.getFname() + " " + evaluator.getLname());
+                    completedEvaluation.setEvaluatee(evaluatee.getFname() + " " + evaluatee.getLname());
                     completedEvaluation.setIsShared(responses.get(0).isIsShared());
                     List<QuestionAndResponse> questionsAndResponses = new ArrayList<QuestionAndResponse>();
                     for (Response response: responses) {
@@ -131,8 +140,10 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                 }
                 CompletedEvaluation completedEvaluation = new CompletedEvaluation();
                 completedEvaluation.setEvalType(assignment.getEvalType().name());
-                completedEvaluation.setEvaluator(assignment.getAsurite());
-                completedEvaluation.setEvaluatee(assignment.getAssignedAsurite());
+                Staff evaluator = tmsApiHelper.getStaffByAsuriteAndSemester(assignment.getAsurite(), assignment.getSemesterName());
+                Staff evaluatee = tmsApiHelper.getStaffByAsuriteAndSemester(assignment.getAssignedAsurite(), assignment.getSemesterName());
+                completedEvaluation.setEvaluator(evaluator.getFname() + " " + evaluator.getLname());
+                completedEvaluation.setEvaluatee(evaluatee.getFname() + " " + evaluatee.getLname());
                 completedEvaluation.setIsShared(responses.get(0).isIsShared());
                 List<QuestionAndResponse> questionsAndResponses = new ArrayList<QuestionAndResponse>();
                 for (Response response: responses) {
