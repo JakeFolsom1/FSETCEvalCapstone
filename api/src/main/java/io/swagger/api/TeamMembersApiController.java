@@ -2,9 +2,8 @@ package io.swagger.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
-import io.swagger.model.Semester;
-import io.swagger.model.Staff;
-import io.swagger.model.TeamMember;
+import io.swagger.model.*;
+import io.swagger.repository.AssignmentRepository;
 import io.swagger.repository.SemesterRepository;
 import io.swagger.repository.TeamMemberRepository;
 import io.swagger.util.TmsApiHelper;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -39,6 +39,9 @@ public class TeamMembersApiController implements TeamMembersApi {
     SemesterRepository semesterRepository;
 
     @Autowired
+    AssignmentRepository assignmentRepository;
+
+    @Autowired
     TmsApiHelper tmsApiHelper;
 
     @org.springframework.beans.factory.annotation.Autowired
@@ -47,6 +50,7 @@ public class TeamMembersApiController implements TeamMembersApi {
         this.request = request;
     }
 
+    @Transactional
     public ResponseEntity<Void> createTeamMember(@ApiParam(value = "" ,required=true )  @Valid @RequestBody TeamMember body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -66,12 +70,27 @@ public class TeamMembersApiController implements TeamMembersApi {
             }
             else {
                 teamMemberRepository.save(body);
+                Assignment t2lAssignment = new Assignment();
+                t2lAssignment.setIsComplete(false);
+                t2lAssignment.setAssignedAsurite(body.getLeadAsurite());
+                t2lAssignment.setAsurite(body.getTutorAsurite());
+                t2lAssignment.setSemesterName(body.getSemesterName());
+                t2lAssignment.setEvalType(Question.EvalType.t2l);
+                assignmentRepository.save(t2lAssignment);
+                Assignment l2tAssignment = new Assignment();
+                l2tAssignment.setIsComplete(false);
+                l2tAssignment.setAsurite(body.getLeadAsurite());
+                l2tAssignment.setAssignedAsurite(body.getTutorAsurite());
+                l2tAssignment.setSemesterName(body.getSemesterName());
+                l2tAssignment.setEvalType(Question.EvalType.l2t);
+                assignmentRepository.save(l2tAssignment);
                 return new ResponseEntity<Void>(HttpStatus.CREATED);
             }
         }
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
+    @Transactional
     public ResponseEntity<Void> deleteLeadTeam(@ApiParam(value = "",required=true) @PathVariable("leadAsurite") String leadAsurite) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -84,13 +103,17 @@ public class TeamMembersApiController implements TeamMembersApi {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             }
             while (teamMemberIterator.hasNext()) {
-                teamMemberRepository.delete(teamMemberIterator.next());
+                TeamMember teamMember = teamMemberIterator.next();
+                teamMemberRepository.delete(teamMember);
+                assignmentRepository.deleteAssignmentByAssignedAsuriteAndAsuriteAndSemesterName(teamMember.getLeadAsurite(), teamMember.getTutorAsurite(), teamMember.getSemesterName());
+                assignmentRepository.deleteAssignmentByAssignedAsuriteAndAsuriteAndSemesterName(teamMember.getTutorAsurite(), teamMember.getLeadAsurite(), teamMember.getSemesterName());
             }
             return new ResponseEntity<Void>(HttpStatus.OK);
         }
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
+    @Transactional
     public ResponseEntity<Void> deleteTeamMember(@ApiParam(value = "",required=true) @PathVariable("tutorAsurite") String tutorAsurite) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -100,6 +123,8 @@ public class TeamMembersApiController implements TeamMembersApi {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             }
             teamMemberRepository.delete(teamMemberToDelete);
+            assignmentRepository.deleteAssignmentByAssignedAsuriteAndAsuriteAndSemesterName(teamMemberToDelete.getLeadAsurite(), teamMemberToDelete.getTutorAsurite(), teamMemberToDelete.getSemesterName());
+            assignmentRepository.deleteAssignmentByAssignedAsuriteAndAsuriteAndSemesterName(teamMemberToDelete.getTutorAsurite(), teamMemberToDelete.getLeadAsurite(), teamMemberToDelete.getSemesterName());
             return new ResponseEntity<Void>(HttpStatus.OK);
         }
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);

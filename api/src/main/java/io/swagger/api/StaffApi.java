@@ -57,6 +57,14 @@ public interface StaffApi {
             method = RequestMethod.GET)
     ResponseEntity<List<Staff>> getAllActiveTutors();
 
+    @ApiOperation(value = "Get all active lead staff", nickname = "getAllActiveLeads", notes = "", response = Staff.class, responseContainer = "List", tags={ "staff", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = Staff.class, responseContainer = "List") })
+    @RequestMapping(value = "/staff/leads",
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<List<Staff>> getAllActiveLeads();
+
     @ApiOperation(value = "Get all active tutor staff by major cluster", nickname = "getAllActiveTutorsByMajorCluster", notes = "", response = Staff.class, responseContainer = "List", tags={ "staff", })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = Staff.class, responseContainer = "List") })

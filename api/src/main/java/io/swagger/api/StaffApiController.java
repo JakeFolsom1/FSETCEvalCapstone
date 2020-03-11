@@ -87,27 +87,31 @@ public class StaffApiController implements StaffApi {
     public ResponseEntity<List<Staff>> getAllActiveTutors() {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            List<Staff> activeStaffList = new ArrayList<Staff>();
-            List<Staff> staffList = tmsApiHelper.getAllStaffInCurrentSemester();
+            List<Staff> staffList = tmsApiHelper.getStaffOfRoleInCurrentSemester("TUTOR");
             if (staffList == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
             else {
-                Iterator<Staff> staffIterator = staffList.iterator();
-                while(staffIterator.hasNext())
-                {
-                    Staff staff = staffIterator.next();
-                    if (staff.getRole().equals("TUTOR")) {
-                        activeStaffList.add(staff);
-                    }
-                }
-                return new ResponseEntity<List<Staff>>(activeStaffList, HttpStatus.OK);
+                return new ResponseEntity<List<Staff>>(staffList, HttpStatus.OK);
             }
-
         }
-
         return new ResponseEntity<List<Staff>>(HttpStatus.BAD_REQUEST);
     }
+
+    public ResponseEntity<List<Staff>> getAllActiveLeads() {
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            List<Staff> staffList = tmsApiHelper.getStaffOfRoleInCurrentSemester("LEAD");
+            if (staffList == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            else {
+                return new ResponseEntity<List<Staff>>(staffList, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<List<Staff>>(HttpStatus.BAD_REQUEST);
+    }
+
 
     public ResponseEntity<List<Staff>> getAllActiveTutorsByMajorCluster(@ApiParam(value = "",required=true) @PathVariable("majorCluster") String majorCluster) {
         String accept = request.getHeader("Accept");

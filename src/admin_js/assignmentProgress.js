@@ -45,7 +45,6 @@ $(document).ready(() => {
                 {
                     title: "Tutor Name",
                     render: (data, _type, row) => {
-                        console.log(row);
                         const ul = row[2].reduce((acc, value) => acc + `<li>${names[row[0]]} needs to evaluate ${names[value]}</li>`, '<ol>') + '</ol>'
                         return `<button
                                 type="button"

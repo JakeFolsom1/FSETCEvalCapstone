@@ -30,8 +30,6 @@ public class AssignmentsApiController implements AssignmentsApi {
 
     private final HttpServletRequest request;
 
-    private final int NUM_ASSIGNMENTS = 2;
-
     @Autowired
     private AssignmentRepository assignmentRepository;
 
@@ -43,6 +41,9 @@ public class AssignmentsApiController implements AssignmentsApi {
 
     @Autowired
     private TeamMemberRepository teamMemberRepository;
+
+    @Autowired
+    private NumberOfAssignmentsRepository numberOfAssignmentsRepository;
 
     @Autowired
     private TmsApiHelper tmsApiHelper;
@@ -58,6 +59,7 @@ public class AssignmentsApiController implements AssignmentsApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             Semester activeSemester = semesterRepository.findByIsActive(true);
+            Long numAssignments = numberOfAssignmentsRepository.findOne(activeSemester.getSemesterName()).getNumAssignments();
             Map<String, Staff> staffMap = tmsApiHelper.getStaffMap();
             // if asurite belongs to a tutor
             if (staffMap.get(asurite).getRole().equals("TUTOR")) {
@@ -67,13 +69,13 @@ public class AssignmentsApiController implements AssignmentsApi {
                 // generate a list of possible assignments
                 List<Assignment> assignmentList = new ArrayList<Assignment>();
                 int candidateIndex = 0;
-                for (int i = 0; i < NUM_ASSIGNMENTS; i++) {
+                for (int i = 0; i < numAssignments; i++) {
                     while (candidateIndex < preferenceList.size()) {
                         // get assignment candidate's asurite and increment
                         String candidate = preferenceList.get(candidateIndex++).getPreferredAsurite();
 
                         // if candidate has not been assigned the total number of assignments, add it to the list and break
-                        if (assignmentRepository.findAllByAssignedAsuriteAndSemesterName(candidate, activeSemester.getSemesterName()).size() < NUM_ASSIGNMENTS) {
+                        if (assignmentRepository.findAllByAssignedAsuriteAndSemesterName(candidate, activeSemester.getSemesterName()).size() < numAssignments) {
                             Assignment assignment = new Assignment();
                             assignment.setAsurite(asurite);
                             assignment.setAssignedAsurite(candidate);
@@ -87,7 +89,7 @@ public class AssignmentsApiController implements AssignmentsApi {
                 }
 
                 // if the desired number of assignments was met
-                if (assignmentList.size() == NUM_ASSIGNMENTS) {
+                if (assignmentList.size() == numAssignments) {
                     // save the assignments to the database
                     for (Assignment assignment : assignmentList) {
                         assignmentRepository.save(assignment);
@@ -134,6 +136,7 @@ public class AssignmentsApiController implements AssignmentsApi {
         if (accept != null && accept.contains("application/json")) {
             // clear all current assignments for the semester
             Semester activeSemester = semesterRepository.findByIsActive(true);
+            Long numAssignments = numberOfAssignmentsRepository.findOne(activeSemester.getSemesterName()).getNumAssignments();
             assignmentRepository.deleteAllBySemesterName(activeSemester.getSemesterName());
 
             // assign leads
@@ -160,7 +163,7 @@ public class AssignmentsApiController implements AssignmentsApi {
                 // get preferences for all the students in a major cluster
                 Map<String, List<String>> preferenceTable = getPreferenceTableForMajorCluster(clusterToTutorsMap.get(majorCluster));
                 StableMatch stableMatch = new StableMatch(preferenceTable);
-                for (int i = 0; i < NUM_ASSIGNMENTS; i++) {
+                for (int i = 0; i < numAssignments; i++) {
                     Map<String, String> matches = stableMatch.getMatches();
                     if (matches != null) {
                         for (String evaluator: matches.keySet()) {

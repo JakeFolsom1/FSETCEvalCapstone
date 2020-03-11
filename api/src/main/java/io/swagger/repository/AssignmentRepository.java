@@ -17,5 +17,6 @@ public interface AssignmentRepository extends CrudRepository<Assignment, Long> {
     List<Assignment> findAllByAssignmentId(Long assignmentId);
     List<Assignment> findAllByAsurite(String asurite);
     void deleteAllBySemesterName(String semesterName);
+    void deleteAssignmentByAssignedAsuriteAndAsuriteAndSemesterName(String assignedAsurite, String asurite, String semesterName);
 
 }
