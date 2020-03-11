@@ -83,10 +83,7 @@ public class QuestionsApiController implements QuestionsApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             List<Question> activeQuestionList = new ArrayList<Question>();
-            Iterator<Question> questionIterator = questionRepository.findQuestionsByIsActiveAndEvalType(true, Question.EvalType.valueOf(evalType)).iterator();
-            if (!questionIterator.hasNext()) {
-                return new ResponseEntity<List<Question>>(HttpStatus.NOT_FOUND);
-            }
+            Iterator<Question> questionIterator = questionRepository.findQuestionsByIsActiveAndEvalTypeOrderByQuestionNumber(true, Question.EvalType.valueOf(evalType)).iterator();
             while(questionIterator.hasNext())
             {
                 activeQuestionList.add(questionIterator.next());

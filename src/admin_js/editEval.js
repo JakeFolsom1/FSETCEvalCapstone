@@ -1,23 +1,4 @@
-// fetch these instead of sample data
-const evalQuestions = [
-    {
-        questionId: 22,
-        questionPrompt: "Does tutor obey all procedures and policies of the tutoring center?",
-        questionType: "free-response",
-        isActive: true,
-        questionNumber: 1,
-        evalType: "p2p"
-    },
-    {
-        questionId: 23,
-        questionPrompt: "Does tutor obey all procedures and policies of the tutoring center?",
-        questionType: "numeric",
-        isActive: true,
-        questionNumber: 2,
-        evalType: "p2p"
-    }
-]
-
+let evalQuestions = [];
 $(document).ready(() => {
     const accordion = $("#accordion");
     [
@@ -128,11 +109,46 @@ $(document).ready(() => {
             const prompt = $(`#${type}QuestionPrompt`).val();
             const responseType = $(`#${type}ResponseType`).val();
             console.log(`Prompt: ${prompt}\nResponse Type: ${responseType}`)
+            $.ajax({
+                type: "POST",
+                url: apiUrl + "/questions",
+                data: JSON.stringify({
+                    evalType: type,
+                    isActive: true,
+                    questionNumber: evalQuestions.filter(question => question.evalType === type).length + 1,
+                    questionPrompt: prompt,
+                    questionType: responseType
+                }),
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                success: function (response) {
+                    console.log(response);
+                    reloadQuestions();
+                }
+            });
             $(`#add${type}QuestionModal`).modal('hide');
         });
     });
 
-    let evalQuestions = []
+    reloadQuestions();
+
+
+});
+
+const deleteQuestion = (questionId) => {
+    console.log("Deleting question " + questionId);
+    $.ajax({
+        type: "DELETE",
+        url: `${apiUrl}/questions/id/${questionId}`,
+        headers: { "Accept": "application/json" },
+        success: function () {
+            evalQuestions.splice(evalQuestions.findIndex(question => question.questionId === questionId), 1);
+            fixQuestionNumbers();
+        }
+    });
+}
+
+const reloadQuestions = () => {
+    evalQuestions = [];
     $.when(
         $.getJSON(apiUrl + "/questions/p2p",
             function (p2pQuestions) {
@@ -153,6 +169,9 @@ $(document).ready(() => {
         const p2pQuestions = $("#p2pQuestions");
         const l2tQuestions = $("#l2tQuestions");
         const t2lQuestions = $("#t2lQuestions");
+        p2pQuestions.empty();
+        l2tQuestions.empty();
+        t2lQuestions.empty();
         evalQuestions.forEach(question => {
             // generate the inner panels for each question of each eval type
             const innerHTML =
@@ -224,18 +243,43 @@ $(document).ready(() => {
         evalQuestions.forEach(question => {
             $(`#${question.evalType}Question${question.questionId}Form`).submit(event => {
                 event.preventDefault();
-                console.log("Saving question " + question.questionId);
-                // save question
-                // reload questions
+                question.questionPrompt = $(`#question${question.questionId}Prompt`).val();
+                question.questionType = $(`#question${question.questionId}ResponseType`).val();
+                $.ajax({
+                    type: "PUT",
+                    url: `${apiUrl}/questions`,
+                    data: JSON.stringify(question),
+                    headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                    success: function () {
+                        reloadQuestions();
+                    }
+                });
             });
         });
-    }
-    );
+    });
+}
 
-});
+const fixQuestionNumbers = () => {
+    let p2pCount = 0, l2tCount = 0, t2lCount = 0, reloadCounter = 0;
+    evalQuestions.forEach(question => {
+        if (question.evalType === "p2p") {
+            question.questionNumber = ++p2pCount;
+        } else if (question.evalType === "l2t") {
+            question.questionNumber = ++l2tCount;
+        } else {
+            question.questionNumber = ++t2lCount;
+        }
 
-const deleteQuestion = (questionId) => {
-    console.log("Deleting question " + questionId);
-    // delete question
-    // reload question
+        $.ajax({
+            type: "PUT",
+            url: `${apiUrl}/questions`,
+            data: JSON.stringify(question),
+            headers: { "Accept": "application/json", "Content-Type": "application/json" },
+            success: function () {
+                if (++reloadCounter === evalQuestions.length) {
+                    reloadQuestions();
+                }
+            }
+        });
+    })
 }
