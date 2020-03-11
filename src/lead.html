@@ -17,58 +17,55 @@
 </head>
 
 <body>
-<div id="navbar">
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div id="header">
-            <img class="nav-logo" src="../public/tutoringCenterHeaderText.jpg" alt="FSETC logo" />
-            <span
+    <div id="navbar">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div id="header">
+                <img class="nav-logo" src="../public/tutoringCenterHeaderText.jpg" alt="FSETC logo" />
+                <span
                     style="position: fixed; top: 10px; left: 345px; background-color: transparent; color: #ccc; font-size: 14pt">
-					FSE Tutoring Centers Evaluations
-				</span>
-            <div class="navbar-header"></div>
-        </div>
-    </nav>
-</div>
-
-<div id="content-page" style="margin: 10rem">
-    <div id="page-header">
-        <h2 style="font-weight: bold; margin-top: 7rem;">Evaluations</h2>
+                    FSE Tutoring Centers Evaluations
+                </span>
+                <div class="navbar-header"></div>
+            </div>
+        </nav>
     </div>
-    <ul class="nav nav-tabs" id="leadTabs" role="tablist">
-        <li class="active">
-            <a data-toggle="tab" id="sharedTab" href="#finished">View Shared</a>
-        </li>
-        <li>
-            <a data-toggle="tab" id="completeAssignmentsTab" href="#checkProgress">Complete Assignments</a>
-        </li>
-    </ul>
 
-    <div class="tab-content" id="leadTabContent">
-        <div class="tab-pane fade active in" id="finished" role="tabpanel" aria-labelledby="sharedTab">
-            <!--View Shared Evaluations Table  -->
-            <div class="tab-pane" id="viewShared" role="tabpanel" aria-labelledby="viewSharedTab">
-                <table id="completedEvaluationTable" class="striped-table cell-border" style="width:100%;"></table>
+    <div id="content-page" style="margin: 10rem">
+        <div id="page-header">
+            <h2 style="font-weight: bold; margin-top: 7rem;">Evaluations</h2>
+        </div>
+        <ul class="nav nav-tabs" id="leadTabs" role="tablist">
+            <li class="active">
+                <a data-toggle="tab" id="sharedTab" href="#finished">View Shared</a>
+            </li>
+            <li>
+                <a data-toggle="tab" id="completeAssignmentsTab" href="#assignments">Assignments</a>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="leadTabContent">
+            <div class="tab-pane fade active in" id="finished" role="tabpanel" aria-labelledby="sharedTab">
+                <!--View Shared Evaluations Table  -->
+                <div class="tab-pane" id="viewShared" role="tabpanel" aria-labelledby="viewSharedTab">
+                    <table id="completedEvaluationTable" class="striped-table cell-border" style="width:100%;"></table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="assignments" role="tabpanel" aria-labelledby="completeAssignmentsTab">
+                <table id="assignmentsTable" class="striped-table cell-border" style="width: 100%"></table>
+                <br />
+
             </div>
         </div>
-        <div class="tab-pane fade" id="checkProgress" role="tabpanel" aria-labelledby="checkProgressTab">
-            <table id="progressTable" class="striped-table cell-border" style="width: 100%"></table>
-            <br />
-
-        </div>
     </div>
-</div>
-<script>
-    const apiUrl = "https://sod819.fulton.asu.edu/eval-app";
+    <script>
+        const apiUrl = "https://sod819.fulton.asu.edu/eval-app";
     // const apiUrl = "http://localhost:8080";
-</script>
-<script src="../js/jquery-3.4.1.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
-<script src="viewShared.js"></script>
-<script src="admin_js/assignmentProgress.js"></script>
-<script src="admin_js/editEval.js"></script>
-<script src="admin_js/assignment.js"></script>
-<script src="admin_js/semester.js"></script>
+    </script>
+    <script src="../js/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="viewShared.js"></script>
+    <script src="completeAssignmentsLead.js"></script>
 </body>
 
 </html>
