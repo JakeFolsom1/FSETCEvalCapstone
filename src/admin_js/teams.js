@@ -86,6 +86,7 @@ const tutorHasTeam = tutor => {
 
 const loadTeamAndAvailable = lead => {
     if (lead === "none") {
+        $("#teamBox").empty();
         $("#availableBox").empty();
         tutorList.filter(tutor => !tutorHasTeam(tutor.asurite)).forEach(availableTutor => {
             $("#availableBox").append(`<option value="${availableTutor.asurite}">${names[availableTutor.asurite]} - ${availableTutor.cluster}</option>`);
