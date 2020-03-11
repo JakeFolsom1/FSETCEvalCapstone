@@ -18,8 +18,9 @@
 //     }
 // ]
 
-let sharedEvals = [], names = {}, leadAsurite = "aarunku3";
+
 $(document).ready(() => {
+    let sharedEvals = [], names = {}, leadAsurite = "aarunku3";
     $.when(
         $.getJSON(apiUrl + `/completedEvaluations/shared/${leadAsurite}`,
             function (completedEvalJson) {
@@ -37,7 +38,7 @@ $(document).ready(() => {
             names[eval.evaluator],
             null
         ])
-        $('#completedEvaluationTable').DataTable({
+        $('#sharedEvaluationsTable').DataTable({
             stripe: true,
             paging: false,
             searching: false,
