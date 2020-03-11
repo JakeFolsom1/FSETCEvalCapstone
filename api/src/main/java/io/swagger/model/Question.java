@@ -6,7 +6,10 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import static javax.persistence.EnumType.STRING;
 
@@ -17,9 +20,9 @@ import static javax.persistence.EnumType.STRING;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 @Entity
 @Table(name = "question")
-public class Question   {
+public class Question implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     @JsonProperty("questionId")
     private Long questionId = null;
 
@@ -51,6 +54,10 @@ public class Question   {
         l2t,
         t2l
     }
+
+//    @JsonProperty("semesterName")
+//    private String semesterName = null;
+
 
     /**
      * Get questionId
@@ -148,6 +155,22 @@ public class Question   {
     }
 
 
+    /**
+     * Get semester
+     * @return semester
+     **/
+    @ApiModelProperty(example = "fall19", required = true, value = "")
+    @NotNull
+
+
+//    public String getSemesterName() {
+//        return semesterName;
+//    }
+//
+//    public void setSemesterName(String semesterName) {
+//        this.semesterName = semesterName;
+//    }
+
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {
@@ -162,6 +185,8 @@ public class Question   {
                 Objects.equals(this.isActive, question.isActive) &&
                 Objects.equals(this.questionNumber, question.questionNumber) &&
                 Objects.equals(this.evalType, question.evalType);
+//                &&
+//                Objects.equals(this.semesterName, question.semesterName);
     }
 
     @Override

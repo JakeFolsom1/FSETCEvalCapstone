@@ -2,9 +2,10 @@ package io.swagger.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
-import io.swagger.model.Account;
 import io.swagger.model.NumberOfAssignments;
+import io.swagger.model.Semester;
 import io.swagger.repository.NumberOfAssignmentsRepository;
+import io.swagger.repository.SemesterRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ public class NumberOfAssignmentsApiController implements NumberOfAssignmentsApi 
 
     @Autowired
     private NumberOfAssignmentsRepository numAssignmentsRepository;
+
 
     @org.springframework.beans.factory.annotation.Autowired
     public NumberOfAssignmentsApiController(ObjectMapper objectMapper, HttpServletRequest request) {

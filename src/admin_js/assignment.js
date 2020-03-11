@@ -23,12 +23,12 @@ $(document).ready(() => {
                 }
             )
         }),
-        $.getJSON(apiUrl + "/accounts/names",
+        $.getJSON(apiUrl + "/staff/names",
             function (namesJson) {
                 names = namesJson;
             }
         ),
-        $.getJSON(apiUrl + "/accounts/tutors",
+        $.getJSON(apiUrl + "/staff/tutors",
             function (tutorsJson) {
                 tutorList = tutorsJson.map(tutor => tutor.asurite);
             }
@@ -72,7 +72,7 @@ $(document).ready(() => {
         });
 
         const prefMap = preferences.reduce((acc, val) => {
-            const { asurite, semester, preferenceId, ...values } = val;
+            const { asurite, semesterName, ...values } = val;
             if (acc[val.asurite]) {
                 acc[val.asurite].push(values);
             }
@@ -88,7 +88,18 @@ $(document).ready(() => {
         Object.keys(prefMap).forEach((val) => { prefMap[val] = prefMap[val].sort((a, b) => a.preferenceNumber - b.preferenceNumber); });
 
         // you also need to figure out if they are a lead or not by calling the account api or if team member is redone
-        const tableData = Object.keys(prefMap).map(val => [val, false, prefMap[val][0].preferredAsurite, prefMap[val][1].preferredAsurite, prefMap[val][2].preferredAsurite]).concat(leadMap);
+        const tableData = Object.keys(prefMap).map(val => {
+            const pref1 = prefMap[val][0]
+            const pref2 = prefMap[val][1];
+            const pref3 = prefMap[val][2];
+            return [
+                val,
+                false,
+                pref1 ? pref1.preferredAsurite : "",
+                pref2 ? pref2.preferredAsurite : "",
+                pref3 ? pref3.preferredAsurite : ""
+            ]
+        }).concat(leadMap);
 
         $('#assignmentTable').DataTable({
             paging: false,
@@ -174,8 +185,8 @@ $(document).ready(() => {
                                         <label for="${tutorName}Peer${index}">Peer Evaluation ${index + 1}:</label>
                                         <select id="${tutorName}Peer${index}" class="form-control">
                                             <option>None</option>
-                                            ${tutorList.filter(value => value !== tutorName).map(value => // possibly make this from preference list because each tutor will have preferences for all tutors in their majorCluster
-                                        `<option value=${value} ${existingAssignment && existingAssignment.assignedAsurite === value ? "selected" : ""}>${names[value]}</option>`)}
+                                            ${prefMap[tutorName].map(value =>
+                                        `<option value=${value.preferredAsurite} ${existingAssignment && existingAssignment.assignedAsurite === value.preferredAsurite ? "selected" : ""}>${names[value.preferredAsurite]}</option>`)}
                                         </select>
                                     </div>
                                 `)
@@ -230,11 +241,45 @@ $(document).ready(() => {
                 const values = Array.from(Array(numAssignments).keys()).map(value => $(`#${tutorName}Peer${value}`).val());
 
                 const button = $(`#${tutorName}SaveAssignButton`);
-                let isValid = new Set(values).size === values.length;
+                let isValid = checkDuplicateAssignments(values); //allows duplicate "None"s but all other names may only appear once
                 if (isValid) {
                     button.attr("disabled", "true");
                     button.text("Saved");
                     console.log("Saving assignments as: " + values);
+                    values.forEach((asurite, index) => {
+                        if (asurite !== "None") {
+                            // should a creation be treated the same as an update
+                            const pastAssignment = assignments.find(assignment =>
+                                assignment.asurite === tutorName &&
+                                assignment.assignmentNumber === (index + 1) &&
+                                assignment.evalType === "p2p");
+                            let newAssignment;
+                            let method;
+                            if (pastAssignment) {
+                                newAssignment = Object.assign({}, pastAssignment, { assignedAsurite: asurite });
+                                method = "PUT";
+                            } else {
+                                newAssignment = {
+                                    assignedAsurite: asurite,
+                                    assignmentNumber: index + 1,
+                                    asurite: tutorName,
+                                    evalType: "p2p",
+                                    isComplete: false,
+                                    semesterName: activeSemester
+                                };
+                                method = "POST";
+                            }
+                            $.ajax({
+                                type: method,
+                                url: apiUrl + "/assignments",
+                                data: JSON.stringify(newAssignment),
+                                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                                success: () => {
+                                    $(`#${tutorName}AssignModal`).modal("hide");
+                                }
+                            })
+                        }
+                    })
                 }
                 else {
                     button.attr("disabled", "true");
@@ -273,3 +318,18 @@ const autoAssignAll = () => {
         button.text("Auto-Assign All");
     }, 1000);
 };
+
+const checkDuplicateAssignments = assignments => {
+    const names = {};
+    for (assignment of assignments) {
+        if (assignment !== "None") {
+            if (names[assignment]) {
+                return false;
+            }
+            else {
+                names[assignment] = 1;
+            }
+        }
+    }
+    return true;
+}

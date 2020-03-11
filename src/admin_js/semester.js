@@ -1,8 +1,9 @@
+let dataTable = null;
 $(document).ready(() => {
     $.getJSON(apiUrl + "/semesters",
         function (semestersJson) {
             const semesters = semestersJson.map(semester => [semester.semesterName, semester.isActive]);
-            $('#semesterTable').DataTable({
+            dataTable = $('#semesterTable').DataTable({
                 paging: false,
                 searching: false,
                 info: false,
@@ -21,8 +22,7 @@ $(document).ready(() => {
                         render: (data, _type, row) => {
                             const modalKey = row[0].replace(/\s+/g, '');
                             let actionButtons =
-                                `<button class="btn btn-primary" ${data ? "disabled" : ""} onclick="activateSemester('${row[0]}')">Set Active</button>
-                                <button 
+                                `<button 
                                 class="btn btn-secondary" 
                                 style="border-color: #8C1D40;" 
                                 data-toggle="modal"
@@ -73,6 +73,15 @@ $(document).ready(() => {
                 event.preventDefault();
                 const semesterName = $("#semesterInput").val() + $("#semesterYearInput").val()
                 console.log("Creating new semester: " + semesterName);
+                $.ajax({
+                    type: "POST",
+                    url: apiUrl + "/semesters",
+                    data: JSON.stringify({ isActive: true, semesterName: semesterName }),
+                    headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                    success: function () {
+                        location.reload();
+                    }
+                })
                 $('#addSemesterModal').modal('hide');
             });
         }
@@ -80,11 +89,19 @@ $(document).ready(() => {
 
 });
 
-const activateSemester = semesterName => {
-    console.log("Activating semester: " + semesterName);
-};
+// const activateSemester = semesterName => {
+//     console.log("Activating semester: " + semesterName);
+// };
 
 const deleteSemester = semesterName => {
     console.log("Deleting semester: " + semesterName);
+    $.ajax({
+        type: "DELETE",
+        url: apiUrl + "/semesters/" + semesterName,
+        headers: { Accept: "application/json" },
+        success: function () {
+            location.reload();
+        }
+    })
     $(`#delete${semesterName.replace(/\s+/g, '')}Modal`).modal('hide');
 };

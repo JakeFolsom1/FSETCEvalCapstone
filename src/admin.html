@@ -51,7 +51,10 @@
 				<a data-toggle="tab" id="assignTab" href="#assign">Assign</a>
 			</li>
 			<li>
-				<a data-toggle="tab" id="setSemesterTab" href="#setSemester">Set Semester</a>
+				<a data-toggle="tab" id="teamsTab" href="#teams">Teams</a>
+			</li>
+			<li>
+				<a data-toggle="tab" id="semesterTab" href="#semester">Semester</a>
 			</li>
 		</ul>
 
@@ -102,7 +105,33 @@
 					Auto-Assign All
 				</button>
 			</div>
-			<div class="tab-pane fade" id="setSemester" role="tabpanel" aria-labelledby="setSemesterTab">
+			<div class="tab-pane fade" id="teams" role="tabpanel" aria-labelledby="teamsTab">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-xs-4">
+							<h4>Leads</h4>
+							<select name="leadBox" id="leadBox" class="form-control" multiple size="25">
+								<option value="none" selected></option>
+							</select>
+						</div>
+						<div class="col-xs-4">
+							<h4>Selected Lead's Team</h4>
+							<select name="teamBox" id="teamBox" class="form-control" multiple size="25">
+							</select>
+							<br />
+							<button id="removeTeamMembersButton" class="btn btn-primary btn-block">Remove</button>
+						</div>
+						<div class="col-xs-4">
+							<h4>Available Tutors</h4>
+							<select name="availableBox" id="availableBox" class="form-control" multiple size="25">
+							</select>
+							<br />
+							<button id="addTeamMembersButton" class="btn btn-primary btn-block">Add</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane fade" id="semester" role="tabpanel" aria-labelledby="semesterTab">
 				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSemesterModal"
 					style="display: block; margin-left: auto; margin-bottom: 1rem;">
 					<span>&#43;</span>
@@ -167,6 +196,7 @@
 	<script src="admin_js/assignmentProgress.js"></script>
 	<script src="admin_js/editEval.js"></script>
 	<script src="admin_js/assignment.js"></script>
+	<script src="admin_js/teams.js"></script>
 	<script src="admin_js/semester.js"></script>
 </body>
 
