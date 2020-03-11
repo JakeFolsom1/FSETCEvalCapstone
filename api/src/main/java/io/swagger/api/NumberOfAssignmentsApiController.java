@@ -30,6 +30,8 @@ public class NumberOfAssignmentsApiController implements NumberOfAssignmentsApi 
     @Autowired
     private NumberOfAssignmentsRepository numAssignmentsRepository;
 
+    @Autowired
+    private SemesterRepository semesterRepository;
 
     @org.springframework.beans.factory.annotation.Autowired
     public NumberOfAssignmentsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -69,10 +71,14 @@ public class NumberOfAssignmentsApiController implements NumberOfAssignmentsApi 
     }
 
     @Override
-    public ResponseEntity<NumberOfAssignments> getNumAssignments(@ApiParam(value = "",required=true) @PathVariable("semesterName") String semesterName) {
+    public ResponseEntity<NumberOfAssignments> getNumAssignments() {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            NumberOfAssignments numberOfAssignments = numAssignmentsRepository.findOne(semesterName);
+            Semester activeSemester = semesterRepository.findByIsActive(true);
+            if (activeSemester == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            NumberOfAssignments numberOfAssignments = numAssignmentsRepository.findOne(activeSemester.getSemesterName());
             if (numberOfAssignments == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -84,10 +90,14 @@ public class NumberOfAssignmentsApiController implements NumberOfAssignmentsApi 
     }
 
     @Override
-    public ResponseEntity<Void> updateNumAssignments(@ApiParam(value = "",required=true) @PathVariable("semesterName") String semesterName, @ApiParam(value = "",required=true) @PathVariable("numAssignments") Long numAssignments) {
+    public ResponseEntity<Void> updateNumAssignments(@ApiParam(value = "",required=true) @PathVariable("numAssignments") Long numAssignments) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            NumberOfAssignments numberOfAssignments = numAssignmentsRepository.findOne(semesterName);
+            Semester activeSemester = semesterRepository.findByIsActive(true);
+            if (activeSemester == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            NumberOfAssignments numberOfAssignments = numAssignmentsRepository.findOne(activeSemester.getSemesterName());
             if (numberOfAssignments == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }

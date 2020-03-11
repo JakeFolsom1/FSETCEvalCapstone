@@ -27,7 +27,7 @@ $(document).ready(() => {
                 sharedEvals = completedEvalJson;
             }
         ),
-        $.getJSON(apiUrl + "/accounts/names",
+        $.getJSON(apiUrl + "/staff/names",
             function (namesJson) {
                 names = namesJson;
             }

@@ -32,21 +32,21 @@ public interface NumberOfAssignmentsApi {
     ResponseEntity<Void> deleteNumAssignments(@ApiParam(value = "",required=true) @PathVariable("semesterName") String semesterName);
 
 
-    @ApiOperation(value = "Get numAssignments by semesterName", nickname = "getNumAssignments", notes = "", response = NumberOfAssignments.class, tags={ "numAssignments", })
+    @ApiOperation(value = "Get numAssignments for the current semester", nickname = "getNumAssignments", notes = "", response = NumberOfAssignments.class, tags={ "numAssignments", })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = NumberOfAssignments.class),
             @ApiResponse(code = 404, message = "Semester not found") })
-    @RequestMapping(value = "/numAssignments/{semesterName}",
+    @RequestMapping(value = "/numAssignments",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<NumberOfAssignments> getNumAssignments(@ApiParam(value = "",required=true) @PathVariable("semesterName") String semesterName);
+    ResponseEntity<NumberOfAssignments> getNumAssignments();
 
-    @ApiOperation(value = "Update an existing numAssignments", nickname = "updateNumAssignments", notes = "", tags={ "numAssignments", })
+    @ApiOperation(value = "Update the current semester's numAssignments", nickname = "updateNumAssignments", notes = "", tags={ "numAssignments", })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully updated"),
             @ApiResponse(code = 404, message = "Semester not found")})
-    @RequestMapping(value = "/numAssignments/{semesterName}/{numAssignments}",
+    @RequestMapping(value = "/numAssignments/{numAssignments}",
             produces = { "application/json" },
             method = RequestMethod.PUT)
-    ResponseEntity<Void> updateNumAssignments(@ApiParam(value = "" ,required=true )  @PathVariable("semesterName") String semesterName, @ApiParam(value = "" ,required=true )  @PathVariable("numAssignments") Long numAssignments);
+    ResponseEntity<Void> updateNumAssignments(@ApiParam(value = "" ,required=true )  @PathVariable("numAssignments") Long numAssignments);
 }

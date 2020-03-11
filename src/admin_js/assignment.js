@@ -1,28 +1,19 @@
 $(document).ready(() => {
-    let names = {};
-    let numAssignments = 0;
-    let tutorList = [];
-    let assignments = [];
-    let preferences = [];
-    let leadTeams = [];
-    let activeSemester = "";
+    let names = {}, numAssignments = 0, tutorList = [], assignments = [], preferences = [], leadTeams = [], activeSemester = "";
     $.when(
-        $.when(
-            $.ajax({
-                type: "GET",
-                url: apiUrl + "/semesters/active",
-                headers: { Accept: "application/text" },
-                success: function (activeSemesterRes) {
-                    activeSemester = activeSemesterRes;
-                }
-            })
-        ).then(function () {
-            $.getJSON(apiUrl + "/numAssignments/" + activeSemester,
-                function (numAssignmentsJson) {
-                    numAssignments = numAssignmentsJson.numAssignments;
-                }
-            )
+        $.ajax({
+            type: "GET",
+            url: apiUrl + "/semesters/active",
+            headers: { Accept: "application/text" },
+            success: function (activeSemesterRes) {
+                activeSemester = activeSemesterRes;
+            }
         }),
+        $.getJSON(apiUrl + "/numAssignments",
+            function (numAssignmentsJson) {
+                numAssignments = numAssignmentsJson.numAssignments;
+            }
+        ),
         $.getJSON(apiUrl + "/staff/names",
             function (namesJson) {
                 names = namesJson;
@@ -56,7 +47,7 @@ $(document).ready(() => {
             const num = $("#numAssignments").val();
             $.ajax({
                 type: "PUT",
-                url: `${apiUrl}/numAssignments/${activeSemester}/${num}`,
+                url: `${apiUrl}/numAssignments/${num}`,
                 headers: { Accept: "application/json" },
                 success: function () {
                     const button = $("#numAssignmentsButton");
