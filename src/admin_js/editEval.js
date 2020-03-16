@@ -98,10 +98,50 @@ $(document).ready(() => {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel-group" id="${type}Questions"></div>
+                                <ul class="panel-group ${type}sortable" id="${type}Questions"></ul>
                             </div>
                         </div>
                     </div>`);
+
+        $(`.${type}sortable`).sortable({
+            start: function (event, ui) {
+                // store the initial position of the dragged item
+                ui.item.data('start_pos', ui.item.index());
+            },
+            update: function (event, ui) {
+                // on finish sort, get the start position
+                const startIndex = ui.item.data('start_pos');
+                // get the final sorted position
+                const endIndex = ui.item.index();
+
+                // get the ids of the sorted questions
+                const sortedIDs = $(`.${type}sortable`).sortable("toArray");
+                // find the index of the question to move in the evalQuestions array
+                const arrStartIndex = evalQuestions.findIndex(question => question.questionId === Number(sortedIDs[endIndex]));
+                // calculate the index to move to
+                const arrEndIndex = arrStartIndex + (endIndex - startIndex);
+
+
+                // store the question to move
+                let temp = evalQuestions[arrStartIndex];
+                // if moving the question to a larger index
+                if (arrStartIndex < arrEndIndex) {
+                    // shift questions to left
+                    for (let i = arrStartIndex; i < arrEndIndex; i++) {
+                        evalQuestions[i] = evalQuestions[i + 1];
+                    }
+                } else {
+                    // else shift questions to the right
+                    for (let i = arrStartIndex; i > arrEndIndex; i--) {
+                        evalQuestions[i] = evalQuestions[i - 1];
+                    }
+                }
+                // put the question in its place
+                evalQuestions[arrEndIndex] = temp;
+                // fix the question numbers and update the db
+                fixQuestionNumbers();
+            }
+        });
 
         $(`#new${val.type}QuestionForm`).submit(event => {
             event.preventDefault();
@@ -175,7 +215,7 @@ const reloadQuestions = () => {
         evalQuestions.forEach(question => {
             // generate the inner panels for each question of each eval type
             const innerHTML =
-                `<div class="panel panel-default"> 
+                `<li class="panel panel-default" id="${question.questionId}" style="list-style: none"> 
                         <div class="panel-heading scheduled"> 
                             <h4 class="panel-title scheduled"> 
                                 <a 
