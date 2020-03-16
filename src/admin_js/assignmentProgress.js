@@ -16,7 +16,7 @@ $(document).ready(() => {
         $(() => {
             $('[data-toggle="tooltip"]').tooltip()
         })
-        // converting the assingment data to be an object with keys on the asurites with incomplete assignments
+        // converting the assignment data to be an object with keys on the asurites with incomplete assignments
         // and values being an array of their incomplete assignment objects
         const assignmentMap = assignmentsProgress.reduce((acc, value) => {
             if (!value.isComplete) {
