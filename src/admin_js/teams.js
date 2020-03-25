@@ -45,7 +45,7 @@ $(document).ready(() => {
                     url: apiUrl + `/teamMembers/tutor/${tutorAsurite}`,
                     headers: { "Accept": "application/json" },
                     success: function () {
-                        reload();
+                        reloadTeamMembers();
                     }
                 })
             })
@@ -64,14 +64,14 @@ $(document).ready(() => {
                     data: JSON.stringify({ leadAsurite: leadAsurite, semesterName: activeSemester, tutorAsurite: tutorAsurite }),
                     headers: { "Accept": "application/json", "Content-Type": "application/json" },
                     success: function () {
-                        reload();
+                        reloadTeamMembers();
                     }
                 })
             })
         }
     });
 
-    reload();
+    reloadTeamMembers();
 
 })
 
@@ -106,7 +106,7 @@ const loadTeamAndAvailable = lead => {
     }
 };
 
-const reload = () => {
+const reloadTeamMembers = () => {
     $.when(
         $.getJSON(apiUrl + "/teamMembers",
             function (teamMemberJson) {

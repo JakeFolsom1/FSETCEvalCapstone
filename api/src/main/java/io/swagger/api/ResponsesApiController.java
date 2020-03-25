@@ -80,10 +80,10 @@ public class ResponsesApiController implements ResponsesApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             List<Response> responseList = new ArrayList<>();
-            Iterator<Response> preferenceIterator = responseRepository.findAll().iterator();
-            while(preferenceIterator.hasNext()) {
-                Response response = preferenceIterator.next();
-                if(response.getAssignmentId() == assignmentId){
+            Iterator<Response> responseIterator = responseRepository.findAll().iterator();
+            while(responseIterator.hasNext()) {
+                Response response = responseIterator.next();
+                if(response.getAssignmentId().equals(assignmentId)){
                     responseList.add(response);
                 }
             }

@@ -145,10 +145,8 @@ $(document).ready(() => {
 
         $(`#new${val.type}QuestionForm`).submit(event => {
             event.preventDefault();
-            console.log(`Adding new ${type} question `);
             const prompt = $(`#${type}QuestionPrompt`).val();
             const responseType = $(`#${type}ResponseType`).val();
-            console.log(`Prompt: ${prompt}\nResponse Type: ${responseType}`)
             $.ajax({
                 type: "POST",
                 url: apiUrl + "/questions",
@@ -279,7 +277,7 @@ const reloadQuestions = () => {
             }
         });
 
-        // add submit handlers after all innerHTML is done loading
+        // add submit handlers
         evalQuestions.forEach(question => {
             $(`#${question.evalType}Question${question.questionId}Form`).submit(event => {
                 event.preventDefault();
