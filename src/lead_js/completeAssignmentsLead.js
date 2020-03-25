@@ -98,7 +98,7 @@ $(document).ready(() => {
                             `<button
                         class="btn btn-primary"
                         style="border-color: #8C1D40;"
-                        onclick="location.href = './evaluations.html';" id="myButton">
+                        onclick="{$('#testmodal').modal('show')};" id="myButton">
                         Evaluate
                         </button>`;
                         return evalButton;
