@@ -67,6 +67,25 @@
 				<div class="tab-pane" id="viewShared" role="tabpanel" aria-labelledby="viewSharedTab">
 					<table id="completedEvaluationTable" class="striped-table cell-border" style="width:100%;"></table>
 				</div>
+				<!-- Test Modal Start -->
+				<div id="testmodal" class="modal fade">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div id = "evalHeader" class="modal-header" >
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+								<h4 class="modal-title" id="evalTitle"></h4>
+							</div>
+							<div class="modal-body">
+								<ul id="questionsAndResponses">
+								</ul>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Test Modal End -->
 			</div>
 			<div class="tab-pane fade" id="checkProgress" role="tabpanel" aria-labelledby="checkProgressTab">
 				<table id="progressTable" class="striped-table cell-border" style="width: 100%"></table>

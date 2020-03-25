@@ -87,3 +87,5 @@ img {
 }
 
 .dataTables_filter, .dataTables_info { display: none; }
+
+.tab-eval { margin-left: 20px; }
