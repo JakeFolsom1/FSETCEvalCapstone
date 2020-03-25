@@ -85,3 +85,7 @@ Bootstrap nav overrides .navbar {
 img {
 	vertical-align: inherit;
 }
+
+.dataTables_filter, .dataTables_info { display: none; }
+
+.tab-eval { margin-left: 20px; }
