@@ -11,6 +11,7 @@
 
 	<link rel="stylesheet" href="../css/bootstrap.min.css" />
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
+	<link rel="stylesheet" href="../css/jquery-ui.min.css" />
 	<link rel="stylesheet" href="../css/asu.css" />
 	<link rel="stylesheet" href="../css/general.css" />
 	<link rel="stylesheet" href="../css/primaryStyles.css" />
@@ -51,7 +52,10 @@
 				<a data-toggle="tab" id="assignTab" href="#assign">Assign</a>
 			</li>
 			<li>
-				<a data-toggle="tab" id="setSemesterTab" href="#setSemester">Set Semester</a>
+				<a data-toggle="tab" id="teamsTab" href="#teams">Teams</a>
+			</li>
+			<li>
+				<a data-toggle="tab" id="semesterTab" href="#semester">Semester</a>
 			</li>
 		</ul>
 
@@ -61,31 +65,10 @@
 				<!-- Search form -->
 				<div
 					style="display: flex; flex-direction: row; justify-content: left; align-items: center; padding-bottom: 20px">
-					<input class="form-control" id="searchText" type="text" placeholder="Enter tutor name..." style="width: 30%; "
-						aria-label="Search" />
+					<input class="form-control" id="searchText" type="text" placeholder="Enter tutor name..."
+						style="width: 30%; " aria-label="Search" />
 				</div>
-				<div class="tab-pane" id="viewShared" role="tabpanel" aria-labelledby="viewSharedTab">
-					<table id="completedEvaluationTable" class="striped-table cell-border" style="width:100%;"></table>
-				</div>
-				<!-- Test Modal Start -->
-				<div id="testmodal" class="modal fade">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div id = "evalHeader" class="modal-header" >
-								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-								<h4 class="modal-title" id="evalTitle"></h4>
-							</div>
-							<div class="modal-body">
-								<ul id="questionsAndResponses">
-								</ul>
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- Test Modal End -->
+				<table id="completedEvaluationTable" class="striped-table cell-border" style="width:100%;"></table>
 			</div>
 			<div class="tab-pane fade" id="checkProgress" role="tabpanel" aria-labelledby="checkProgressTab">
 				<table id="progressTable" class="striped-table cell-border" style="width: 100%"></table>
@@ -121,7 +104,33 @@
 					Auto-Assign All
 				</button>
 			</div>
-			<div class="tab-pane fade" id="setSemester" role="tabpanel" aria-labelledby="setSemesterTab">
+			<div class="tab-pane fade" id="teams" role="tabpanel" aria-labelledby="teamsTab">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-xs-4">
+							<h4>Leads</h4>
+							<select name="leadBox" id="leadBox" class="form-control" multiple size="25">
+								<option value="none" selected></option>
+							</select>
+						</div>
+						<div class="col-xs-4">
+							<h4>Selected Lead's Team</h4>
+							<select name="teamBox" id="teamBox" class="form-control" multiple size="25">
+							</select>
+							<br />
+							<button id="removeTeamMembersButton" class="btn btn-primary btn-block">Remove</button>
+						</div>
+						<div class="col-xs-4">
+							<h4>Available Tutors</h4>
+							<select name="availableBox" id="availableBox" class="form-control" multiple size="25">
+							</select>
+							<br />
+							<button id="addTeamMembersButton" class="btn btn-primary btn-block">Add</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane fade" id="semester" role="tabpanel" aria-labelledby="semesterTab">
 				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSemesterModal"
 					style="display: block; margin-left: auto; margin-bottom: 1rem;">
 					<span>&#43;</span>
@@ -170,7 +179,7 @@
 	</div>
 	<script src="../js/jquery-3.4.1.min.js"></script>
 	<script>
-		 const apiUrl = "https://sod819.fulton.asu.edu/eval-app";
+		const apiUrl = "https://sod819.fulton.asu.edu/eval-app";
 		// const apiUrl = "http://localhost:8080";
 		$(document).ajaxStart(function () {
 			$(".ajax-gif").css("display", "block");
@@ -181,11 +190,13 @@
 		});
 	</script>
 	<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+	<script src="../js/jquery-ui.min.js"></script>
 	<script src="../js/bootstrap.min.js"></script>
 	<script src="admin_js/completedEval.js"></script>
 	<script src="admin_js/assignmentProgress.js"></script>
 	<script src="admin_js/editEval.js"></script>
 	<script src="admin_js/assignment.js"></script>
+	<script src="admin_js/teams.js"></script>
 	<script src="admin_js/semester.js"></script>
 </body>
 
