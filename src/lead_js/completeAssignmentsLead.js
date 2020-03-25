@@ -98,7 +98,7 @@ $(document).ready(() => {
                             `<button
                         class="btn btn-primary"
                         style="border-color: #8C1D40;"
-                        onclick="{$('#testmodal').modal('show')};" id="myButton">
+                        onclick="buildEvaluation()" id="myButton">
                         Evaluate
                         </button>`;
                         return evalButton;
@@ -121,7 +121,7 @@ $(document).ready(() => {
                 { title: "Evaluatee" },
                 {
                     title: "Actions",
-                    render: () => {
+                    render: (data, _type, row) => {
                         //Use data variable to pass the evaluation parameters to the evaluations page.
                         let viewButton =
                             `<button
@@ -138,3 +138,32 @@ $(document).ready(() => {
     })
 
 });
+
+const buildEvaluation = () => {
+    let evalQuestions = [];
+    $('#questionsAndResponses').empty();
+    $('#evalHeader h3').remove();
+    $.when(
+        $.getJSON(apiUrl + "/questions/l2t",
+            function (result) {
+                console.log(result);
+                evalQuestions = result;
+            }
+        ),
+    ).then(function () {
+        $.each(evalQuestions, (index, question) =>{
+            const innerHTML =
+                `<li>
+                <h4 style="font-weight: bold">Question ${index + 1}:</h4>
+                <p class="tab-eval">  ${question.questionPrompt}</p>
+                <br>
+             </li>`;
+            $('#questionsAndResponses').append(innerHTML)
+        });
+        $('#testmodal').modal('show')
+    })
+}
+
+const submitEvaluation = () => {
+
+}
