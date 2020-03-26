@@ -1,0 +1,81 @@
+.content-main {
+	margin-left: 20%;
+	position: relative;
+	margin-top: 50px;
+}
+
+.content-main h3 {
+	display: inline-block;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+/* 
+li {
+	font-size: 24pt;
+}
+
+h2 {
+	font-family: "Segoe UI", sans-serif;
+	color: #080808;
+} */
+
+.pageText {
+	font-size: 14pt;
+	font-family: "Segoe UI", serif;
+	color: #5c6670;
+}
+
+.squareButtons {
+	width: 5%;
+	height: 5%;
+	background-color: #f0f0f0;
+	display: inline-block;
+	border: 1px #111111;
+	margin-left: 10%;
+}
+.cornerButton {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+}
+.squareButtons:focus {
+	background-color: #8c1d40;
+}
+
+.striped-table > tbody > tr:nth-child(odd) > td,
+.striped-table > tbody > tr:nth-child(odd) > th {
+	background-color: #fff1cc;
+}
+
+.striped-table > tbody > tr:nth-child(even) > td,
+.striped-table > tbody > tr:nth-child(even) > th {
+	background-color: #ffffff;
+}
+
+.dot {
+	height: 25px;
+	width: 25px;
+	background-color: green;
+	border-radius: 50%;
+	display: inline-block;
+}
+
+/* Needed to vertically center modals in Bootstrap 3 */
+.modal {
+	text-align: center;
+	padding: 0 !important;
+}
+
+.modal:before {
+	content: "";
+	display: inline-block;
+	height: 100%;
+	vertical-align: middle;
+	margin-right: -4px;
+}
+
+.modal-dialog {
+	display: inline-block;
+	text-align: left;
+	vertical-align: middle;
+}

@@ -1,0 +1,23 @@
+{
+  "name": "fsetcevalcapstone",
+  "version": "1.0.0",
+  "description": "This is the evaluation platform for the Fulton Schools of Engineering Tutoring Centers.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JakeFolsom1/FSETCEvalCapstone.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JakeFolsom1/FSETCEvalCapstone/issues"
+  },
+  "homepage": "https://github.com/JakeFolsom1/FSETCEvalCapstone#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.0"
+  }
+}

@@ -1,4 +1,4 @@
-let activeSemester = "", names = {}, tutorList = [], leadList = [], leadTeams = {};
+let activeSemester = "", namesForTeams = {}, tutorList = [], leadList = [], leadTeams = {};
 
 $(document).ready(() => {
     $.when(
@@ -12,7 +12,7 @@ $(document).ready(() => {
         }),
         $.getJSON(apiUrl + "/staff/names",
             function (namesJson) {
-                names = namesJson;
+                namesForTeams = namesJson;
             }
         ),
         $.getJSON(apiUrl + "/staff/tutors",
@@ -27,7 +27,7 @@ $(document).ready(() => {
         )
     ).then(() => {
         leadList.forEach(lead => {
-            $("#leadBox").append(`<option value="${lead.asurite}_${lead.cluster}">${names[lead.asurite]} - ${lead.cluster}</option>`);
+            $("#leadBox").append(`<option value="${lead.asurite}_${lead.cluster}">${namesForTeams[lead.asurite]} - ${lead.cluster}</option>`);
         });
     });
 
@@ -89,19 +89,19 @@ const loadTeamAndAvailable = lead => {
         $("#teamBox").empty();
         $("#availableBox").empty();
         tutorList.filter(tutor => !tutorHasTeam(tutor.asurite)).forEach(availableTutor => {
-            $("#availableBox").append(`<option value="${availableTutor.asurite}">${names[availableTutor.asurite]} - ${availableTutor.cluster}</option>`);
+            $("#availableBox").append(`<option value="${availableTutor.asurite}">${namesForTeams[availableTutor.asurite]} - ${availableTutor.cluster}</option>`);
         });
     } else {
         const [leadAsurite, leadCluster] = lead.split("_");
 
         $("#teamBox").empty();
         leadTeams[leadAsurite].forEach(tutor => {
-            $("#teamBox").append(`<option value="${tutor}">${names[tutor]}</option>`);
+            $("#teamBox").append(`<option value="${tutor}">${namesForTeams[tutor]}</option>`);
         });
 
         $("#availableBox").empty();
         tutorList.filter(tutor => !tutorHasTeam(tutor.asurite) && tutor.cluster === leadCluster).forEach(availableTutor => {
-            $("#availableBox").append(`<option value="${availableTutor.asurite}">${names[availableTutor.asurite]}</option>`);
+            $("#availableBox").append(`<option value="${availableTutor.asurite}">${namesForTeams[availableTutor.asurite]}</option>`);
         });
     }
 };
