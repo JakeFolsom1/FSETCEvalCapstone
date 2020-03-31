@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/JakeFolsom1/FSETCEvalCapstone#readme",
   "dependencies": {
+    "cas-authentication": "0.0.8",
     "express": "^4.17.1",
     "node-fetch": "^2.6.0"
   }
