@@ -30,8 +30,7 @@ $(document).ready(() => {
             return acc;
         }, {});
 
-        // convert the above data to an array for data tables in the following format [name, lead (true if lead), [asurites they need to evaluate]]
-        // we could simplify this logic by returning this flow in the first place
+        // convert the above data to an array for data tables in the following format [asurite, isLead, [asurites they need to evaluate]]
         const tableData = Object.keys(assignmentMap).map(val => {
             return [val, assignmentMap[val][0].evalType === 'l2t', assignmentMap[val].reduce((prev, value) => [...prev, value.assignedAsurite], [])];
         });

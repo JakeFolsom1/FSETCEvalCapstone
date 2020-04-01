@@ -62,6 +62,7 @@ $(document).ready(() => {
             });
         });
 
+        // convert the preferences into datatable format
         const prefMap = preferences.reduce((acc, val) => {
             const { asurite, semesterName, ...values } = val;
             if (acc[val.asurite]) {
@@ -75,10 +76,10 @@ $(document).ready(() => {
 
         const leadMap = Object.keys(leadTeams).map(val => [val, true, "", "", ""]);
 
-        // sort or ensure data will be sorted by preference number
+        // sort by preference number
         Object.keys(prefMap).forEach((val) => { prefMap[val] = prefMap[val].sort((a, b) => a.preferenceNumber - b.preferenceNumber); });
 
-        // you also need to figure out if they are a lead or not by calling the account api or if team member is redone
+        // get table data in form [asurite, isLead, preference1, preference2, preference3]
         const tableData = Object.keys(prefMap).map(val => {
             const pref1 = prefMap[val][0]
             const pref2 = prefMap[val][1];
@@ -149,6 +150,8 @@ $(document).ready(() => {
                         const tutorName = row[0];
                         const lead = Object.keys(leadTeams).find(value => tutorName === value); // define a lead's name if the current user is a lead
                         const tutorsLead = Object.keys(leadTeams).find(value => leadTeams[value].includes(tutorName)); // else find the current user's lead
+
+                        // TODO: refactor this to be just one modal that gets loaded on click of assign
                         return (`
                         <button id="${tutorName}AssignButton" class="btn btn-primary" data-toggle="modal" data-target="#${tutorName}AssignModal">Assign</button>
                         <button id="${tutorName}AutoAssignButton" class="btn btn-primary" onclick="autoAssign('${tutorName}')" ${row[1] ? "disabled" : ""}>Auto-Assign</button>
@@ -239,17 +242,21 @@ $(document).ready(() => {
                     console.log("Saving assignments as: " + values);
                     values.forEach((asurite, index) => {
                         if (asurite !== "None") {
-                            // should a creation be treated the same as an update
+                            // check if a past assignments at this slot exists
                             const pastAssignment = assignments.find(assignment =>
                                 assignment.asurite === tutorName &&
                                 assignment.assignmentNumber === (index + 1) &&
                                 assignment.evalType === "p2p");
                             let newAssignment;
                             let method;
+                            // if it exists
                             if (pastAssignment) {
+                                // modify the assigned asurite
                                 newAssignment = Object.assign({}, pastAssignment, { assignedAsurite: asurite });
+                                // set the method as put
                                 method = "PUT";
                             } else {
+                                // else create the assignment
                                 newAssignment = {
                                     assignedAsurite: asurite,
                                     assignmentNumber: index + 1,
@@ -258,6 +265,7 @@ $(document).ready(() => {
                                     isComplete: false,
                                     semesterName: activeSemester
                                 };
+                                // set the method as post
                                 method = "POST";
                             }
                             $.ajax({
