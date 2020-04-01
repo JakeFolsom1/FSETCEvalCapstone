@@ -54,13 +54,14 @@
 //         "evalType": "l2t"
 //     }
 // ]
-
+let userAssignments = [];
+let names = {};
 $(document).ready(() => {
-    let assignments = [], completedEvals = [], names = {}, teamMembers = [], leadAsurite = "aarunku3";
+    let completedEvals = [], teamMembers = [], leadAsurite = "aarunku3";
     $.when(
         $.getJSON(apiUrl + `/assignments/active/${leadAsurite}`,
             function (assignmentsJson) {
-                assignments = assignmentsJson;
+                userAssignments = assignmentsJson;
             }
         ),
         $.getJSON(apiUrl + `/teamMembers/${leadAsurite}`,
@@ -79,7 +80,7 @@ $(document).ready(() => {
             }
         )
     ).then(() => {
-        const tableData = assignments.map(eval => [
+        const tableData = userAssignments.map(eval => [
             names[eval.assignedAsurite], null
         ]);
         $('#assignmentsTable').DataTable({
@@ -92,13 +93,13 @@ $(document).ready(() => {
                 { title: "Tutor Name" },
                 {
                     title: "Actions",
-                    render: () => {
+                    render: (data, _type, row) => {
                         //Use data variable to pass the evaluation parameters to the evaluations page.
                         let evalButton =
                             `<button
                         class="btn btn-primary"
                         style="border-color: #8C1D40;"
-                        onclick="buildEvaluation()" id="myButton">
+                        onclick="buildEvaluation('${row[0]}', userAssignments)" id="myButton">
                         Evaluate
                         </button>`;
                         return evalButton;
@@ -139,31 +140,62 @@ $(document).ready(() => {
 
 });
 
-const buildEvaluation = () => {
+const buildEvaluation = (evaluatee, assignments) => {
+    let asurite = Object.keys(names).find(key => names[key] == evaluatee)
+    const assignmentId = assignments.find(assignment => assignment.assignedAsurite == asurite).assignmentId
+
     let evalQuestions = [];
     $('#questionsAndResponses').empty();
     $('#evalHeader h3').remove();
     $.when(
         $.getJSON(apiUrl + "/questions/l2t",
             function (result) {
-                console.log(result);
                 evalQuestions = result;
             }
         ),
     ).then(function () {
+        const title = `<h3>${evaluatee}'s Evaluation</h3>`;
+        $('#evalHeader').append(title)
         $.each(evalQuestions, (index, question) =>{
             const innerHTML =
                 `<li>
                 <h4 style="font-weight: bold">Question ${index + 1}:</h4>
                 <p class="tab-eval">  ${question.questionPrompt}</p>
+                ${question.questionType == 'numeric' ? 
+                    `<input type="range" class="form-control custom-range" min="0" max="5" id="response${index}">`:
+                    `<input type="text" placeholder="Enter Answer Here..." class="form-control" id="response${index}">`}
                 <br>
              </li>`;
             $('#questionsAndResponses').append(innerHTML)
         });
         $('#testmodal').modal('show')
+        $('#submitEvalButton').click(function () {
+            $.each(evalQuestions, (index, question) => {
+                $.ajax({
+                    type: "POST",
+                    url: apiUrl + "/responses",
+                    data: JSON.stringify({
+                        assignment: assignmentId,
+                        isShared: false,
+                        question: question.questionId,
+                        response: $(`#response${index}`).val()
+                    }),
+                    headers: {"Accept": "application/json", "Content-Type": "application/json"},
+                    success: function (response) {
+                        console.log(response)
+                    }
+                })
+            })
+            $.ajax({
+                type: "PUT",
+                url: apiUrl + '/assignments/id/' + assignmentId,
+                headers: {"Accept": "application/json", "Content-Type": "application/json"},
+                success: function (response) {
+                    console.log(response)
+                }
+            })
+        })
     })
 }
 
-const submitEvaluation = () => {
 
-}
