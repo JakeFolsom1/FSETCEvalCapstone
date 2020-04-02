@@ -160,9 +160,9 @@ const buildEvaluation = (evaluatee) => {
         const sharedRadioInput =
             `<div>
                 <p>Would you like to share this evaluation with ${evaluatee}?</p>
-                <input type="radio" id="isSharedYes" name="gender" checked="checked">
+                <input type="radio" id="isSharedYes" checked="checked">
                 <label for="isSharedYes">Yes</label>
-                <input type="radio" id="isSharedNo" name="gender">
+                <input type="radio" id="isSharedNo">
                 <label for="isSharedNo">No</label>
              </div>`
         $('#evalHeader').append(title)
