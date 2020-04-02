@@ -94,12 +94,14 @@ $(document).ready(() => {
                 {
                     title: "Actions",
                     render: (data, _type, row) => {
+                        let asurite = Object.keys(names).find(key => names[key] == row[0])
+                        const assignment = userAssignments.find(assignment => assignment.assignedAsurite == asurite)
                         //Use data variable to pass the evaluation parameters to the evaluations page.
                         let evalButton =
                             `<button
-                        class="btn btn-primary"
+                        class=${assignment.isComplete ? "btn btn-secondary" : "btn btn-primary"}
                         style="border-color: #8C1D40;"
-                        onclick="buildEvaluation('${row[0]}', userAssignments)" id="myButton">
+                        onclick="buildEvaluation('${row[0]}')" id="myButton">
                         Evaluate
                         </button>`;
                         return evalButton;
@@ -140,9 +142,9 @@ $(document).ready(() => {
 
 });
 
-const buildEvaluation = (evaluatee, assignments) => {
+const buildEvaluation = (evaluatee) => {
     let asurite = Object.keys(names).find(key => names[key] == evaluatee)
-    const assignmentId = assignments.find(assignment => assignment.assignedAsurite == asurite).assignmentId
+    const assignment = userAssignments.find(assignment => assignment.assignedAsurite == asurite)
 
     let evalQuestions = [];
     $('#questionsAndResponses').empty();
@@ -155,6 +157,14 @@ const buildEvaluation = (evaluatee, assignments) => {
         ),
     ).then(function () {
         const title = `<h3>${evaluatee}'s Evaluation</h3>`;
+        const sharedRadioInput =
+            `<div>
+                <p>Would you like to share this evaluation with ${evaluatee}?</p>
+                <input type="radio" id="isSharedYes" name="gender" checked="checked">
+                <label for="isSharedYes">Yes</label>
+                <input type="radio" id="isSharedNo" name="gender">
+                <label for="isSharedNo">No</label>
+             </div>`
         $('#evalHeader').append(title)
         $.each(evalQuestions, (index, question) =>{
             const innerHTML =
@@ -168,15 +178,23 @@ const buildEvaluation = (evaluatee, assignments) => {
              </li>`;
             $('#questionsAndResponses').append(innerHTML)
         });
+        $('#questionsAndResponses').append(sharedRadioInput)
         $('#testmodal').modal('show')
+        $('#isShared').click(function () {
+            if(this.checked)
+                $('.isShared label').text('No')
+            else
+                $('.isShared label').text('Yes')
+        })
         $('#submitEvalButton').click(function () {
+            let temp = $('#isSharedYes')[0].checked
             $.each(evalQuestions, (index, question) => {
                 $.ajax({
-                    type: "POST",
+                    type: assignment.isComplete == true ? "PUT" : "POST",
                     url: apiUrl + "/responses",
                     data: JSON.stringify({
-                        assignment: assignmentId,
-                        isShared: false,
+                        assignment: assignment.assignmentId,
+                        isShared: $('#isSharedYes')[0].checked,
                         question: question.questionId,
                         response: $(`#response${index}`).val()
                     }),
@@ -188,7 +206,7 @@ const buildEvaluation = (evaluatee, assignments) => {
             })
             $.ajax({
                 type: "PUT",
-                url: apiUrl + '/assignments/id/' + assignmentId,
+                url: apiUrl + '/assignments/id/' + assignment.assignmentId,
                 headers: {"Accept": "application/json", "Content-Type": "application/json"},
                 success: function (response) {
                     console.log(response)
