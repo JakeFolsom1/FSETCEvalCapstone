@@ -117,10 +117,10 @@ $(document).ready(() => {
             }
         )
     ).then(function () {
-        const tableData = dummyData.map(eval => [
+        const tableData = completedEvals.map(eval => [
             eval.semester,
-            getName(eval.evaluator) + (eval.evalType === "l2t" ? " - Lead" : ""),
-            getName(eval.evaluatee) + (eval.evalType === "t2l" ? " - Lead" : "")
+            eval.evaluator + (eval.evalType === "l2t" ? " - Lead" : ""),
+            eval.evaluatee + (eval.evalType === "t2l" ? " - Lead" : "")
         ])
            let table =  $('#completedEvaluationTable').DataTable({
                 stripe: true,
@@ -139,7 +139,7 @@ $(document).ready(() => {
                                 `<button
                             class="btn btn-primary"
                             style="border-color: #8C1D40;"
-                            onclick="getEval('${row[1]}', '${row[2]}')"
+                            onclick="getEval('${row[1].replace(' - Lead', '')}', '${row[2]}')"
                             id="myButton">
                             View
                             </button>`;
@@ -162,48 +162,41 @@ const getEval = (evaluator, evaluatee) => {
     $('#questionsAndResponses').empty();
     $('#evalHeader h3').remove();
 
-    //Split the name and get the Asurite of that person. This will be used to search for the evaluation
-    const evaluatorAsurite = getAsurite(evaluator.split(" "));
-    const evaluateeAsurite = getAsurite(evaluatee.split(" "));
-
     //search for the evaluation and questions
-    const currentEval = dummyData.find(evaluation => evaluatorAsurite == evaluation.evaluator && evaluateeAsurite == evaluation.evaluatee);
+    const currentEval = completedEvals.find(evaluation => evaluator == evaluation.evaluator && evaluatee == evaluation.evaluatee);
     const questions = currentEval.questionsAndResponses;
 
     //Add the title to the Modal
     const title = `<h3>${evaluator}'s Evaluation of ${evaluatee} </h3>`;
     $('#evalHeader').append(title);
 
+    const sharedRadioInput =
+        `<div>
+            <p>Is this evaluation shared with ${evaluatee}?</p>
+            ${currentEval.isShared == true ? 
+            `<input type="radio" id="isSharedYes" checked="checked" disabled="true"><label for="isSharedYes">Yes</label>
+            <input type="radio" id="isSharedNo" disabled="true"><label for="isSharedNo">No</label>`:
+            `<input type="radio" id="isSharedYes" disabled="true"><label for="isSharedYes">Yes</label>
+            <input type="radio" id="isSharedNo" checked="checked" disabled="true"><label for="isSharedNo">No</label>`}
+         </div>`
+
     //Add the questions to the modal. Needs styling.
     $.each(questions, (index, question) =>{
         const innerHTML =
             `<li>
-                <h4 style="font-weight: bold">Question ${question.question.questionNumber}:</h4>
+                <h4 style="font-weight: bold">Question ${index + 1}:</h4>
                 <p class="tab-eval">  ${question.question.questionPrompt}</p>
-                <h4 style="font-weight: bold">Response:</h4>
-                <p class="tab-eval">${question.response}</p>
+                ${question.question.questionType == 'numeric' ?
+                `<input type="range" class="form-control custom-range" disabled="true" min="0" max="5" value="${question.response}" id="response${index} readonly">`:
+                `<p class="tab-eval" readonly>${question.response}</p>`}
                 <br>
              </li>`;
         $('#questionsAndResponses').append(innerHTML)
     });
+    $('#questionsAndResponses').append(sharedRadioInput)
     $('#testmodal').modal('show');
 }
 
-const getName = (asurite) => {
-    let result = names.find(employee => employee.asurite == asurite);
-    if(result != undefined){
-        return result.fname + " " + result.lname;
-    }else
-        return "Invalid asurite";
-}
-
-const getAsurite = (name) => {
-    let result = names.find(employee => employee.fname == name[0] && employee.lname == name[1]);
-    if(result != undefined){
-        return result.asurite;
-    }else
-        return "Asurite not found";
-}
 
 
 

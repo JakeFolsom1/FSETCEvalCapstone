@@ -99,7 +99,7 @@ $(document).ready(() => {
                         //Use data variable to pass the evaluation parameters to the evaluations page.
                         let evalButton =
                             `<button
-                        class=${assignment.isComplete ? "btn btn-secondary" : "btn btn-primary"}
+                        class=${assignment.isComplete ? "btn btn-primary" : "btn btn-secondary"}
                         style="border-color: #8C1D40;"
                         onclick="buildEvaluation('${row[0]}')" id="myButton">
                         Evaluate
@@ -111,7 +111,6 @@ $(document).ready(() => {
         })
 
         completedEvals = completedEvals.filter(eval => teamMembers.includes(Object.keys(names).find(key => names[key] == eval.evaluatee)));
-        //completedEvals = completedEvals.filter(eval => eval.evaluator == leadAsurite);
         const completedEvalsTableData = completedEvals.map(eval => [eval.semester, eval.evaluator, eval.evaluatee, null])
         let completedEvalTable = $('#completedEvaluationTable').DataTable({
             stripe: true,
