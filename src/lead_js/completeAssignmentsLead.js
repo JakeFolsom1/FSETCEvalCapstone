@@ -83,10 +83,10 @@ $(document).ready(() => {
         const tableData = userAssignments.map(eval => [
             names[eval.assignedAsurite], null
         ]);
-        $('#assignmentsTable').DataTable({
+        let assignTable = $('#assignmentsTable').DataTable({
             stripe: true,
             paging: false,
-            searching: false,
+            searching: true,
             info: false,
             data: tableData,
             columns: [
@@ -110,12 +110,13 @@ $(document).ready(() => {
             ]
         })
 
-        completedEvals = completedEvals.filter(eval => teamMembers.includes(eval.evaluatee));
+        completedEvals = completedEvals.filter(eval => teamMembers.includes(Object.keys(names).find(key => names[key] == eval.evaluatee)));
+        //completedEvals = completedEvals.filter(eval => eval.evaluator == leadAsurite);
         const completedEvalsTableData = completedEvals.map(eval => [eval.semester, eval.evaluator, eval.evaluatee, null])
-        $('#completedEvaluationTable').DataTable({
+        let completedEvalTable = $('#completedEvaluationTable').DataTable({
             stripe: true,
             paging: false,
-            searching: false,
+            searching: true,
             info: false,
             data: completedEvalsTableData,
             columns: [
@@ -137,6 +138,10 @@ $(document).ready(() => {
                     }
                 }
             ]
+        })
+
+        $('#searchText').on('keyup change', function () {
+            completedEvalTable.search(this.value).draw();
         })
     })
 
