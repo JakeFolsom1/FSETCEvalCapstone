@@ -35,8 +35,7 @@ public class StableMatch
 
 		//create a copy of the preferenceTable to work with as to not modify the table
 		//The preference table should only be modified in updateTable() method
-		Map<String, List<String>> phase1Table = new HashMap<>(preferenceTable);
-
+		Map<String, List<String>> phase1Table = deepCopy(preferenceTable);
 		List <String> possibleEvaluators = new ArrayList<>();
 
 		//phase 1 of the algorithm///////////////////////////////////////////////////
@@ -265,6 +264,15 @@ public class StableMatch
 		{
 			preferenceTable.get(evaluator).remove(matches.get(evaluator));
 		}
+	}
+
+	private Map<String, List<String>> deepCopy(Map<String, List<String>> originalMap) {
+		Map<String, List<String>> mapCopy = new HashMap<>();
+		for(String evaluator: originalMap.keySet()) {
+			List<String> listCopy = new ArrayList<>(originalMap.get(evaluator));
+			mapCopy.put(evaluator, listCopy);
+		}
+		return mapCopy;
 	}
 
 	private boolean containsDuplicate(List<String> arr, String key)

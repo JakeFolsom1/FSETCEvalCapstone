@@ -1,0 +1,9 @@
+{
+	"short_name": "FSETC Evaluations",
+	"name": "FSETC Evaluation Web Application",
+	"icons": [],
+	"start_url": ".",
+	"display": "standalone",
+	"theme_color": "#000000",
+	"background_color": "#ffffff"
+}

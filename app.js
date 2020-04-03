@@ -14,7 +14,7 @@ app.use(session({
 
 const cas = new CASAuthentication({
     cas_url: 'https://sod819.fulton.asu.edu/cas',
-    service_url: '/',
+    service_url: 'https://sod819.fulton.asu.edu/evaluations',
     cas_version: '3.0',
     renew: false,
     is_dev_mode: false,

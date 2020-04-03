@@ -104,7 +104,7 @@ let completedEvals = [];
 let names = [];
 $(document).ready(() => {
     $.when(
-        $.getJSON(apiUrl + "/completedEvaluations/",
+        $.getJSON(apiUrl + "/completedEvaluations",
             function (completedEvalJson) {
                 console.log(completedEvalJson);
                 completedEvals = completedEvalJson;
@@ -122,37 +122,37 @@ $(document).ready(() => {
             getName(eval.evaluator) + (eval.evalType === "l2t" ? " - Lead" : ""),
             getName(eval.evaluatee) + (eval.evalType === "t2l" ? " - Lead" : "")
         ])
-        let table = $('#completedEvaluationTable').DataTable({
-            stripe: true,
-            paging: false,
-            searching: true,
-            info: false,
-            data: tableData,
-            columns: [
-                { title: "Semester" },
-                { title: "Evaluator Name" },
-                { title: "Evaluatee Name" },
-                {
-                    title: "Actions",
-                    render: (data, _type, row) => {
-                        let viewButton =
-                            `<button
+           let table =  $('#completedEvaluationTable').DataTable({
+                stripe: true,
+                paging: false,
+                searching: true,
+                info: false,
+                data: tableData,
+                columns: [
+                    { title: "Semester" },
+                    { title: "Evaluator Name" },
+                    { title: "Evaluatee Name" },
+                    {
+                        title: "Actions",
+                        render: (data, _type, row) => {
+                            let viewButton =
+                                `<button
                             class="btn btn-primary"
                             style="border-color: #8C1D40;"
                             onclick="getEval('${row[1]}', '${row[2]}')"
                             id="myButton">
                             View
                             </button>`;
-                        return viewButton;
+                            return viewButton;
+                        }
                     }
-                }
-            ]
-        })
+                ]
+            })
 
-        $('#searchText').on('keyup change', function () {
-            table.search(this.value).draw();
-        })
-    }
+            $('#searchText').on('keyup change', function () {
+                table.search(this.value).draw();
+            })
+        }
     )
 
 });
@@ -175,7 +175,7 @@ const getEval = (evaluator, evaluatee) => {
     $('#evalHeader').append(title);
 
     //Add the questions to the modal. Needs styling.
-    $.each(questions, (index, question) => {
+    $.each(questions, (index, question) =>{
         const innerHTML =
             `<li>
                 <h4 style="font-weight: bold">Question ${question.question.questionNumber}:</h4>
@@ -191,17 +191,17 @@ const getEval = (evaluator, evaluatee) => {
 
 const getName = (asurite) => {
     let result = names.find(employee => employee.asurite == asurite);
-    if (result != undefined) {
+    if(result != undefined){
         return result.fname + " " + result.lname;
-    } else
+    }else
         return "Invalid asurite";
 }
 
 const getAsurite = (name) => {
     let result = names.find(employee => employee.fname == name[0] && employee.lname == name[1]);
-    if (result != undefined) {
+    if(result != undefined){
         return result.asurite;
-    } else
+    }else
         return "Asurite not found";
 }
 

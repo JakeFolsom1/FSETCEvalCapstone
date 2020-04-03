@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -53,6 +54,7 @@ public class AssignmentsApiController implements AssignmentsApi {
         this.objectMapper = objectMapper;
         this.request = request;
     }
+
 
     // auto assigns one member their p2p and t2l (tutor) or l2t(lead) assignments
     public ResponseEntity<Void> autoAssign(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite) {
@@ -131,30 +133,14 @@ public class AssignmentsApiController implements AssignmentsApi {
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
+    @Transactional
     public ResponseEntity<Void> autoAssignAll() {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             // clear all current assignments for the semester
             Semester activeSemester = semesterRepository.findByIsActive(true);
             Long numAssignments = numberOfAssignmentsRepository.findOne(activeSemester.getSemesterName()).getNumAssignments();
-            assignmentRepository.deleteAllBySemesterName(activeSemester.getSemesterName());
-
-            // assign leads
-            List<Staff> leadStaffList = tmsApiHelper.getStaffOfRoleInCurrentSemester("LEAD");
-            for (Staff lead : leadStaffList) {
-                // get a list of team members
-                List<TeamMember> teamMemberList = teamMemberRepository.findTeamMembersByLeadAsuriteAndSemesterName(lead.getAsurite(), activeSemester.getSemesterName());
-                // for each team member, create an assignment
-                for (TeamMember teamMember: teamMemberList) {
-                    Assignment assignment = new Assignment();
-                    assignment.setAsurite(teamMember.getLeadAsurite());
-                    assignment.setAssignedAsurite(teamMember.getTutorAsurite());
-                    assignment.setEvalType(Question.EvalType.l2t);
-                    assignment.setIsComplete(false);
-                    assignment.setSemesterName(activeSemester.getSemesterName());
-                    assignmentRepository.save(assignment);
-                }
-            }
+            assignmentRepository.deleteAllBySemesterNameAndEvalType(activeSemester.getSemesterName(), Question.EvalType.p2p);
 
             // assign tutors
             // for each major Cluster
