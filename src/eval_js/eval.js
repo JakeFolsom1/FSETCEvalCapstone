@@ -6,14 +6,30 @@ function openNav() {
 */
 //EvaluationList should be Unique for every person.
 //Organized by Semester, Name, IsLead?. Link to the evaluation website as well though this will probably be phased out
+
+
+
+
+
+
 const tutorsList = [
-    ["Fall 2019", "Bob", false, "http://www.google.com"],
-    ["Fall 2019", "Jake", true, "http://www.google.com"],
-    ["Fall 2019", "John", false, "http://www.google.com"],
-    ["Fall 2019", "Carmen", false, "http://www.yahoo.com"]
+    ["Fall 2019", "Bob", false],
+    ["Fall 2019", "Jake", true],
+    ["Fall 2019", "John", false],
+    ["Fall 2019", "Carmen", false]
 ];
 
-const evaluationsToComplete = [
+
+const reorderArray = (event, originalArray) => {
+    const movedItem = originalArray.find((item, index) => index === event.oldIndex);
+    const remainingItems = originalArray.filter((item, index) => index !== event.oldIndex);
+    const reorderedItems = [
+    ]
+}
+
+
+
+const evaluationsToComplete = [ //Not sure if I need this anymore, swapped to Tutorslist
     ["Bob", false],
     ["John", true],
     ["Jack", false],
@@ -26,12 +42,19 @@ $(document).ready(() => {
     $('#sortable').disableSelection();
 
     //Creates the elements for the draggable interface
+    var count = 0;
     var frag = document.createDocumentFragment();
-    $.each(evaluationsToComplete, function(i, item){
+
+    $.each(tutorsList, function(i, item){
        var newListItem = document.createElement("li");
        newListItem.className = 'ui-state-default';
-       var itemText = document.createTextNode(item[0]);
+       count++;
+       var itemText = document.createTextNode( count + " " + item[1]);
        newListItem.appendChild(itemText);
+       newListItem.addEventListener("dragstart", function(e){
+        item = e.target;
+        e.dataTransfer.setData('text', '')
+       }, false);
        frag.append(newListItem);
     });
 
@@ -58,14 +81,15 @@ $(document).ready(() => {
             {
                 title : "Actions",
                 render : function(data, type, row){
-                     return `<button class="btn-primary" onclick="openPage()">View</button>`
+                     return `<button class="btn btn-primary navb" onclick="openPage(this)">View</button>`
                 }
             }
         ]
     });
-    $("#sortable").sortable();
+
     $("#sortable").disableSelection();
-    $('#completeAssignmentsTable').DataTable({
+
+    $('#completeAssignmentsTable').DataTable(       {
         paging: false,
         info: false,
         searching: false,
@@ -83,19 +107,29 @@ $(document).ready(() => {
             {
               title: "Actions",
               render : function(data, type, row){
-                  return '<button class="btn-primary" onclick="openEvaluationPage()">Evaluate</button>'
+                  return '<button class="btn btn-primary navb" onclick="openEvaluationPage()">Evaluate</button>'
               }
             }
         ]
     });
 });
 
-function openPage(){
-    return `<button class="btn-primary">Page goes here</button>`
+//This function needs to grab the element clicked and pass it into a state variable on the newWindow
+//Ele is a reference to the element that called it
+function openPage(ele){
+    //Testing
+    /*
+    */
+   // window.open("http://localhost:63342/FSETCEvalCapstone/src/sampleEvalPage.html?name=", "name");
+    //var index = ele._getIndex();
+    var name = document.getElementById('viewShared').childNodes[0];
+    console.log(name);
+    window.open("http://localhost:63342/FSETCEvalCapstone/src/sampleEvalPage.html?val=", name);
+    //document.location.href = "http://localhost:63342/FSETCEvalCapstone/src/sampleEvalPage.html?name=" + name;
 }
 
 function openEvaluationPage(){
-    return '<button class="btn-primary">Page goes here</button>'
+    return '<button class="btn btn-primary navb">Page goes here</button>'
 }
 
 

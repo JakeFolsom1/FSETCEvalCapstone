@@ -8,21 +8,10 @@
     <link href="https://use.fontawesome.com/9fb47689fa.css" rel="stylesheet">
     <!---------- DATA TABLES ---------->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.css"/>
-    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.js"></script>
     <!-------------------------------->
-    <script type="text/javascript" src="eval_js/eval.js"></script>
-    <script src="../js/jquery-3.4.1.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
-    <script src="../js/select-togglebutton.js"></script>
-    <script src="../js/jquery.tablesorter.min.js"></script>
-    <script src="../js/bootstrap-dialog.min.js"></script>
-    <script src="../js/utility.min.js"></script>
-    <script src="../js/navbar.min.js"></script>
-    <script src="../js/sidebar.min.js"></script>
-
     <meta charset="UTF-8">
 </head>
-<body onload="dataTablesSetup()">
+<body>
 <div id="navbar">
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div id="header">
@@ -54,16 +43,17 @@
 </div>
 <div id="content-main" style="margin-top: 0;">
     <div style="padding-top:70px;">
-        <h2>
-            $Name Shared this Evaluation with You
+        <h2 id="modifyHeader">
         </h2>
         <ul style="list-style-type: decimal">
             <li>
-                <p class="pageText">Say Something about this Tutor</p>
-                <button class="squareButtons">1</button>
-                <button class="squareButtons">2</button>
-                <button class="squareButtons">3</button>
-                <button class="squareButtons">4</button>
+                <p class="pageText">
+                    Rate this tutor on a scale from 1 to 10
+                </p>
+                   <div class="form-control">
+                        <input id="slider" type="range" min="1" max="10" value="5" class="ui-slider-horizontal">
+                        <span id="slider-label">5</span>
+                   </div>
             </li>
             <li>
                     <p class="pageText">Say something about this tutor</p>
@@ -72,16 +62,25 @@
             <li>
                 <p class="pageText">Lorem Ipsum</p>
                 <label>
-                    <select class="pageText">
-                        <option value="Joe">Joe</option>
-                        <option value="Bob">Bob</option>
-                        <option value="Jonathon">Jonathon</option>
+                    <select class="pageText" id="optionsList">
                     </select>
                 </label>
             </li>
+            <li>
+                <button class="btn-primary" onclick="submitAndReturnToPage()">Submit</button>
+            </li>
         </ul>
-        <button class="btn-primary cornerButton">Back</button>
     </div>
 </div>
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/select-togglebutton.js"></script>
+<script src="../js/jquery.tablesorter.min.js"></script>
+<script src="../js/bootstrap-dialog.min.js"></script>
+<script src="../js/utility.min.js"></script>
+<script src="../js/navbar.min.js"></script>
+<script src="../js/sidebar.min.js"></script>
+<script src="eval_js/sampleEvalPage.js"></script>
 </body>
 </html>
