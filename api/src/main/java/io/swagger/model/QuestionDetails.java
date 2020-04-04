@@ -1,13 +1,11 @@
 package io.swagger.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 /**
  * QuestionDetails
@@ -25,11 +23,6 @@ public class QuestionDetails   {
   @JsonProperty("questionType")
   private String questionType = null;
 
-  public QuestionDetails questionNumber(Long questionNumber) {
-    this.questionNumber = questionNumber;
-    return this;
-  }
-
   /**
    * Get questionNumber
    * @return questionNumber
@@ -46,11 +39,6 @@ public class QuestionDetails   {
     this.questionNumber = questionNumber;
   }
 
-  public QuestionDetails questionPrompt(String questionPrompt) {
-    this.questionPrompt = questionPrompt;
-    return this;
-  }
-
   /**
    * Get questionPrompt
    * @return questionPrompt
@@ -65,11 +53,6 @@ public class QuestionDetails   {
 
   public void setQuestionPrompt(String questionPrompt) {
     this.questionPrompt = questionPrompt;
-  }
-
-  public QuestionDetails questionType(String questionType) {
-    this.questionType = questionType;
-    return this;
   }
 
   /**

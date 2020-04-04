@@ -1,17 +1,15 @@
 package io.swagger.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * Semester
@@ -20,7 +18,7 @@ import javax.validation.constraints.*;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 @Entity
 @Table(name = "SEMESTER")
-public class Semester   {
+public class Semester implements Serializable {
   @Id
   @JsonProperty("semesterName")
   private String semesterName = null;
@@ -28,16 +26,11 @@ public class Semester   {
   @JsonProperty("isActive")
   private Boolean isActive = null;
 
-  public Semester semesterName(String semesterName) {
-    this.semesterName = semesterName;
-    return this;
-  }
-
   /**
    * Get semesterName
    * @return semesterName
   **/
-  @ApiModelProperty(example = "Fall 2019", required = true, value = "")
+  @ApiModelProperty(example = "spring20", required = true, value = "")
   @NotNull
 
 
@@ -47,11 +40,6 @@ public class Semester   {
 
   public void setSemesterName(String semesterName) {
     this.semesterName = semesterName;
-  }
-
-  public Semester isActive(Boolean isActive) {
-    this.isActive = isActive;
-    return this;
   }
 
   /**
@@ -70,7 +58,6 @@ public class Semester   {
     this.isActive = isActive;
   }
 
-
   @Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {
@@ -80,8 +67,7 @@ public class Semester   {
       return false;
     }
     Semester semester = (Semester) o;
-    return Objects.equals(this.semesterName, semester.semesterName) &&
-        Objects.equals(this.isActive, semester.isActive);
+    return Objects.equals(this.semesterName, semester.semesterName);
   }
 
   @Override

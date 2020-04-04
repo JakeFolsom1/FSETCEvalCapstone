@@ -35,10 +35,11 @@ public interface PreferencesApi {
     @ApiResponses(value = {
         @ApiResponse(code = 404, message = "User not found"),
         @ApiResponse(code = 405, message = "Preference number not found") })
-    @RequestMapping(value = "/preferences/{preferenceId}",
+    @RequestMapping(value = "/preferences/{asurite}/{preferenceNumber}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
-    ResponseEntity<Void> deletePreference(@ApiParam(value = "",required=true) @PathVariable("preferenceId") Long preferenceId);
+    ResponseEntity<Void> deletePreference(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite,
+                                          @ApiParam(value = "",required=true) @PathVariable("preferenceNumber") Long preferenceNumber);
 
 
     @ApiOperation(value = "Get all preferences for the current semester", nickname = "getAllPreferences", notes = "", response = Preference.class, responseContainer = "List", tags={ "preferences", })

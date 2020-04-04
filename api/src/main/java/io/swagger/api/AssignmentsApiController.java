@@ -5,14 +5,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.model.*;
 import io.swagger.repository.*;
 import io.swagger.util.StableMatch;
-import org.apache.http.HttpResponse;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.HttpClientBuilder;
+import io.swagger.util.TmsApiHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
@@ -39,13 +30,8 @@ public class AssignmentsApiController implements AssignmentsApi {
 
     private final HttpServletRequest request;
 
-    private final int NUM_ASSIGNMENTS = 2;
-
     @Autowired
     private AssignmentRepository assignmentRepository;
-
-    @Autowired
-    private AccountRepository accountRepository;
 
     @Autowired
     private SemesterRepository semesterRepository;
@@ -55,6 +41,12 @@ public class AssignmentsApiController implements AssignmentsApi {
 
     @Autowired
     private TeamMemberRepository teamMemberRepository;
+
+    @Autowired
+    private NumberOfAssignmentsRepository numberOfAssignmentsRepository;
+
+    @Autowired
+    private TmsApiHelper tmsApiHelper;
 
     @org.springframework.beans.factory.annotation.Autowired
     public AssignmentsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -66,28 +58,30 @@ public class AssignmentsApiController implements AssignmentsApi {
     public ResponseEntity<Void> autoAssign(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            String activeSemester = semesterRepository.findByIsActive(true).getSemesterName();
+            Semester activeSemester = semesterRepository.findByIsActive(true);
+            Long numAssignments = numberOfAssignmentsRepository.findOne(activeSemester.getSemesterName()).getNumAssignments();
+            Map<String, Staff> staffMap = tmsApiHelper.getStaffMap();
             // if asurite belongs to a tutor
-            if (accountRepository.findOne(asurite).getAccountType() == Account.AccountType.tutor) {
+            if (staffMap.get(asurite).getRole().equals("TUTOR")) {
                 // get their preference list
-                List<Preference> preferenceList = preferenceRepository.findAllByAsuriteAndSemesterOrderByPreferenceNumber(asurite, activeSemester);
+                List<Preference> preferenceList = preferenceRepository.findAllByAsuriteAndSemesterNameOrderByPreferenceNumber(asurite, activeSemester.getSemesterName());
 
                 // generate a list of possible assignments
                 List<Assignment> assignmentList = new ArrayList<Assignment>();
                 int candidateIndex = 0;
-                for (int i = 0; i < NUM_ASSIGNMENTS; i++) {
+                for (int i = 0; i < numAssignments; i++) {
                     while (candidateIndex < preferenceList.size()) {
                         // get assignment candidate's asurite and increment
                         String candidate = preferenceList.get(candidateIndex++).getPreferredAsurite();
 
                         // if candidate has not been assigned the total number of assignments, add it to the list and break
-                        if (assignmentRepository.findAllByAssignedAsuriteAndSemester(candidate, activeSemester).size() < NUM_ASSIGNMENTS) {
+                        if (assignmentRepository.findAllByAssignedAsuriteAndSemesterName(candidate, activeSemester.getSemesterName()).size() < numAssignments) {
                             Assignment assignment = new Assignment();
                             assignment.setAsurite(asurite);
                             assignment.setAssignedAsurite(candidate);
                             assignment.setEvalType(Question.EvalType.p2p);
                             assignment.setIsComplete(false);
-                            assignment.setSemester(activeSemester);
+                            assignment.setSemesterName(activeSemester.getSemesterName());
                             assignmentList.add(assignment);
                             break;
                         }
@@ -95,16 +89,16 @@ public class AssignmentsApiController implements AssignmentsApi {
                 }
 
                 // if the desired number of assignments was met
-                if (assignmentList.size() == NUM_ASSIGNMENTS) {
+                if (assignmentList.size() == numAssignments) {
                     // save the assignments to the database
                     for (Assignment assignment : assignmentList) {
                         assignmentRepository.save(assignment);
                     }
 
                     // create and save the lead assignment
-                    String lead = teamMemberRepository.findByTutorAsurite(asurite).getLeadAsurite();
+                    String lead = teamMemberRepository.findOne(new TeamMember.TeamMemberPK(asurite, activeSemester.getSemesterName())).getLeadAsurite();
                     Assignment leadAssignment = new Assignment();
-                    leadAssignment.setSemester(activeSemester);
+                    leadAssignment.setSemesterName(activeSemester.getSemesterName());
                     leadAssignment.setIsComplete(false);
                     leadAssignment.setEvalType(Question.EvalType.t2l);
                     leadAssignment.setAssignedAsurite(lead);
@@ -120,7 +114,7 @@ public class AssignmentsApiController implements AssignmentsApi {
             // if asurite belongs to a lead
             else {
                 // get a list of team members
-                List<TeamMember> teamMemberList = teamMemberRepository.findTeamMembersByLeadAsurite(asurite);
+                List<TeamMember> teamMemberList = teamMemberRepository.findTeamMembersByLeadAsuriteAndSemesterName(asurite, activeSemester.getSemesterName());
                 // for each team member, create an assignment
                 for (TeamMember teamMember: teamMemberList) {
                     Assignment assignment = new Assignment();
@@ -128,7 +122,7 @@ public class AssignmentsApiController implements AssignmentsApi {
                     assignment.setAssignedAsurite(teamMember.getTutorAsurite());
                     assignment.setEvalType(Question.EvalType.l2t);
                     assignment.setIsComplete(false);
-                    assignment.setSemester(activeSemester);
+                    assignment.setSemesterName(activeSemester.getSemesterName());
                     assignmentRepository.save(assignment);
                 }
                 return new ResponseEntity<Void>(HttpStatus.OK);
@@ -141,14 +135,15 @@ public class AssignmentsApiController implements AssignmentsApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             // clear all current assignments for the semester
-            String activeSemester = semesterRepository.findByIsActive(true).getSemesterName();
-            assignmentRepository.deleteAllBySemester(activeSemester);
+            Semester activeSemester = semesterRepository.findByIsActive(true);
+            Long numAssignments = numberOfAssignmentsRepository.findOne(activeSemester.getSemesterName()).getNumAssignments();
+            assignmentRepository.deleteAllBySemesterName(activeSemester.getSemesterName());
 
             // assign leads
-            List<Account> leadAccountList = accountRepository.findAccountsByAccountTypeAndIsActive(Account.AccountType.lead, true);
-            for (Account lead : leadAccountList) {
+            List<Staff> leadStaffList = tmsApiHelper.getStaffOfRoleInCurrentSemester("LEAD");
+            for (Staff lead : leadStaffList) {
                 // get a list of team members
-                List<TeamMember> teamMemberList = teamMemberRepository.findTeamMembersByLeadAsurite(lead.getAsurite());
+                List<TeamMember> teamMemberList = teamMemberRepository.findTeamMembersByLeadAsuriteAndSemesterName(lead.getAsurite(), activeSemester.getSemesterName());
                 // for each team member, create an assignment
                 for (TeamMember teamMember: teamMemberList) {
                     Assignment assignment = new Assignment();
@@ -156,19 +151,19 @@ public class AssignmentsApiController implements AssignmentsApi {
                     assignment.setAssignedAsurite(teamMember.getTutorAsurite());
                     assignment.setEvalType(Question.EvalType.l2t);
                     assignment.setIsComplete(false);
-                    assignment.setSemester(activeSemester);
+                    assignment.setSemesterName(activeSemester.getSemesterName());
                     assignmentRepository.save(assignment);
                 }
             }
 
             // assign tutors
             // for each major Cluster
-            Set<String> majorClusters = getAllMajorClusters();
-            for (String majorCluster: majorClusters) {
-                // get preferences
-                Map<String, List<String>> preferenceTable = getPreferenceTableForMajorCluster(majorCluster);
+            Map<String, List<String>> clusterToTutorsMap = tmsApiHelper.getMapFromClusterToTutors();
+            for (String majorCluster: clusterToTutorsMap.keySet()) {
+                // get preferences for all the students in a major cluster
+                Map<String, List<String>> preferenceTable = getPreferenceTableForMajorCluster(clusterToTutorsMap.get(majorCluster));
                 StableMatch stableMatch = new StableMatch(preferenceTable);
-                for (int i = 0; i < NUM_ASSIGNMENTS; i++) {
+                for (int i = 0; i < numAssignments; i++) {
                     Map<String, String> matches = stableMatch.getMatches();
                     if (matches != null) {
                         for (String evaluator: matches.keySet()) {
@@ -177,7 +172,7 @@ public class AssignmentsApiController implements AssignmentsApi {
                             assignment.setAssignedAsurite(matches.get(evaluator));
                             assignment.setEvalType(Question.EvalType.p2p);
                             assignment.setIsComplete(false);
-                            assignment.setSemester(activeSemester);
+                            assignment.setSemesterName(activeSemester.getSemesterName());
                             assignmentRepository.save(assignment);
                         }
                     }
@@ -189,82 +184,18 @@ public class AssignmentsApiController implements AssignmentsApi {
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
-    private Map<String, List<String>> getPreferenceTableForMajorCluster(String majorCluster) {
+    private Map<String, List<String>> getPreferenceTableForMajorCluster(List<String> tutorsInCluster) {
         Map<String, List<String>> preferenceTable = new HashMap<>();
-        String activeSemester = semesterRepository.findByIsActive(true).getSemesterName();
-        List<Account> tutors = getActiveTutorsByMajorCluster(majorCluster);
-        if (tutors != null) {
-            for (Account tutor : tutors) {
-                List<Preference> tutorPreferenceList = preferenceRepository.findAllByAsuriteAndSemesterOrderByPreferenceNumber(tutor.getAsurite(), activeSemester);
-                List<String> preferenceRow = new ArrayList<>();
-                for (Preference preference : tutorPreferenceList) {
-                    preferenceRow.add(preference.getPreferredAsurite());
-                }
-                preferenceTable.put(tutor.getAsurite(), preferenceRow);
+        Semester activeSemester = semesterRepository.findByIsActive(true);
+        for (String tutor : tutorsInCluster) {
+            List<Preference> tutorPreferenceList = preferenceRepository.findAllByAsuriteAndSemesterNameOrderByPreferenceNumber(tutor, activeSemester.getSemesterName());
+            List<String> preferenceRow = new ArrayList<>();
+            for (Preference preference : tutorPreferenceList) {
+                preferenceRow.add(preference.getPreferredAsurite());
             }
+            preferenceTable.put(tutor, preferenceRow);
         }
         return preferenceTable;
-    }
-
-    // not the most elegant option, consider a different approach
-    private Set<String> getAllMajorClusters() {
-        Set<String> majorClusters = new HashSet<String>();
-        CredentialsProvider provider = new BasicCredentialsProvider();
-        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("EVAL", "dbbac9ba-feeb-11e9-8f0b-362b9e155667");
-        provider.setCredentials(AuthScope.ANY, credentials);
-        HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
-        HttpGet request = new HttpGet("https://fsetc.asu.edu/tmsapi/staff");
-        request.setHeader("Accept", "application/json");
-        try {
-            HttpResponse response = client.execute(request);
-            InputStream stream = response.getEntity().getContent();
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> responseMap = mapper.readValue(stream, Map.class);
-            if (!responseMap.get("status").equals("OK")) {
-                return null;
-            }
-            List termsList = (List) responseMap.get("terms");
-            List<Map<String, Object>> staffList = (List<Map<String, Object>>) (((Map)termsList.get(0)).get("staff"));
-            for (int i = 0; i < staffList.size(); i++) {
-                majorClusters.add((String) staffList.get(i).get("cluster"));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return majorClusters;
-    }
-
-    private List<Account> getActiveTutorsByMajorCluster(String majorCluster) {
-        CredentialsProvider provider = new BasicCredentialsProvider();
-        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("EVAL", "dbbac9ba-feeb-11e9-8f0b-362b9e155667");
-        provider.setCredentials(AuthScope.ANY, credentials);
-        HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
-        // get the staff for the active term
-        HttpGet request = new HttpGet("https://fsetc.asu.edu/tmsapi/staff");
-        request.setHeader("Accept", "application/json");
-        List<Account> tutorList = new ArrayList<Account>();
-        try {
-            HttpResponse response = client.execute(request);
-            InputStream stream = response.getEntity().getContent();
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> responseMap = mapper.readValue(stream, Map.class);
-            if (!responseMap.get("status").equals("OK")) {
-                return null;
-            }
-            List termsList = (List) responseMap.get("terms");
-            List<Map<String, Object>> staffList = (List<Map<String, Object>>) (((Map)termsList.get(0)).get("staff"));
-            for (Map<String, Object> staff : staffList) {
-                if(staff.get("cluster").equals(majorCluster)) {
-                    Account tutor = accountRepository.findOne((String) staff.get("asurite"));
-                    if (tutor != null && tutor.getAccountType() == Account.AccountType.tutor) {
-                        tutorList.add(tutor);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return tutorList;
     }
 
     public ResponseEntity<Void> completeAssignment(@ApiParam(value = "",required=true) @PathVariable("assignmentId") Long assignmentId) {
@@ -287,15 +218,16 @@ public class AssignmentsApiController implements AssignmentsApi {
     public ResponseEntity<Void> createAssignment(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Assignment body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            Account evaluator = accountRepository.findOne(body.getAsurite());
-            Account evaluatee = accountRepository.findOne(body.getAssignedAsurite());
-            Semester semester = semesterRepository.findOne(body.getSemester());
+            Map<String, Staff> staffList = tmsApiHelper.getStaffMap();
+            Staff evaluator = staffList.get(body.getAsurite());
+            Staff evaluatee = staffList.get(body.getAssignedAsurite());
+            Semester semester = semesterRepository.findOne(body.getSemesterName());
             // ensure assignment has valid asurites and semester name
             if (evaluator == null || evaluatee == null || semester == null) {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             }
             // ensure no duplicates
-            if (assignmentRepository.findByAsuriteAndAssignedAsuriteAndSemester(body.getAsurite(), body.getAssignedAsurite(), body.getSemester()) != null) {
+            if (assignmentRepository.findByAsuriteAndAssignmentNumberAndEvalTypeAndSemesterName(body.getAsurite(), body.getAssignmentNumber(), body.getEvalType(), body.getSemesterName()) != null) {
                 return new ResponseEntity<Void>(HttpStatus.CONFLICT);
             }
             else {
@@ -361,7 +293,7 @@ public class AssignmentsApiController implements AssignmentsApi {
             Iterator<Assignment> assignmentIterator = assignmentRepository.findAll().iterator();
             while(assignmentIterator.hasNext()) {
                 Assignment assignment = assignmentIterator.next();
-                if (assignment.getSemester().equals(activeSemester) && assignment.getAsurite().equals(asurite)) {
+                if (assignment.getSemesterName().equals(activeSemester) && assignment.getAsurite().equals(asurite)) {
                     assignmentList.add(assignment);
                 }
             }
@@ -373,9 +305,10 @@ public class AssignmentsApiController implements AssignmentsApi {
     public ResponseEntity<Void> updateAssignment(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Assignment body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            Account evaluator = accountRepository.findOne(body.getAsurite());
-            Account evaluatee = accountRepository.findOne(body.getAssignedAsurite());
-            Semester semester = semesterRepository.findOne(body.getSemester());
+            Map<String, Staff> staffList = tmsApiHelper.getStaffMap();
+            Staff evaluator = staffList.get(body.getAsurite());
+            Staff evaluatee = staffList.get(body.getAssignedAsurite());
+            Semester semester = semesterRepository.findOne(body.getSemesterName());
             // ensure assignment has valid asurites and semester name
             if (evaluator == null || evaluatee == null || semester == null) {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);

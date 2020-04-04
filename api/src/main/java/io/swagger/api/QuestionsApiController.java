@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
 import io.swagger.model.Question;
 import io.swagger.repository.QuestionRepository;
+import io.swagger.repository.SemesterRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class QuestionsApiController implements QuestionsApi {
 
     @Autowired
     QuestionRepository questionRepository;
+
+    @Autowired
+    SemesterRepository semesterRepository;
 
     @org.springframework.beans.factory.annotation.Autowired
     public QuestionsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -79,10 +83,7 @@ public class QuestionsApiController implements QuestionsApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             List<Question> activeQuestionList = new ArrayList<Question>();
-            Iterator<Question> questionIterator = questionRepository.findQuestionsByIsActiveAndEvalType(true, Question.EvalType.valueOf(evalType)).iterator();
-            if (!questionIterator.hasNext()) {
-                return new ResponseEntity<List<Question>>(HttpStatus.NOT_FOUND);
-            }
+            Iterator<Question> questionIterator = questionRepository.findQuestionsByIsActiveAndEvalTypeOrderByQuestionNumber(true, Question.EvalType.valueOf(evalType)).iterator();
             while(questionIterator.hasNext())
             {
                 activeQuestionList.add(questionIterator.next());

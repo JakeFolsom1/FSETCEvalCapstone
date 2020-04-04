@@ -1,14 +1,12 @@
 package io.swagger.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.model.QuestionDetails;
 import org.springframework.validation.annotation.Validated;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 /**
  * QuestionAndResponse
@@ -23,10 +21,6 @@ public class QuestionAndResponse   {
   @JsonProperty("response")
   private String response = null;
 
-  public QuestionAndResponse question(QuestionDetails question) {
-    this.question = question;
-    return this;
-  }
 
   /**
    * Get question
@@ -43,11 +37,6 @@ public class QuestionAndResponse   {
 
   public void setQuestion(QuestionDetails question) {
     this.question = question;
-  }
-
-  public QuestionAndResponse response(String response) {
-    this.response = response;
-    return this;
   }
 
   /**

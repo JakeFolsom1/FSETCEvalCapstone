@@ -1,13 +1,17 @@
-Reduce clutter for assignmentProgress by making a function that returns a list of people who need to do evals in the following format
-    [name, lead (true if lead), [asurites they need to evaluate]]
+Assignments
+    -Service and Object that keeps the number of assignments that will be used for the semester
+    
 
-Function to get the leads of the current semester
-    or
-Function that will return all lead teams in the following format
-    [{leadAsurite: [...teamMembersAsurites]}]
+    Currently only entries that show up have their preferences set
 
-Should we let them set the number of peer evaluations that they want to assign?
-    If so that needs to have additional UI
-    and persist on the DB
+Completed Evaluations
+    Add semester key to the completedEvaluation Object
 
-Need to add the evaluation number to assignments 1 through N (that they set)
+
+Semester
+    On semester creation, all preferences need to be set for each tutor based off their major cluster, lead teams need to be created, then all l2t and t2l assignments will be made
+    An alternate idea is to drop the teamMembers services altogether and let admins make t2l and l2t assignments manually, and set numAssignments to a default val
+
+
+If Charles can't put role into the service, does Account need to be keyed on semester?
+TeamMembers should be keyed by semester

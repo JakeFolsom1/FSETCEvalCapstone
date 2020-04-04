@@ -54,7 +54,7 @@ public class ResponsesApiController implements ResponsesApi {
             // ensure no other response exists with primary keys questionId and assignmentId
             // and evalTypes match from assignment and question
             // and the question is active
-            else if (responseRepository.findByQuestionIdAndAssignmentId(body.getQuestionId(), body.getAssignmentId()) != null
+            else if (responseRepository.findOne(new Response.ResponsePK(body.getQuestionId(), body.getAssignmentId())) != null
                 || assignment.getEvalType() != question.getEvalType()
                 || !question.isIsActive()) {
                 return new ResponseEntity<Void>(HttpStatus.CONFLICT);
@@ -67,7 +67,7 @@ public class ResponsesApiController implements ResponsesApi {
     public ResponseEntity<Void> deleteQuestionResponse(@ApiParam(value = "",required=true) @PathVariable("assignmentId") Long assignmentId,@ApiParam(value = "",required=true) @PathVariable("questionId") Long questionId) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            Response responseToDelete = responseRepository.findByQuestionIdAndAssignmentId(questionId, assignmentId);
+            Response responseToDelete = responseRepository.findOne(new Response.ResponsePK(questionId, assignmentId));
             if (responseToDelete == null) {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             }
@@ -80,10 +80,10 @@ public class ResponsesApiController implements ResponsesApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             List<Response> responseList = new ArrayList<>();
-            Iterator<Response> preferenceIterator = responseRepository.findAll().iterator();
-            while(preferenceIterator.hasNext()) {
-                Response response = preferenceIterator.next();
-                if(response.getAssignmentId() == assignmentId){
+            Iterator<Response> responseIterator = responseRepository.findAll().iterator();
+            while(responseIterator.hasNext()) {
+                Response response = responseIterator.next();
+                if(response.getAssignmentId().equals(assignmentId)){
                     responseList.add(response);
                 }
             }
@@ -94,7 +94,7 @@ public class ResponsesApiController implements ResponsesApi {
     public ResponseEntity<Response> getQuestionResponse(@ApiParam(value = "",required=true) @PathVariable("assignmentId") Long assignmentId, @ApiParam(value = "",required=true) @PathVariable("questionId") Long questionId) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            Response response = responseRepository.findByQuestionIdAndAssignmentId(questionId, assignmentId);
+            Response response = responseRepository.findOne(new Response.ResponsePK(questionId, assignmentId));
             if (response == null) {
                 return new ResponseEntity<Response>(HttpStatus.NOT_FOUND);
             }
@@ -106,7 +106,7 @@ public class ResponsesApiController implements ResponsesApi {
     public ResponseEntity<Void> updateQuestionResponse(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Response body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            if (responseRepository.findByQuestionIdAndAssignmentId(body.getQuestionId(), body.getAssignmentId()) == null) {
+            if (responseRepository.findOne(new Response.ResponsePK(body.getQuestionId(), body.getAssignmentId())) == null) {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             }
             else {
