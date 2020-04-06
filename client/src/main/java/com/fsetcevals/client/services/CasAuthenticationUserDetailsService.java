@@ -25,7 +25,7 @@ public class CasAuthenticationUserDetailsService implements AuthenticationUserDe
         String username = token.getName();
         String password = token.getName();
         RestTemplate restTemplate = new RestTemplate();
-        String url = "https://sod819.fulton.asu.edu/eval-app/staff/" + username;
+        String url = "https://sod819.fulton.asu.edu/eval-api/staff/" + username;
         String role = "ROLE_NONE";
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);

@@ -53,7 +53,7 @@ $(document).ready(() => {
                                 data-html="true"
                                 title="${ul}"
                                 style="text-decoration: none; color: black;"
-                            >${names[data]}  <span>&#x1F6C8;</span>
+                            >${names[data]}
                             </button>`;
                     }
                 },

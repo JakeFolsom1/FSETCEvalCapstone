@@ -30,7 +30,7 @@ public class IndexController {
                 modelAndView.setViewName("lead");
                 return modelAndView;
             case "TUTOR":
-                modelAndView.setViewName("evaluations");
+                modelAndView.setViewName("tutor");
                 return modelAndView;
             default:
                 throw new AccessDeniedException("User: " + ((User) auth.getPrincipal()).getUsername());

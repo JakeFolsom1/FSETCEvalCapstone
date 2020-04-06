@@ -55,7 +55,7 @@ $(document).ready(() => {
                             `<button
                             class="btn btn-primary"
                             style="border-color: #8C1D40;"
-                            onclick="location.href = '../../templates/evaluations.html';" id="myButton">
+                            onclick="location.href = './evaluations.html';" id="myButton">
                             View
                             </button>`;
                         return viewButton;

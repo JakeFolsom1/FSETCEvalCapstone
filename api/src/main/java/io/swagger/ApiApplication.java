@@ -15,7 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableSwagger2
 @ComponentScan(basePackages = { "io.swagger", "io.swagger.api" , "io.swagger.configuration"})
-public class EvaluationApp extends SpringBootServletInitializer {
+public class ApiApplication extends SpringBootServletInitializer {
 
 //    @Override
 //    public void run(String... arg0) throws Exception {
@@ -26,11 +26,11 @@ public class EvaluationApp extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(EvaluationApp.class);
+        return application.sources(ApiApplication.class);
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(EvaluationApp.class, args);
+        SpringApplication.run(ApiApplication.class, args);
     }
 
     @Bean

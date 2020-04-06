@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <title>FSETC Evaluations</title>
+    <meta name="description" content="FSETC Evaluation Web Application" />
+
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/jquery-ui.min.css">
+    <link rel="stylesheet" href="../css/asu.css">
+    <link rel="stylesheet" href="../css/general.css">
+    <link rel="stylesheet" href="../css/primaryStyles.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/9fb47689fa.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.css" />
+    <style>
+        #sortable {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            width: 60%
+        }
+
+        #sortable li {
+            margin: 0 3px 3px 3px;
+            padding-left: 1.5em;
+            font-size: 1.7em;
+            height: 24px;
+        }
+
+        #sortable li span {
+            position: center;
+            margin-left: -1.3em;
+        }
+    </style>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <div id="navbar">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div id="header">
+                <img class="nav-logo" src="../tutoringCenterHeaderText.jpg">
+                <span
+                    style="position:fixed; top:10px; left:345px; background-color:transparent; color:#ccc; font-size:14pt">
+                    Tutor Management System
+                </span>
+            </div>
+        </nav>
+    </div>
+    <div id="content-main" style="margin-top: 0;">
+        <div style="padding-top:70px;">
+            <ul class="nav nav-tabs" id="tabs" role="tablist">
+                <li class="active">
+                    <a class="nav-link" id="viewSharedTab" data-toggle="tab" href="#viewShared">View Shared</a>
+                </li>
+                <li>
+                    <a class="nav-link" id="assignmentsTab" data-toggle="tab" href="#assignments">Complete
+                        Assignments</a>
+                </li>
+                <li>
+                    <a class="nav-link" id="preferencesTab" data-toggle="tab" href="#preferences">Preferences</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="tab-content content-main">
+        <div id="viewShared" class="tab-pane fade" role="tabpanel" aria-labelledby="viewSharedTab">
+            <table id="viewSharedTable" class="striped-table cell-border" style="width:80%;"></table>
+        </div>
+        <div class="tab-pane" id="assignments" role="tabpanel" aria-labelledby="assignmentsTab">
+            <table id="completeAssignmentsTable" class="striped-table cell-border" style="width:80%;"></table>
+        </div>
+        <div class="tab-pane" id="preferences" role="tabpanel" aria-labelledby="preferencesTab">
+            <ul id="sortable"></ul>
+        </div>
+    </div>
+    <script src="../js/jquery-3.4.1.min.js"></script>
+    <script>
+        const asurite = "${asurite}";
+        const apiUrl = "https://sod819.fulton.asu.edu/eval-api";
+        // const apiUrl = "http://localhost:8080";
+        $(document).ajaxStart(function () {
+            $(".ajax-gif").css("display", "block");
+        });
+
+        $(document).ajaxComplete(function () {
+            $(".ajax-gif").css("display", "none");
+        });
+    </script>
+    <script src="../js/jquery-ui.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/select-togglebutton.js"></script>
+    <script src="../js/bootstrap-dialog.min.js"></script>
+    <script src="../js/utility.min.js"></script>
+    <script src="../js/navbar.min.js"></script>
+    <script src="../js/sidebar.min.js"></script>
+    <script src="../tutor/tutor.js"></script>
+</body>
+
+</html>

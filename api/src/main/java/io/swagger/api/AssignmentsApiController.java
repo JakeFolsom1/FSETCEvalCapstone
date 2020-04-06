@@ -156,6 +156,7 @@ public class AssignmentsApiController implements AssignmentsApi {
                             Assignment assignment = new Assignment();
                             assignment.setAsurite(evaluator);
                             assignment.setAssignedAsurite(matches.get(evaluator));
+                            assignment.setAssignmentNumber(new Long(i + 1));
                             assignment.setEvalType(Question.EvalType.p2p);
                             assignment.setIsComplete(false);
                             assignment.setSemesterName(activeSemester.getSemesterName());

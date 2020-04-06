@@ -27,6 +27,7 @@ $(document).ready(() => {
         $.getJSON(apiUrl + "/assignments",
             function (assignmentsJson) {
                 assignments = assignmentsJson;
+                console.log(assignments);
             }
         ),
         $.getJSON(apiUrl + "/preferences",
