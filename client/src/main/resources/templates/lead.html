@@ -82,11 +82,19 @@
             </div>
         </div>
     </div>
+    <script src="../js/jquery-3.4.1.min.js"></script>
     <script>
+        const asurite = "${asurite}";
         const apiUrl = "https://sod819.fulton.asu.edu/eval-app";
         // const apiUrl = "http://localhost:8080";
+        $(document).ajaxStart(function () {
+            $(".ajax-gif").css("display", "block");
+        });
+
+        $(document).ajaxComplete(function () {
+            $(".ajax-gif").css("display", "none");
+        });
     </script>
-    <script src="../js/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../lead/viewShared.js"></script>
