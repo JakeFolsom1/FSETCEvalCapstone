@@ -20,7 +20,7 @@
     <div id="navbar">
         <nav class="navbar navbar-inverse navbar-fixed-top">
             <div id="header">
-                <img class="nav-logo" src="../public/tutoringCenterHeaderText.jpg" alt="FSETC logo" />
+                <img class="nav-logo" src="../tutoringCenterHeaderText.jpg" alt="FSETC logo" />
                 <span
                     style="position: fixed; top: 10px; left: 345px; background-color: transparent; color: #ccc; font-size: 14pt">
                     FSE Tutoring Centers Evaluations
@@ -56,8 +56,6 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button id="submitEvalButton" type="button" class="btn btn-primary"
-                            data-dismiss="modal">Submit</button>
                     </div>
                 </div>
             </div>
@@ -75,22 +73,32 @@
                 <!-- Search form -->
                 <div
                     style="display: flex; flex-direction: row; justify-content: left; align-items: center; padding-bottom: 20px">
-                    <input class="form-control" id="searchText" type="text" placeholder="Enter tutor name..."
-                        style="width: 30%; " aria-label="Search" />
+                    <input class="form-control" type="text" placeholder="Enter tutor name..." style="width: 30%; "
+                        aria-label="Search" />
+                    <a class="btn btn-primary navb" id="home" role="button" style="margin-left:10px;"
+                        onclick="">Search</a>
                 </div>
                 <table id="completedEvaluationTable" class="striped-table cell-border" style="width:100%;"></table>
             </div>
         </div>
     </div>
+    <script src="../js/jquery-3.4.1.min.js"></script>
     <script>
+        const asurite = "${asurite}";
         const apiUrl = "https://sod819.fulton.asu.edu/eval-app";
         // const apiUrl = "http://localhost:8080";
+        $(document).ajaxStart(function () {
+            $(".ajax-gif").css("display", "block");
+        });
+
+        $(document).ajaxComplete(function () {
+            $(".ajax-gif").css("display", "none");
+        });
     </script>
-    <script src="../js/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
-    <script src="lead_js/viewShared.js"></script>
-    <script src="lead_js/completeAssignmentsLead.js"></script>
+    <script src="../lead/viewShared.js"></script>
+    <script src="../lead/completeAssignmentsLead.js"></script>
 </body>
 
 </html>

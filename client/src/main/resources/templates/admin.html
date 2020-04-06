@@ -21,7 +21,7 @@
 	<div id="navbar">
 		<nav class="navbar navbar-inverse navbar-fixed-top">
 			<div id="header">
-				<img class="nav-logo" src="../public/tutoringCenterHeaderText.jpg" alt="FSETC logo" />
+				<img class="nav-logo" src="../tutoringCenterHeaderText.jpg" alt="FSETC logo" />
 				<span
 					style="position: fixed; top: 10px; left: 345px; background-color: transparent; color: #ccc; font-size: 14pt">
 					FSE Tutoring Centers Evaluations
@@ -35,7 +35,7 @@
 		<div id="page-header">
 			<h2 style="font-weight: bold; margin-top: 7rem;">Evaluations</h2>
 			<span style="float:right;margin-top:-50px">
-				<img class="ajax-gif" src="../public/ajax-loader-bar-wh.gif" style="display: none;">
+				<img class="ajax-gif" src="../ajax-loader-bar-wh.gif" style="display: none;">
 			</span>
 		</div>
 		<ul class="nav nav-tabs" id="adminTabs" role="tablist">
@@ -199,6 +199,7 @@
 	</div>
 	<script src="../js/jquery-3.4.1.min.js"></script>
 	<script>
+		const asurite = "${asurite}";
 		const apiUrl = "https://sod819.fulton.asu.edu/eval-app";
 		// const apiUrl = "http://localhost:8080";
 		$(document).ajaxStart(function () {
@@ -212,12 +213,12 @@
 	<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 	<script src="../js/jquery-ui.min.js"></script>
 	<script src="../js/bootstrap.min.js"></script>
-	<script src="admin_js/completedEval.js"></script>
-	<script src="admin_js/assignmentProgress.js"></script>
-	<script src="admin_js/editEval.js"></script>
-	<script src="admin_js/assignment.js"></script>
-	<script src="admin_js/teams.js"></script>
-	<script src="admin_js/semester.js"></script>
+	<script src="../admin/completedEval.js"></script>
+	<script src="../admin/assignmentProgress.js"></script>
+	<script src="../admin/editEval.js"></script>
+	<script src="../admin/assignment.js"></script>
+	<script src="../admin/teams.js"></script>
+	<script src="../admin/semester.js"></script>
 </body>
 
 </html>
