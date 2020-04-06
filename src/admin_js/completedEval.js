@@ -1,3 +1,105 @@
+const dummyData = [
+    {
+        "evalType": "p2p",
+        "evaluatee": "smurra11",
+        "evaluator": "jjbowma2",
+        "isShared": true,
+        "questionsAndResponses": [
+            {
+                "question": {
+                    "questionNumber": 1,
+                    "questionPrompt": "Does tutor obey all procedures and policies of the center?",
+                    "questionType": "freeResponse"
+                },
+                "response": "Yes. Steven has yet to make a mistake"
+            },
+            {
+                "question": {
+                    "questionNumber": 2,
+                    "questionPrompt": "Does tutor obey all procedures and policies of the center?",
+                    "questionType": "freeResponse"
+                },
+                "response": "Steven does not wear his sash when he's on shift."
+            },
+            {
+                "question": {
+                    "questionNumber": 3,
+                    "questionPrompt": "Does the tutor show up to work on time?",
+                    "questionType": "freeResponse"
+                },
+                "response": "No. he is consistently late"
+            }
+        ],
+        "semester": "Fall 2019"
+    },
+    {
+        "evalType": "p2p",
+        "evaluatee": "cjstanfi",
+        "evaluator": "jjbowma2",
+        "isShared": true,
+        "questionsAndResponses": [
+            {
+                "question": {
+                    "questionNumber": 1,
+                    "questionPrompt": "Does tutor obey all procedures and policies of the center?",
+                    "questionType": "freeResponse"
+                },
+                "response": "John does not wear his sash when he's on shift."
+            }
+        ],
+        "semester": "Fall 2019"
+    },
+    {
+        "evalType": "p2p",
+        "evaluatee": "smurra11",
+        "evaluator": "cjstanfi",
+        "isShared": true,
+        "questionsAndResponses": [
+            {
+                "question": {
+                    "questionNumber": 1,
+                    "questionPrompt": "Does tutor obey all procedures and policies of the center?",
+                    "questionType": "freeResponse"
+                },
+                "response": "John does not wear his sash when he's on shift."
+            },
+            {
+                "question": {
+                    "questionNumber": 2,
+                    "questionPrompt": "Test question?",
+                    "questionType": "freeResponse"
+                },
+                "response": "Test response"
+            }
+        ],
+        "semester": "Fall 2019"
+    },
+    {
+        "evalType": "p2p",
+        "evaluatee": "asdonova",
+        "evaluator": "amariajo",
+        "isShared": true,
+        "questionsAndResponses": [
+            {
+                "question": {
+                    "questionNumber": 1,
+                    "questionPrompt": "Does tutor obey all procedures and policies of the center?",
+                    "questionType": "freeResponse"
+                },
+                "response": "John does not wear his sash when he's on shift."
+            },
+            {
+                "question": {
+                    "questionNumber": 2,
+                    "questionPrompt": "Test question?",
+                    "questionType": "freeResponse"
+                },
+                "response": "Test response"
+            }
+        ],
+        "semester": "Fall 2019"
+    }
+];
 let completedEvals = [];
 let names = [];
 $(document).ready(() => {
@@ -94,3 +196,8 @@ const viewEvaluation = (evaluator, evaluatee) => {
     $('#questionsAndResponses').append(sharedRadioInput)
     $('#testmodal').modal('show');
 }
+
+
+
+
+

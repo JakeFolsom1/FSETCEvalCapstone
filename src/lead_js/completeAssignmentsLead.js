@@ -58,14 +58,14 @@ let userAssignments = [];
 let names = {};
 let completedEvals = [];
 $(document).ready(() => {
-    let teamMembers = [];
+    let teamMembers = [], leadAsurite = "aarunku3";
     $.when(
-        $.getJSON(apiUrl + `/assignments/active/${asurite}`,
+        $.getJSON(apiUrl + `/assignments/active/${leadAsurite}`,
             function (assignmentsJson) {
                 userAssignments = assignmentsJson;
             }
         ),
-        $.getJSON(apiUrl + `/teamMembers/${asurite}`,
+        $.getJSON(apiUrl + `/teamMembers/${leadAsurite}`,
             function (teamMemberJson) {
                 teamMembers = teamMemberJson;
             }
@@ -95,14 +95,14 @@ $(document).ready(() => {
                 {
                     title: "Actions",
                     render: (data, _type, row) => {
-                        let evaluateeAsurite = Object.keys(names).find(key => names[key] == row[0])
-                        const assignment = userAssignments.find(assignment => assignment.assignedAsurite == evaluateeAsurite)
+                        let asurite = Object.keys(names).find(key => names[key] == row[0])
+                        const assignment = userAssignments.find(assignment => assignment.assignedAsurite == asurite)
                         //Use data variable to pass the evaluation parameters to the evaluations page.
                         let evalButton =
                             `<button
                         class=${assignment.isComplete ? "btn btn-primary" : "btn btn-secondary"}
                         style="border-color: #8C1D40;"
-                        onclick="viewEvaluation('${names[asurite]}', '${row[0]}')" id="myButton">
+                        onclick="buildEvaluation('${row[0]}')" id="myButton">
                         Evaluate
                         </button>`;
                         return evalButton;
@@ -131,7 +131,7 @@ $(document).ready(() => {
                             `<button
                         class="btn btn-primary"
                         style="border-color: #8C1D40;"
-                        onclick="viewEvaluation('${asurite}', '${row[2]}')" id="myButton">
+                        onclick="viewEvaluation('${leadAsurite}', '${row[2]}')" id="myButton">
                         View
                         </button>`;
                         return viewButton;
@@ -148,8 +148,8 @@ $(document).ready(() => {
 });
 
 const buildEvaluation = (evaluatee) => {
-    let evaluateeAsurite = Object.keys(names).find(key => names[key] == evaluatee)
-    const assignment = userAssignments.find(assignment => assignment.assignedAsurite == evaluateeAsurite)
+    let asurite = Object.keys(names).find(key => names[key] == evaluatee)
+    const assignment = userAssignments.find(assignment => assignment.assignedAsurite == asurite)
 
     let evalQuestions = [];
     $('#questionsAndResponses').empty();
@@ -220,9 +220,9 @@ const buildEvaluation = (evaluatee) => {
         })
     })
 }
-
 const viewEvaluation = (evaluator, evaluatee) => {
     //Clear any old evaluations in the modal. There is probably a better way to do this
+    evaluator = names[evaluator]
     $('#questionsAndResponses').empty();
     $('#evalHeader h3').remove();
 
@@ -260,3 +260,7 @@ const viewEvaluation = (evaluator, evaluatee) => {
     $('#questionsAndResponses').append(sharedRadioInput)
     $('#testmodal').modal('show');
 }
+
+
+
+
