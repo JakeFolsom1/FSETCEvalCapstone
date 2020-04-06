@@ -31,7 +31,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>io.swagger.Swagger2SpringBoot</mainClass>
+                    <mainClass>io.swagger.EvaluationApp</mainClass>
                 </configuration>
             </plugin>
         </plugins>

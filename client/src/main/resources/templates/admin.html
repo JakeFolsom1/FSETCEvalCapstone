@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+	<title>FSETC Evaluations</title>
+	<meta name="description" content="FSETC Evaluation Web Application" />
+
+	<link rel="stylesheet" href="../css/bootstrap.min.css" />
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
+	<link rel="stylesheet" href="../css/jquery-ui.min.css" />
+	<link rel="stylesheet" href="../css/asu.css" />
+	<link rel="stylesheet" href="../css/general.css" />
+	<link rel="stylesheet" href="../css/primaryStyles.css" />
+</head>
+
+<body>
+	<div id="navbar">
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+			<div id="header">
+				<img class="nav-logo" src="../tutoringCenterHeaderText.jpg" alt="FSETC logo" />
+				<span
+					style="position: fixed; top: 10px; left: 345px; background-color: transparent; color: #ccc; font-size: 14pt">
+					FSE Tutoring Centers Evaluations
+				</span>
+				<div class="navbar-header"></div>
+			</div>
+		</nav>
+	</div>
+
+	<div id="content-page" style="margin: 10rem">
+		<div id="page-header">
+			<h2 style="font-weight: bold; margin-top: 7rem;">Evaluations</h2>
+			<span style="float:right;margin-top:-50px">
+				<img class="ajax-gif" src="../ajax-loader-bar-wh.gif" style="display: none;">
+			</span>
+		</div>
+		<ul class="nav nav-tabs" id="adminTabs" role="tablist">
+			<li class="active">
+				<a data-toggle="tab" id="finishedTab" href="#finished">View Finished</a>
+			</li>
+			<li>
+				<a data-toggle="tab" id="checkProgressTab" href="#checkProgress">Check Progress</a>
+			</li>
+			<li>
+				<a data-toggle="tab" id="editTab" href="#edit">Edit Evaluations</a>
+			</li>
+			<li>
+				<a data-toggle="tab" id="assignTab" href="#assign">Assign</a>
+			</li>
+			<li>
+				<a data-toggle="tab" id="teamsTab" href="#teams">Teams</a>
+			</li>
+			<li>
+				<a data-toggle="tab" id="semesterTab" href="#semester">Semester</a>
+			</li>
+		</ul>
+
+		<div class="tab-content" id="adminTabContent">
+			<div class="tab-pane fade active in" id="finished" role="tabpanel" aria-labelledby="finishedTab">
+				<h3>Search for tutor</h3>
+				<!-- Search form -->
+				<div
+					style="display: flex; flex-direction: row; justify-content: left; align-items: center; padding-bottom: 20px">
+					<input class="form-control" id="searchText" type="text" placeholder="Enter tutor name..."
+						style="width: 30%; " aria-label="Search" />
+				</div>
+				<table id="completedEvaluationTable" class="striped-table cell-border" style="width:100%;"></table>
+				<!-- Test Modal Start -->
+				<div id="testmodal" class="modal fade">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div id="evalHeader" class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"
+									aria-hidden="true">&times;</button>
+								<h4 class="modal-title" id="evalTitle"></h4>
+							</div>
+							<div class="modal-body">
+								<ul id="questionsAndResponses">
+								</ul>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Test Modal End -->
+			</div>
+			<div class="tab-pane fade" id="checkProgress" role="tabpanel" aria-labelledby="checkProgressTab">
+				<table id="progressTable" class="striped-table cell-border" style="width: 100%"></table>
+				<br />
+				<button id="remindAllButton" class="btn btn-primary text-right" onclick="remindAll()"
+					style="display: block; margin-left: auto; margin-bottom: 1rem;">
+					Remind All
+				</button>
+			</div>
+			<div class="tab-pane fade" id="edit" role="tabpanel" aria-labelledby="editTab">
+				<div id="accordion-wrapper">
+					<!--Auto populate this panel-group with questions from JS-->
+					<div class="panel-group" id="accordion" style="width: 50%;"></div>
+				</div>
+			</div>
+			<div class="tab-pane fade" id="assign" role="tabpanel" aria-labelledby="assignTab">
+				<br />
+				<form class="form-inline" id="numAssignmentsForm">
+					<div class="form-group">
+						<label for="numAssignments">Number of peer evaluations to assign:
+						</label>
+						<input id="numAssignments" type="number" class="form-control" placeholder="2" required />
+						<button id="numAssignmentsButton" class="btn btn-primary" type="submit">
+							Save
+						</button>
+					</div>
+				</form>
+				<br />
+				<table id="assignmentTable" class="striped-table cell-border" style="width: 100%"></table>
+				<br />
+				<button id="autoAssignAllButton" class="btn btn-primary" onclick="autoAssignAll()"
+					style="display: block; margin-left: auto; margin-bottom: 1rem;">
+					Auto-Assign All
+				</button>
+			</div>
+			<div class="tab-pane fade" id="teams" role="tabpanel" aria-labelledby="teamsTab">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-xs-4">
+							<h4>Leads</h4>
+							<select name="leadBox" id="leadBox" class="form-control" multiple size="25">
+								<option value="none" selected></option>
+							</select>
+						</div>
+						<div class="col-xs-4">
+							<h4>Selected Lead's Team</h4>
+							<select name="teamBox" id="teamBox" class="form-control" multiple size="25">
+							</select>
+							<br />
+							<button id="removeTeamMembersButton" class="btn btn-primary btn-block">Remove</button>
+						</div>
+						<div class="col-xs-4">
+							<h4>Available Tutors</h4>
+							<select name="availableBox" id="availableBox" class="form-control" multiple size="25">
+							</select>
+							<br />
+							<button id="addTeamMembersButton" class="btn btn-primary btn-block">Add</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane fade" id="semester" role="tabpanel" aria-labelledby="semesterTab">
+				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSemesterModal"
+					style="display: block; margin-left: auto; margin-bottom: 1rem;">
+					<span>&#43;</span>
+				</button>
+				<div class="modal fade" id="addSemesterModal" tabindex="-1" role="dialog"
+					aria-labelledby="addSemesterModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h3 class="modal-title" id="addSemesterModalLabel">
+									Add New Semester
+								</h3>
+							</div>
+							<div class="modal-body">
+								<form id="newSemesterForm">
+									<div class="input-group" style="width: 100%">
+										<label for="semesterInput">Select a semester:</label>
+										<select id="semesterInput" class="form-control" placeholder="Select semester"
+											required>
+											<option value="fall">Fall</option>
+											<option value="spring">Spring</option>
+											<option value="summer">Summer</option>
+										</select>
+										<br />
+										<label for="semesterYearInput">Enter a year:</label>
+										<input id="semesterYearInput" class="form-control" type="text" placeholder="YY"
+											maxlength="2" pattern="[0-9]{2}" required />
+									</div>
+									<br />
+								</form>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">
+									Close
+								</button>
+								<button type="submit" form="newSemesterForm" class="btn btn-primary">
+									Create
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<table id="semesterTable" class="striped-table cell-border" style="width: 100%"></table>
+			</div>
+		</div>
+	</div>
+	<script src="../js/jquery-3.4.1.min.js"></script>
+	<script>
+		const asurite = "${asurite}";
+		const apiUrl = "https://sod819.fulton.asu.edu/eval-app";
+		// const apiUrl = "http://localhost:8080";
+		$(document).ajaxStart(function () {
+			$(".ajax-gif").css("display", "block");
+		});
+
+		$(document).ajaxComplete(function () {
+			$(".ajax-gif").css("display", "none");
+		});
+	</script>
+	<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+	<script src="../js/jquery-ui.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<script src="../admin/completedEval.js"></script>
+	<script src="../admin/assignmentProgress.js"></script>
+	<script src="../admin/editEval.js"></script>
+	<script src="../admin/assignment.js"></script>
+	<script src="../admin/teams.js"></script>
+	<script src="../admin/semester.js"></script>
+</body>
+
+</html>
