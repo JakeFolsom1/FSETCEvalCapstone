@@ -119,10 +119,33 @@
 				<br />
 				<table id="assignmentTable" class="striped-table cell-border" style="width: 100%"></table>
 				<br />
-				<button id="autoAssignAllButton" class="btn btn-primary" onclick="autoAssignAll()"
+				<button id="autoAssignAllButton" class="btn btn-primary" data-toggle="modal" data-target="#autoAssignAllModal"
 					style="display: block; margin-left: auto; margin-bottom: 1rem;">
 					Auto-Assign All
 				</button>
+				<div class="modal fade" id="autoAssignAllModal" tabindex="-1" role="dialog"
+					 aria-labelledby="autoAssignAllModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title" id="autoAssignAllModalLabel">
+									Are you sure you want to auto-assign all peers?
+								</h4>
+							</div>
+							<div class="modal-body">
+								<p>This will remove all peer assignments for the current semester.</p>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">
+									Cancel
+								</button>
+								<button class="btn btn-primary" onclick="autoAssignAll()">
+									Confirm
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="tab-pane fade" id="teams" role="tabpanel" aria-labelledby="teamsTab">
 				<div class="container-fluid">

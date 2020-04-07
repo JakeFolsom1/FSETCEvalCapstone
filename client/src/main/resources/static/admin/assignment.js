@@ -1,4 +1,4 @@
-$(document).ready(() => {
+$("a[href='#assign']").on('show.bs.tab', function(e) { // experimenting with load on show of tab
     let names = {}, numAssignments = 0, tutorList = [], assignments = [], preferences = [], leadTeams = [], activeSemester = "";
     $.when(
         $.ajax({
@@ -95,6 +95,7 @@ $(document).ready(() => {
         }).concat(leadMap);
 
         $('#assignmentTable').DataTable({
+            destroy: true, // experimental feature
             paging: false,
             info: false,
             searching: false,
@@ -298,25 +299,48 @@ $(document).ready(() => {
 });
 
 const autoAssign = asurite => {
-    console.log("Auto-assigning: " + asurite);
     const button = $(`#${asurite}AutoAssignButton`)
     button.attr("disabled", "true");
-    button.text("Auto-Assigned");
-    setTimeout(() => {
-        button.removeAttr("disabled");
-        button.text("Auto-Assign");
-    }, 1000);
+    button.text("Auto-Assigning");
+    $.ajax({
+        type: "POST",
+        url: apiUrl + "/assignments/auto/" + asurite,
+        headers: { "Accept": "application/json" },
+        success: function (response) {
+            button.removeAttr("disabled");
+            button.text("Auto-Assign");
+        },
+        error: function (response) {
+            button.text("Failed");
+            setTimeout(() => {
+                button.text("Auto-Assign");
+            }, 1000);
+        }
+    });
+
 };
 
 const autoAssignAll = () => {
-    console.log("Auto-Assigning All");
+    $("#autoAssignAllModal").modal("hide");
     const button = $("#autoAssignAllButton");
     button.attr("disabled", "true");
-    button.text("Auto-Assigned All");
-    setTimeout(() => {
-        button.removeAttr("disabled");
-        button.text("Auto-Assign All");
-    }, 1000);
+    button.text("Auto-Assigning All");
+
+    $.ajax({
+        type: "POST",
+        url: apiUrl + "/assignments/auto",
+        headers: { "Accept": "application/json" },
+        success: function (response) {
+            button.removeAttr("disabled");
+            button.text("Auto-Assign All");
+        },
+        error: function (response) {
+            button.text("Failed");
+            setTimeout(() => {
+                button.text("Auto-Assign All");
+            }, 1000);
+        }
+    });
 };
 
 const checkDuplicateAssignments = assignments => {

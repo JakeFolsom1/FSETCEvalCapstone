@@ -56,7 +56,7 @@ public class AssignmentsApiController implements AssignmentsApi {
     }
 
 
-    // auto assigns one member their p2p and t2l (tutor) or l2t(lead) assignments
+    // auto assigns one member their p2p assignments
     public ResponseEntity<Void> autoAssign(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -67,67 +67,44 @@ public class AssignmentsApiController implements AssignmentsApi {
             if (staffMap.get(asurite).getRole().equals("TUTOR")) {
                 // get their preference list
                 List<Preference> preferenceList = preferenceRepository.findAllByAsuriteAndSemesterNameOrderByPreferenceNumber(asurite, activeSemester.getSemesterName());
+                List<Assignment> currentAssignmentsList = assignmentRepository.findAllByAsuriteAndSemesterName(asurite, activeSemester.getSemesterName());
 
                 // generate a list of possible assignments
-                List<Assignment> assignmentList = new ArrayList<Assignment>();
+                List<Assignment> newAssignmentList = new ArrayList<Assignment>();
                 int candidateIndex = 0;
-                for (int i = 0; i < numAssignments; i++) {
+                for (int i = currentAssignmentsList.size(); i < numAssignments; i++) {
                     while (candidateIndex < preferenceList.size()) {
                         // get assignment candidate's asurite and increment
                         String candidate = preferenceList.get(candidateIndex++).getPreferredAsurite();
 
-                        // if candidate has not been assigned the total number of assignments, add it to the list and break
-                        if (assignmentRepository.findAllByAssignedAsuriteAndSemesterName(candidate, activeSemester.getSemesterName()).size() < numAssignments) {
-                            Assignment assignment = new Assignment();
-                            assignment.setAsurite(asurite);
-                            assignment.setAssignedAsurite(candidate);
-                            assignment.setEvalType(Question.EvalType.p2p);
-                            assignment.setIsComplete(false);
-                            assignment.setSemesterName(activeSemester.getSemesterName());
-                            assignmentList.add(assignment);
-                            break;
+                        if (assignmentRepository.findByAsuriteAndAssignedAsurite(asurite, candidate) == null) { // if asurite has not already been assigned to candidate
+                            if (assignmentRepository.findAllByAssignedAsuriteAndSemesterName(candidate, activeSemester.getSemesterName()).size() < numAssignments) { // and if candidate has not been assigned the total number of assignments, add it to the list and break
+                                Assignment assignment = new Assignment();
+                                assignment.setAsurite(asurite);
+                                assignment.setAssignedAsurite(candidate);
+                                assignment.setEvalType(Question.EvalType.p2p);
+                                assignment.setIsComplete(false);
+                                assignment.setSemesterName(activeSemester.getSemesterName());
+                                assignment.setAssignmentNumber(new Long(i + 1));
+                                newAssignmentList.add(assignment);
+                                break;
+                            }
                         }
                     }
                 }
 
                 // if the desired number of assignments was met
-                if (assignmentList.size() == numAssignments) {
+                if (currentAssignmentsList.size() + newAssignmentList.size() == numAssignments) {
                     // save the assignments to the database
-                    for (Assignment assignment : assignmentList) {
+                    for (Assignment assignment : newAssignmentList) {
                         assignmentRepository.save(assignment);
                     }
-
-                    // create and save the lead assignment
-                    String lead = teamMemberRepository.findOne(new TeamMember.TeamMemberPK(asurite, activeSemester.getSemesterName())).getLeadAsurite();
-                    Assignment leadAssignment = new Assignment();
-                    leadAssignment.setSemesterName(activeSemester.getSemesterName());
-                    leadAssignment.setIsComplete(false);
-                    leadAssignment.setEvalType(Question.EvalType.t2l);
-                    leadAssignment.setAssignedAsurite(lead);
-                    leadAssignment.setAsurite(asurite);
-                    assignmentRepository.save(leadAssignment);
                     return new ResponseEntity<Void>(HttpStatus.OK);
                 }
                 // desired number could not be met, so return conflict
                 else {
                     return new ResponseEntity<Void>(HttpStatus.CONFLICT);
                 }
-            }
-            // if asurite belongs to a lead
-            else {
-                // get a list of team members
-                List<TeamMember> teamMemberList = teamMemberRepository.findTeamMembersByLeadAsuriteAndSemesterName(asurite, activeSemester.getSemesterName());
-                // for each team member, create an assignment
-                for (TeamMember teamMember: teamMemberList) {
-                    Assignment assignment = new Assignment();
-                    assignment.setAsurite(asurite);
-                    assignment.setAssignedAsurite(teamMember.getTutorAsurite());
-                    assignment.setEvalType(Question.EvalType.l2t);
-                    assignment.setIsComplete(false);
-                    assignment.setSemesterName(activeSemester.getSemesterName());
-                    assignmentRepository.save(assignment);
-                }
-                return new ResponseEntity<Void>(HttpStatus.OK);
             }
         }
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);

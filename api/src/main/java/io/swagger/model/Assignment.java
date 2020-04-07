@@ -19,7 +19,7 @@ import static javax.persistence.EnumType.STRING;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 @Entity
-@Table(name = "ASSIGNMENT", uniqueConstraints = {@UniqueConstraint(columnNames = {"ASURITE", "SEMESTER_NAME", "ASSIGNMENT_NUMBER", "EVAL_TYPE"})})
+@Table(name = "ASSIGNMENT") //, uniqueConstraints = {@UniqueConstraint(columnNames = {"ASURITE", "SEMESTER_NAME", "ASSIGNMENT_NUMBER", "EVAL_TYPE"})})
 public class Assignment implements Serializable {
     @Id
     @GeneratedValue
