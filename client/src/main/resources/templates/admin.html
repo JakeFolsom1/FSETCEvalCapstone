@@ -123,6 +123,28 @@
 					style="display: block; margin-left: auto; margin-bottom: 1rem;">
 					Auto-Assign All
 				</button>
+				<div class="modal fade" id="assignmentsModal" tabindex="-1" role="dialog"
+					 aria-labelledby="assignmentsModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title" id="assignmentsModalLabel">
+									Assignments
+								</h4>
+							</div>
+							<div class="modal-body" id="assignmentsModalBody">
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">
+									Close
+								</button>
+								<button class="btn btn-primary" id="assignmentsModalSubmitButton">
+									Save
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
 				<div class="modal fade" id="autoAssignAllModal" tabindex="-1" role="dialog"
 					 aria-labelledby="autoAssignAllModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-dialog-centered" role="document">
@@ -139,7 +161,7 @@
 								<button type="button" class="btn btn-secondary" data-dismiss="modal">
 									Cancel
 								</button>
-								<button class="btn btn-primary" onclick="autoAssignAll()">
+								<button class="btn btn-primary" id="autoAssignConfirmButton">
 									Confirm
 								</button>
 							</div>
@@ -164,7 +186,15 @@
 							<button id="removeTeamMembersButton" class="btn btn-primary btn-block">Remove</button>
 						</div>
 						<div class="col-xs-4">
-							<h4>Available Tutors</h4>
+							<div class="row">
+								<div class="col-xs-8">
+									<h4>Available Tutors</h4>
+								</div>
+								<div class="col-xs-4">
+									<input type="checkbox" id="filterByMajorCheckbox" disabled checked/>
+									<label for="filterByMajorCheckbox">Filter by Lead's Major</label>
+								</div>
+							</div>
 							<select name="availableBox" id="availableBox" class="form-control" multiple size="25">
 							</select>
 							<br />

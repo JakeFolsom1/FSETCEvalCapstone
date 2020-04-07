@@ -1,4 +1,4 @@
-$(document).ready(() => {
+$("a[href='#checkProgress']").on('show.bs.tab', function(e) {
     let assignmentsProgress = [];
     let names = {};
     $.when(
@@ -36,6 +36,7 @@ $(document).ready(() => {
         });
 
         $('#progressTable').DataTable({
+            destroy: true,
             paging: false,
             searching: false,
             info: false,
