@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="utf-8" />
@@ -8,11 +8,11 @@
     <title>FSETC Evaluations</title>
     <meta name="description" content="FSETC Evaluation Web Application" />
 
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/jquery-ui.min.css">
-    <link rel="stylesheet" href="../css/asu.css">
-    <link rel="stylesheet" href="../css/general.css">
-    <link rel="stylesheet" href="../css/primaryStyles.css">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/jquery-ui.min.css}">
+    <link rel="stylesheet" th:href="@{/css/asu.css}">
+    <link rel="stylesheet" th:href="@{/css/general.css}">
+    <link rel="stylesheet" th:href="@{/css/primaryStyles.css}">
     <link rel="stylesheet" href="https://use.fontawesome.com/9fb47689fa.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.css" />
     <style>
@@ -42,7 +42,7 @@
     <div id="navbar">
         <nav class="navbar navbar-inverse navbar-fixed-top">
             <div id="header">
-                <img class="nav-logo" src="../tutoringCenterHeaderText.jpg">
+                <img class="nav-logo" th:src="@{/tutoringCenterHeaderText.jpg}">
                 <span
                     style="position:fixed; top:10px; left:345px; background-color:transparent; color:#ccc; font-size:14pt">
                     Tutor Management System
@@ -77,9 +77,9 @@
             <ul id="sortable"></ul>
         </div>
     </div>
-    <script src="../js/jquery-3.4.1.min.js"></script>
+    <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
     <script>
-        const asurite = "${asurite}";
+        const asurite = "[[${asurite}]]";
         const apiUrl = "https://sod819.fulton.asu.edu/eval-api";
         // const apiUrl = "http://localhost:8080";
         $(document).ajaxStart(function () {
@@ -90,15 +90,15 @@
             $(".ajax-gif").css("display", "none");
         });
     </script>
-    <script src="../js/jquery-ui.min.js"></script>
+    <script th:src="@{/js/jquery-ui.min.js}"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
-    <script src="../js/select-togglebutton.js"></script>
-    <script src="../js/bootstrap-dialog.min.js"></script>
-    <script src="../js/utility.min.js"></script>
-    <script src="../js/navbar.min.js"></script>
-    <script src="../js/sidebar.min.js"></script>
-    <script src="../tutor/tutor.js"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/select-togglebutton.js}"></script>
+    <script th:src="@{/js/bootstrap-dialog.min.js}"></script>
+    <script th:src="@{/js/utility.min.js}"></script>
+    <script th:src="@{/js/navbar.min.js}"></script>
+    <script th:src="@{/js/sidebar.min.js}"></script>
+    <script th:src="@{/tutor/tutor.js}"></script>
 </body>
 
 </html>

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 	<meta charset="utf-8" />
@@ -9,19 +9,19 @@
 	<title>FSETC Evaluations</title>
 	<meta name="description" content="FSETC Evaluation Web Application" />
 
-	<link rel="stylesheet" href="../css/bootstrap.min.css" />
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
-	<link rel="stylesheet" href="../css/jquery-ui.min.css" />
-	<link rel="stylesheet" href="../css/asu.css" />
-	<link rel="stylesheet" href="../css/general.css" />
-	<link rel="stylesheet" href="../css/primaryStyles.css" />
+	<link rel="stylesheet" th:href="@{/css/jquery-ui.min.css}" />
+	<link rel="stylesheet" th:href="@{/css/asu.css}" />
+	<link rel="stylesheet" th:href="@{/css/general.css}" />
+	<link rel="stylesheet" th:href="@{/css/primaryStyles.css}" />
 </head>
 
 <body>
 	<div id="navbar">
 		<nav class="navbar navbar-inverse navbar-fixed-top">
 			<div id="header">
-				<img class="nav-logo" src="../tutoringCenterHeaderText.jpg" alt="FSETC logo" />
+				<img class="nav-logo" th:src="@{/tutoringCenterHeaderText.jpg}" alt="FSETC logo" />
 				<span
 					style="position: fixed; top: 10px; left: 345px; background-color: transparent; color: #ccc; font-size: 14pt">
 					FSE Tutoring Centers Evaluations
@@ -35,7 +35,7 @@
 		<div id="page-header">
 			<h2 style="font-weight: bold; margin-top: 7rem;">Evaluations</h2>
 			<span style="float:right;margin-top:-50px">
-				<img class="ajax-gif" src="../ajax-loader-bar-wh.gif" style="display: none;">
+				<img class="ajax-gif" th:src="@{/ajax-loader-bar-wh.gif}" style="display: none;">
 			</span>
 		</div>
 		<ul class="nav nav-tabs" id="adminTabs" role="tablist">
@@ -197,9 +197,9 @@
 			</div>
 		</div>
 	</div>
-	<script src="../js/jquery-3.4.1.min.js"></script>
+	<script th:src="@{/js/jquery-3.4.1.min.js}"></script>
 	<script>
-		const asurite = "${asurite}";
+		const asurite = "[[${asurite}]]";
 		const apiUrl = "https://sod819.fulton.asu.edu/eval-api";
 		// const apiUrl = "http://localhost:8080";
 		$(document).ajaxStart(function () {
@@ -211,14 +211,14 @@
 		});
 	</script>
 	<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-	<script src="../js/jquery-ui.min.js"></script>
-	<script src="../js/bootstrap.min.js"></script>
-	<script src="../admin/completedEval.js"></script>
-	<script src="../admin/assignmentProgress.js"></script>
-	<script src="../admin/editEval.js"></script>
-	<script src="../admin/assignment.js"></script>
-	<script src="../admin/teams.js"></script>
-	<script src="../admin/semester.js"></script>
+	<script th:src="@{/js/jquery-ui.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<script th:src="@{/admin/completedEval.js}"></script>
+	<script th:src="@{/admin/assignmentProgress.js}"></script>
+	<script th:src="@{/admin/editEval.js}"></script>
+	<script th:src="@{/admin/assignment.js}"></script>
+	<script th:src="@{/admin/teams.js}"></script>
+	<script th:src="@{/admin/semester.js}"></script>
 </body>
 
 </html>
