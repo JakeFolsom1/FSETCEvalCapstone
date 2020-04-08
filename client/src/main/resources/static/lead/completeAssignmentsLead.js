@@ -58,205 +58,228 @@ let userAssignments = [];
 let names = {};
 let completedEvals = [];
 $(document).ready(() => {
-    let teamMembers = [];
-    $.when(
-        $.getJSON(apiUrl + `/assignments/active/${asurite}`,
-            function (assignmentsJson) {
-                userAssignments = assignmentsJson;
-            }
-        ),
-        $.getJSON(apiUrl + `/teamMembers/${asurite}`,
-            function (teamMemberJson) {
-                teamMembers = teamMemberJson;
-            }
-        ),
-        $.getJSON(apiUrl + "/completedEvaluations",
-            function (completedEvalJson) {
-                completedEvals = completedEvalJson;
-            }
-        ),
-        $.getJSON(apiUrl + "/staff/names",
-            function (namesJson) {
-                names = namesJson
-            }
-        )
-    ).then(() => {
-        const tableData = userAssignments.map(eval => [
-            names[eval.assignedAsurite], null
-        ]);
-        let assignTable = $('#assignmentsTable').DataTable({
-            stripe: true,
-            paging: false,
-            searching: true,
-            info: false,
-            data: tableData,
-            columns: [
-                { title: "Tutor Name" },
-                {
-                    title: "Actions",
-                    render: (data, _type, row) => {
-                        let evaluateeAsurite = Object.keys(names).find(key => names[key] == row[0])
-                        const assignment = userAssignments.find(assignment => assignment.assignedAsurite == evaluateeAsurite)
-                        //Use data variable to pass the evaluation parameters to the evaluations page.
-                        let evalButton =
-                            `<button
-                        class=${assignment.isComplete ? "btn btn-primary" : "btn btn-secondary"}
-                        style="border-color: #8C1D40;"
-                        onclick="viewEvaluation('${names[asurite]}', '${row[0]}')" id="myButton">
-                        Evaluate
-                        </button>`;
-                        return evalButton;
-                    }
-                }
-            ]
-        })
-
-        completedEvals = completedEvals.filter(eval => teamMembers.includes(Object.keys(names).find(key => names[key] == eval.evaluatee)));
-        const completedEvalsTableData = completedEvals.map(eval => [eval.semester, eval.evaluator, eval.evaluatee, null])
-        let completedEvalTable = $('#completedEvaluationTable').DataTable({
-            stripe: true,
-            paging: false,
-            searching: true,
-            info: false,
-            data: completedEvalsTableData,
-            columns: [
-                { title: "Semester" },
-                { title: "Evaluator" },
-                { title: "Evaluatee" },
-                {
-                    title: "Actions",
-                    render: (data, _type, row) => {
-                        //Use data variable to pass the evaluation parameters to the evaluations page.
-                        let viewButton =
-                            `<button
+  let teamMembers = [];
+  $.when(
+    $.getJSON(apiUrl + `/assignments/active/${asurite}`, function (
+      assignmentsJson
+    ) {
+      userAssignments = assignmentsJson;
+    }),
+    $.getJSON(apiUrl + `/teamMembers/${asurite}`, function (teamMemberJson) {
+      teamMembers = teamMemberJson;
+    }),
+    $.getJSON(apiUrl + "/completedEvaluations", function (completedEvalJson) {
+      completedEvals = completedEvalJson;
+    }),
+    $.getJSON(apiUrl + "/staff/names", function (namesJson) {
+      names = namesJson;
+    })
+  ).then(() => {
+    const tableData = userAssignments.map((eval) => [
+      names[eval.assignedAsurite],
+      null,
+    ]);
+    let assignTable = $("#assignmentsTable").DataTable({
+      stripe: true,
+      paging: false,
+      searching: true,
+      info: false,
+      data: tableData,
+      columns: [
+        { title: "Tutor Name" },
+        {
+          title: "Actions",
+          render: (data, _type, row) => {
+            let evaluateeAsurite = Object.keys(names).find(
+              (key) => names[key] == row[0]
+            );
+            const assignment = userAssignments.find(
+              (assignment) => assignment.assignedAsurite == evaluateeAsurite
+            );
+            //Use data variable to pass the evaluation parameters to the evaluations page.
+            let evalButton = `<button
                         class="btn btn-primary"
                         style="border-color: #8C1D40;"
-                        onclick="viewEvaluation('${asurite}', '${row[2]}')" id="myButton">
+                        onclick="buildEvaluation('${row[0]}')" id="myButton">
+                        Evaluate
+                        </button>`;
+            return evalButton;
+          },
+        },
+      ],
+    });
+
+    completedEvals = completedEvals.filter((eval) =>
+      teamMembers.includes(
+        Object.keys(names).find((key) => names[key] == eval.evaluatee)
+      )
+    );
+    const completedEvalsTableData = completedEvals.map((eval) => [
+      eval.semester,
+      eval.evaluator,
+      eval.evaluatee,
+      null,
+    ]);
+    let completedEvalTable = $("#completedEvaluationTable").DataTable({
+      stripe: true,
+      paging: false,
+      searching: true,
+      info: false,
+      data: completedEvalsTableData,
+      columns: [
+        { title: "Semester" },
+        { title: "Evaluator" },
+        { title: "Evaluatee" },
+        {
+          title: "Actions",
+          render: (data, _type, row) => {
+            //Use data variable to pass the evaluation parameters to the evaluations page.
+            let viewButton = `<button
+                        class="btn btn-primary"
+                        style="border-color: #8C1D40;"
+                        onclick="viewEvaluation('${names[asurite]}', '${row[2]}')" id="myButton">
                         View
                         </button>`;
-                        return viewButton;
-                    }
-                }
-            ]
-        })
+            return viewButton;
+          },
+        },
+      ],
+    });
 
-        $('#searchText').on('keyup change', function () {
-            completedEvalTable.search(this.value).draw();
-        })
-    })
-
+    $("#searchText").on("keyup change", function () {
+      completedEvalTable.search(this.value).draw();
+    });
+  });
 });
 
 const buildEvaluation = (evaluatee) => {
-    let evaluateeAsurite = Object.keys(names).find(key => names[key] == evaluatee)
-    const assignment = userAssignments.find(assignment => assignment.assignedAsurite == evaluateeAsurite)
+  let evaluateeAsurite = Object.keys(names).find(
+    (key) => names[key] == evaluatee
+  );
+  const assignment = userAssignments.find(
+    (assignment) => assignment.assignedAsurite == evaluateeAsurite
+  );
 
-    let evalQuestions = [];
-    $('#questionsAndResponses').empty();
-    $('#evalHeader h3').remove();
-    $.when(
-        $.getJSON(apiUrl + "/questions/l2t",
-            function (result) {
-                evalQuestions = result;
-            }
-        ),
-    ).then(function () {
-        const title = `<h3>${evaluatee}'s Evaluation</h3>`;
-        const sharedRadioInput =
-            `<div>
+  let evalQuestions = [];
+  $("#questionsAndResponses").empty();
+  $("#evalHeader h3").remove();
+  $.when(
+    $.getJSON(apiUrl + "/questions/l2t", function (result) {
+      evalQuestions = result;
+    })
+  ).then(function () {
+    const title = `<h3>${evaluatee}'s Evaluation</h3>`;
+    const sharedRadioInput = `<div>
                 <p>Would you like to share this evaluation with ${evaluatee}?</p>
                 <input type="radio" id="isSharedYes" checked="checked">
                 <label for="isSharedYes">Yes</label>
                 <input type="radio" id="isSharedNo">
                 <label for="isSharedNo">No</label>
-             </div>`
-        $('#evalHeader').append(title)
-        $.each(evalQuestions, (index, question) => {
-            const innerHTML =
-                `<li>
+             </div>`;
+    $("#evalHeader").append(title);
+    $.each(evalQuestions, (index, question) => {
+      const innerHTML = `<li>
                 <h4 style="font-weight: bold">Question ${index + 1}:</h4>
                 <p class="tab-eval">  ${question.questionPrompt}</p>
-                ${question.questionType == 'numeric' ?
-                    `<input type="range" class="form-control custom-range" min="0" max="5" id="response${index}">` :
-                    `<input type="text" placeholder="Enter Answer Here..." class="form-control" id="response${index}">`}
+                ${
+                  question.questionType == "numeric"
+                    ? `<input type="range" class="form-control custom-range" min="0" max="5" id="response${index}">`
+                    : question.questionType == "yesNo"
+                    ? `<input type="checkbox" id="response${index}" class="form-control"><label for="response${index}">Yes</label>`
+                    : `<input type="text" placeholder="Enter Answer Here..." class="form-control" id="response${index}">`
+                }
                 <br>
              </li>`;
-            $('#questionsAndResponses').append(innerHTML)
+      $("#questionsAndResponses").append(innerHTML);
+    });
+    $("#questionsAndResponses").append(sharedRadioInput);
+    $("#testmodal").modal("show");
+    $("#isShared").click(function () {
+      if (this.checked) $(".isShared label").text("No");
+      else $(".isShared label").text("Yes");
+    });
+    $("#submitEvalButton").click(function () {
+      let temp = $("#isSharedYes")[0].checked;
+      $.each(evalQuestions, (index, question) => {
+        $.ajax({
+          type: assignment.isComplete == true ? "PUT" : "POST",
+          url: apiUrl + "/responses",
+          data: JSON.stringify({
+            assignment: assignment.assignmentId,
+            isShared: $("#isSharedYes")[0].checked,
+            question: question.questionId,
+            response:
+              question.questionType == "yesNo"
+                ? $(`#response${index}`)[0].checked
+                : $(`#response${index}`).val(),
+          }),
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          success: function (response) {
+            console.log(response);
+          },
         });
-        $('#questionsAndResponses').append(sharedRadioInput)
-        $('#testmodal').modal('show')
-        $('#isShared').click(function () {
-            if (this.checked)
-                $('.isShared label').text('No')
-            else
-                $('.isShared label').text('Yes')
-        })
-        $('#submitEvalButton').click(function () {
-            let temp = $('#isSharedYes')[0].checked
-            $.each(evalQuestions, (index, question) => {
-                $.ajax({
-                    type: assignment.isComplete == true ? "PUT" : "POST",
-                    url: apiUrl + "/responses",
-                    data: JSON.stringify({
-                        assignment: assignment.assignmentId,
-                        isShared: $('#isSharedYes')[0].checked,
-                        question: question.questionId,
-                        response: $(`#response${index}`).val()
-                    }),
-                    headers: { "Accept": "application/json", "Content-Type": "application/json" },
-                    success: function (response) {
-                        console.log(response)
-                    }
-                })
-            })
-            $.ajax({
-                type: "PUT",
-                url: apiUrl + '/assignments/id/' + assignment.assignmentId,
-                headers: { "Accept": "application/json", "Content-Type": "application/json" },
-                success: function (response) {
-                    console.log(response)
-                }
-            })
-        })
-    })
-}
+      });
+      $.ajax({
+        type: "PUT",
+        url: apiUrl + "/assignments/id/" + assignment.assignmentId,
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        success: function (response) {
+          console.log(response);
+        },
+      });
+    });
+  });
+};
 
 const viewEvaluation = (evaluator, evaluatee) => {
-    //Clear any old evaluations in the modal. There is probably a better way to do this
-    $('#questionsAndResponses').empty();
-    $('#evalHeader h3').remove();
+  //Clear any old evaluations in the modal. There is probably a better way to do this
+  $("#questionsAndResponses").empty();
+  $("#evalHeader h3").remove();
 
-    //search for the evaluation and questions
-    const currentEval = completedEvals.find(evaluation => evaluator == evaluation.evaluator && evaluatee == evaluation.evaluatee);
-    const questions = currentEval.questionsAndResponses;
+  //search for the evaluation and questions
+  const currentEval = completedEvals.find(
+    (evaluation) =>
+      evaluator == evaluation.evaluator && evaluatee == evaluation.evaluatee
+  );
+  const questions = currentEval.questionsAndResponses;
 
-    //Add the title to the Modal
-    const title = `<h3>${evaluator}'s Evaluation of ${evaluatee} </h3>`;
-    $('#evalHeader').append(title);
+  //Add the title to the Modal
+  const title = `<h3>${evaluator}'s Evaluation of ${evaluatee} </h3>`;
+  $("#evalHeader").append(title);
 
-    const sharedRadioInput =
-        `<div>
+  const sharedRadioInput = `<div>
             <p>Is this evaluation shared with ${evaluatee}?</p>
-            ${currentEval.isShared == true ?
-            `<input type="radio" id="isSharedYes" checked="checked" disabled="true"><label for="isSharedYes">Yes</label>
-            <input type="radio" id="isSharedNo" disabled="true"><label for="isSharedNo">No</label>`:
-            `<input type="radio" id="isSharedYes" disabled="true"><label for="isSharedYes">Yes</label>
-            <input type="radio" id="isSharedNo" checked="checked" disabled="true"><label for="isSharedNo">No</label>`}
-         </div>`
+            ${
+              currentEval.isShared == true
+                ? `<input type="radio" id="isSharedYes" checked="checked" disabled="true"><label for="isSharedYes">Yes</label>
+            <input type="radio" id="isSharedNo" disabled="true"><label for="isSharedNo">No</label>`
+                : `<input type="radio" id="isSharedYes" disabled="true"><label for="isSharedYes">Yes</label>
+            <input type="radio" id="isSharedNo" checked="checked" disabled="true"><label for="isSharedNo">No</label>`
+            }
+         </div>`;
 
-    //Add the questions to the modal. Needs styling.
-    $.each(questions, (index, question) => {
-        const innerHTML =
-            `<li>
+  //Add the questions to the modal. Needs styling.
+  $.each(questions, (index, question) => {
+    const innerHTML = `<li>
                 <h4 style="font-weight: bold">Question ${index + 1}:</h4>
                 <p class="tab-eval">  ${question.question.questionPrompt}</p>
-                ${question.question.questionType == 'numeric' ?
-                `<input type="range" class="form-control custom-range" disabled="true" min="0" max="5" value="${question.response}" id="response${index}" readonly>` :
-                `<p class="tab-eval" readonly>${question.response}</p>`}
+                ${
+                  question.question.questionType == "numeric"
+                    ? `<input type="range" class="form-control custom-range" min="0" max="5" id="response${index}" value="${question.response}" disabled="true">`
+                    : question.question.questionType == "yesNo"
+                    ? `<input type="checkbox" id="response${index}" checked="${question.response}" class="form-control" disabled="true"><label for="response${index}">Yes</label>`
+                    : `<input type="text" value="${question.response}"class="form-control" id="response${index}" disabled="true">`
+                }
                 <br>
              </li>`;
-        $('#questionsAndResponses').append(innerHTML)
-    });
-    $('#questionsAndResponses').append(sharedRadioInput)
-    $('#testmodal').modal('show');
-}
+    $("#questionsAndResponses").append(innerHTML);
+  });
+  $("#questionsAndResponses").append(sharedRadioInput);
+  $("#testmodal").modal("show");
+};
