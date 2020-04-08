@@ -21,5 +21,6 @@ public interface AssignmentRepository extends CrudRepository<Assignment, Long> {
     void deleteAllBySemesterName(String semesterName);
     void deleteAllBySemesterNameAndEvalType(String semesterName, Question.EvalType evalType);
     void deleteAssignmentByAssignedAsuriteAndAsuriteAndSemesterName(String assignedAsurite, String asurite, String semesterName);
+    void deleteAllBySemesterNameAndEvalTypeAndAssignmentNumberGreaterThan(String semesterName, Question.EvalType evalType, Long assignmentNumber);
 
 }
