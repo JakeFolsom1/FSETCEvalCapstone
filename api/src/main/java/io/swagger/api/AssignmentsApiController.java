@@ -67,7 +67,7 @@ public class AssignmentsApiController implements AssignmentsApi {
             if (staffMap.get(asurite).getRole().equals("TUTOR")) {
                 // get their preference list
                 List<Preference> preferenceList = preferenceRepository.findAllByAsuriteAndSemesterNameOrderByPreferenceNumber(asurite, activeSemester.getSemesterName());
-                List<Assignment> currentAssignmentsList = assignmentRepository.findAllByAsuriteAndSemesterName(asurite, activeSemester.getSemesterName());
+                List<Assignment> currentAssignmentsList = assignmentRepository.findAllByAsuriteAndSemesterNameAndEvalType(asurite, activeSemester.getSemesterName(), Question.EvalType.p2p);
 
                 // generate a list of possible assignments
                 List<Assignment> newAssignmentList = new ArrayList<Assignment>();
