@@ -3,11 +3,9 @@ let names = [];
 $(document).ready(() => {
   $.when(
     $.getJSON(apiUrl + "/completedEvaluations", function (completedEvalJson) {
-      console.log(completedEvalJson);
       completedEvals = completedEvalJson;
     }),
     $.getJSON(apiUrl + "/staff", function (namesJson) {
-      console.log(namesJson);
       names = namesJson;
     })
   ).then(function () {
@@ -23,7 +21,14 @@ $(document).ready(() => {
       info: false,
       data: tableData,
       columns: [
-        { title: "Semester" },
+        {
+          title: "Semester",
+          render: data => {
+            const semester = (data.includes("fall") ? "Fall" : data.includes("spring") ? "Spring" : data.includes("summer") ? "Summer" : "Invalid Semester");
+            const year = data.substr(-2);
+            return `${semester} 20${year}`;
+          }
+        },
         { title: "Evaluator Name" },
         { title: "Evaluatee Name" },
         {
@@ -79,16 +84,19 @@ const viewEvaluation = (evaluator, evaluatee) => {
          </div>`;
 
   //Add the questions to the modal. Needs styling.
-  $.each(questions, (index, question) => {
+  $.each(questions.sort((q1, q2) => q1.question.questionNumber - q2.question.questionNumber), (index, question) => {
     const innerHTML = `<li>
-                <h4 style="font-weight: bold">Question ${index + 1}:</h4>
+                <h4 style="font-weight: bold">Question ${question.question.questionNumber}:</h4>
                 <p class="tab-eval">  ${question.question.questionPrompt}</p>
                 ${
                   question.question.questionType == "numeric"
-                    ? `<input type="range" class="form-control custom-range" min="0" max="5" id="response${index}" value="${question.response}" disabled="true">`
-                    : question.question.questionType == "yesNo"
-                    ? `<input type="checkbox" id="response${index}" checked="${question.response}" class="form-control" disabled="true"><label for="response${index}">Yes</label>`
-                    : `<input type="text" value="${question.response}"class="form-control" id="response${index}" disabled="true">`
+                      ? `<input type="range" min="1" max="5" id="response${index}" value="${question.response}" disabled="true"/><p class="text-center">${question.response}</p>`
+                      : question.question.questionType == "yesNo"
+                      ? `<input type="radio" id="response${index}" ${question.response == "true" ? "checked" : ""} disabled="true"/>
+                        <label for="response${index}">Yes</label>
+                        <input type="radio" id="response${index}No" ${question.response == "true" ? "" : "checked"} disabled="true"/>
+                        <label for="response${index}No">No</label>`
+                      : `<textarea class="form-control" id="response${index}" disabled="true" >${question.response}</textarea>`
                 }
                 <br>
              </li>`;

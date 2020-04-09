@@ -105,6 +105,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                     completedEvaluation.setEvaluator(evaluator.getFname() + " " + evaluator.getLname());
                     completedEvaluation.setEvaluatee(evaluatee.getFname() + " " + evaluatee.getLname());
                     completedEvaluation.setIsShared(responses.get(0).isIsShared());
+                    completedEvaluation.setSemester(assignment.getSemesterName());
                     List<QuestionAndResponse> questionsAndResponses = new ArrayList<QuestionAndResponse>();
                     for (Response response: responses) {
                         QuestionAndResponse questionAndResponse = new QuestionAndResponse();
@@ -145,6 +146,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                 completedEvaluation.setEvaluator(evaluator.getFname() + " " + evaluator.getLname());
                 completedEvaluation.setEvaluatee(evaluatee.getFname() + " " + evaluatee.getLname());
                 completedEvaluation.setIsShared(responses.get(0).isIsShared());
+                completedEvaluation.setSemester(assignment.getSemesterName());
                 List<QuestionAndResponse> questionsAndResponses = new ArrayList<QuestionAndResponse>();
                 for (Response response: responses) {
                     QuestionAndResponse questionAndResponse = new QuestionAndResponse();

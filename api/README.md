@@ -15,9 +15,8 @@ To run locally, start as a simple java project and connect to http://localhost:8
     ```
 2. Copy the war to the server under your home directory
 3. Login to server and as root move the war file to /home/tomcat/webapps
-4. Run the shutdown script located in /home/tomcat/bin then restart with catalina script
+4. Restart the tomcat server
     ```shell script
-    ./bin/shutdown.sh
-    ./bin/catalina.sh run
+    sudo systemctl restart tomcat
     ```
    
