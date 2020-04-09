@@ -15,7 +15,7 @@ $(document).ready(() => {
                 list.append(
                     $(`<li class="panel panel-default" id="preference${pref.preferenceNumber}" style="list-style: none">
                             <div class="panel-heading scheduled"> 
-                                <h4 class="panel-title scheduled"> 
+                                <h4 class="panel-title scheduled" id="preference${pref.preferenceNumber}Label"> 
                                     ${pref.preferenceNumber}. ${names[pref.preferredAsurite]}
                                 </h4>
                             </div>
@@ -53,6 +53,11 @@ $(document).ready(() => {
                     }
                     // put the pref in its place
                     preferences[endIndex] = temp;
+
+                    // locally update the numbers to reflect the new order
+                    sortedIDs.forEach((id, index) => {
+                        $(`#${id}Label`).text(`${index + 1}. ${names[preferences[index].preferredAsurite]}`)
+                    })
                 }
             })
         })
