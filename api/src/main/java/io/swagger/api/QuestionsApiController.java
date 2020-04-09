@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -107,16 +108,35 @@ public class QuestionsApiController implements QuestionsApi {
         return new ResponseEntity<Question>(HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<Void> updateQuestion(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Question body) {
+    @Transactional
+    public ResponseEntity<Void> updateQuestions(@ApiParam(value = "" ,required=true )  @Valid @RequestBody List<Question> body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            if (questionRepository.findOne(body.getQuestionId()) == null) {
-                return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            for (Question question: body) {
+                // retrieve the old question using the questionId
+                Question oldQuestion = questionRepository.findOne(question.getQuestionId());
+                if (oldQuestion == null) {
+                    return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+                }
+                else {
+                    // if the question has been modified
+                    if (oldQuestion.equals(question) == false) {
+                        // mark the old question as inactive so it can still be used for completed evals
+                        oldQuestion.setIsActive(false);
+                        questionRepository.save(oldQuestion);
+
+                        // remove the questionId from the new question so that a new question is stored
+                        question.setQuestionId(null);
+                        questionRepository.save(question);
+                    }
+                }
             }
-            else {
-                questionRepository.save(body);
-                return new ResponseEntity<Void>(HttpStatus.OK);
-            }
+
+            return new ResponseEntity<Void>(HttpStatus.OK);
+
+
+
+
         }
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }

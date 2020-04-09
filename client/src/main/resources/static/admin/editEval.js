@@ -286,7 +286,7 @@ const reloadQuestions = () => {
                 $.ajax({
                     type: "PUT",
                     url: `${apiUrl}/questions`,
-                    data: JSON.stringify(question),
+                    data: JSON.stringify([question]),
                     headers: { "Accept": "application/json", "Content-Type": "application/json" },
                     success: function () {
                         reloadQuestions();
@@ -307,17 +307,15 @@ const fixQuestionNumbers = () => {
         } else {
             question.questionNumber = ++t2lCount;
         }
-
-        $.ajax({
-            type: "PUT",
-            url: `${apiUrl}/questions`,
-            data: JSON.stringify(question),
-            headers: { "Accept": "application/json", "Content-Type": "application/json" },
-            success: function () {
-                if (++reloadCounter === evalQuestions.length) {
-                    reloadQuestions();
-                }
-            }
-        });
     })
+    $.ajax({
+        type: "PUT",
+        url: `${apiUrl}/questions`,
+        data: JSON.stringify(evalQuestions),
+        headers: { "Accept": "application/json", "Content-Type": "application/json" },
+        success: function () {
+            reloadQuestions();
+
+        }
+    });
 }

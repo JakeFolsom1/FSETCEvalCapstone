@@ -1,6 +1,7 @@
 package io.swagger.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 
@@ -180,11 +181,10 @@ public class Question implements Serializable {
             return false;
         }
         Question question = (Question) o;
-        return Objects.equals(this.questionId, question.questionId) &&
-                Objects.equals(this.questionPrompt, question.questionPrompt) &&
-                Objects.equals(this.isActive, question.isActive) &&
+        return Objects.equals(this.questionPrompt, question.questionPrompt) &&
                 Objects.equals(this.questionNumber, question.questionNumber) &&
-                Objects.equals(this.evalType, question.evalType);
+                Objects.equals(this.evalType, question.evalType) &&
+                Objects.equals(this.questionType, question.questionType);
 //                &&
 //                Objects.equals(this.semesterName, question.semesterName);
     }

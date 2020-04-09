@@ -71,14 +71,14 @@ public interface QuestionsApi {
     ResponseEntity<Question> getQuestion(@ApiParam(value = "",required=true) @PathVariable("questionId") Long questionId);
 
 
-    @ApiOperation(value = "Update an existing question", nickname = "updateQuestion", notes = "", tags={ "questions", })
+    @ApiOperation(value = "Update a list of existing questions", nickname = "updateQuestions", notes = "", tags={ "questions", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Successfully updated"),
-        @ApiResponse(code = 404, message = "Question ID not found") })
+        @ApiResponse(code = 200, message = "Successfully updated questions"),
+        @ApiResponse(code = 404, message = "One or more question IDs not found") })
     @RequestMapping(value = "/questions",
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.PUT)
-    ResponseEntity<Void> updateQuestion(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Question body);
+    ResponseEntity<Void> updateQuestions(@ApiParam(value = "" ,required=true )  @Valid @RequestBody List<Question> body);
 
 }
