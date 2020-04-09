@@ -37,7 +37,7 @@
 				<img class="ajax-gif" th:src="@{/ajax-loader-bar-wh.gif}" style="display: none;">
 			</span>
     </div>
-    <ul class="nav nav-tabs" id="leadTabs" role="tablist">
+    <ul class="nav nav-tabs" id="tutorTabs" role="tablist">
         <li class="active">
             <a data-toggle="tab" id="sharedTab" href="#finished">View Shared</a>
         </li>
@@ -69,31 +69,21 @@
         </div>
     </div>
     <!-- Test Modal End -->
-    <div class="tab-content" id="leadTabContent">
+    <div class="tab-content" id="tutorTabContent">
         <div class="tab-pane fade active in" id="finished" role="tabpanel" aria-labelledby="sharedTab">
             <!--View Shared Evaluations Table  -->
             <table id="sharedEvaluationsTable" class="striped-table cell-border" style="width:100%;"></table>
         </div>
         <div class="tab-pane fade" id="assignments" role="tabpanel" aria-labelledby="completeAssignmentsTab">
             <table id="assignmentsTable" class="striped-table cell-border" style="width: 100%"></table>
-            <br />
-            <h3>Completed Team Member Evaluations</h3>
-            <h4>Search for tutor</h4>
-            <!-- Search form -->
-            <div
-                    style="display: flex; flex-direction: row; justify-content: left; align-items: center; padding-bottom: 20px">
-                <input class="form-control" id="searchText" type="text" placeholder="Enter tutor name..."
-                       style="width: 30%; " aria-label="Search" />
-            </div>
-            <table id="completedEvaluationTable" class="striped-table cell-border" style="width:100%;"></table>
         </div>
     </div>
 </div>
 <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
 <script>
     const asurite = "[[${asurite}]]";
-    const apiUrl = "https://sod819.fulton.asu.edu/eval-api";
-    // const apiUrl = "http://localhost:8080";
+    //const apiUrl = "https://sod819.fulton.asu.edu/eval-api";
+    const apiUrl = "http://localhost:8081";
     $(document).ajaxStart(function () {
         $(".ajax-gif").css("display", "block");
     });
