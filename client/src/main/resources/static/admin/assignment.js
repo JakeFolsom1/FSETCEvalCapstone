@@ -362,13 +362,14 @@ $("a[href='#assign']").on('show.bs.tab', function(e) { // experimenting with loa
             success: function (response) {
                 button.removeAttr("disabled");
                 button.text("Auto-Assign All");
-            },
-            error: function (response) {
-                button.text("Failed");
-                setTimeout(() => {
-                    button.text("Auto-Assign All");
-                }, 1000);
             }
+            // ,
+            // error: function (response) {
+            //     button.text("Failed");
+            //     setTimeout(() => {
+            //         button.text("Auto-Assign All");
+            //     }, 1000);
+            // }
         });
     };
 

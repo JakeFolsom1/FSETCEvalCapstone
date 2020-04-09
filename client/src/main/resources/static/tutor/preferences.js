@@ -53,15 +53,15 @@ $(document).ready(() => {
                     }
                     // put the pref in its place
                     preferences[endIndex] = temp;
-
-                    fixPreferenceNumbers();
                 }
             })
         })
     }
 
+    let saveButton = $("#savePreferencesButton");
     const fixPreferenceNumbers = () => {
-
+        saveButton.attr("disabled", true);
+        saveButton.text("Saving Preferences");
         let data = preferences.map((preference, index) => {
             return Object.assign({}, preference, {preferenceNumber: index + 1})
         })
@@ -71,10 +71,14 @@ $(document).ready(() => {
             data: JSON.stringify(data),
             headers: {"Accept": "application/json", "Content-Type": "application/json"},
             success: () => {
+                saveButton.removeAttr("disabled");
+                saveButton.text("Save Preferences");
                 reloadPreferences();
             }
         });
     };
+
+    saveButton.click(fixPreferenceNumbers)
 
     reloadPreferences();
 });
