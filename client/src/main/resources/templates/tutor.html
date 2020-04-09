@@ -77,12 +77,15 @@
         <div class="tab-pane fade" id="assignments" role="tabpanel" aria-labelledby="completeAssignmentsTab">
             <table id="assignmentsTable" class="striped-table cell-border" style="width: 100%"></table>
         </div>
+        <div class="tab-pane fade" id="preferences" role="tabpanel" aria-labelledby="preferencesTab">
+            <ul class="panel-group sortablePreferences" id="preferenceList"></ul>
+        </div>
     </div>
 </div>
 <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
 <script>
     const asurite = "[[${asurite}]]";
-    //const apiUrl = "https://sod819.fulton.asu.edu/eval-api";
+    // const apiUrl = "https://sod819.fulton.asu.edu/eval-api";
     const apiUrl = "http://localhost:8081";
     $(document).ajaxStart(function () {
         $(".ajax-gif").css("display", "block");
@@ -94,8 +97,10 @@
 </script>
 <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/jquery-ui.min.js}"></script>
 <script th:src="@{/tutor/viewSharedTutor.js}"></script>
 <script th:src="@{/tutor/completeAssignmentsTutor.js}"></script>
+<script th:src="@{/tutor/preferences.js}"></script>
 </body>
 
 </html>

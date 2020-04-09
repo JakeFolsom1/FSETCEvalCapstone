@@ -123,18 +123,19 @@ public class PreferencesApiController implements PreferencesApi {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             }
             else {
-                Staff tutor = tmsApiHelper.getStaffByAsurite(body.getAsurite());
-                Staff preferredTutor = tmsApiHelper.getStaffByAsurite(body.getAsurite());
+                // too slow to verify one by one
+                //Staff tutor = tmsApiHelper.getStaffByAsurite(body.getAsurite());
+                //Staff preferredTutor = tmsApiHelper.getStaffByAsurite(body.getAsurite());
                 Semester semester = semesterRepository.findOne(body.getSemesterName());
                 // ensure asurites are from valid accounts and semester is a valid semester
-                if (tutor == null || preferredTutor == null || semester == null) {
+                if (/*tutor == null || preferredTutor == null ||*/ semester == null) {
                     return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
                 }
                 // ensure both asurites are from active tutors
-                else if(tutor.getRole().equals("TUTOR") == false
-                        || preferredTutor.getRole().equals("TUTOR") == false){
-                    return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-                }
+//                else if(tutor.getRole().equals("TUTOR") == false
+//                        || preferredTutor.getRole().equals("TUTOR") == false){
+//                    return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+//                }
                 preferenceRepository.save(body);
                 return new ResponseEntity<Void>(HttpStatus.OK);
             }
