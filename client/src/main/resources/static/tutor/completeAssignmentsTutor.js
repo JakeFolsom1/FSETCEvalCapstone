@@ -70,7 +70,7 @@ const buildEvaluation = (evaluatee) => {
             evalQuestions = result;
         })
     ).then(function () {
-        const title = `<h3>${evaluatee}'s Evaluation</h3>`;
+        const title = `<h3>${evaluatee}'s ${assignment.evalType == 't2l' ? "(Lead) " : "(Tutor)"} Evaluation</h3>`;
         const sharedRadioInput = `<div class="input-group">
                 <p>Would you like to share this evaluation with ${evaluatee}?</p>
                 <input type="radio" id="isSharedYes" name="shared" checked="checked">
@@ -91,7 +91,7 @@ const buildEvaluation = (evaluatee) => {
                       <label for="response${index}">Yes</label>
                       <input type="radio" id="response${index}No" name="yesNo${index}"/>
                       <label for="response${index}No">No</label>`
-                    : `<textarea placeholder="Enter Answer Here..." class="form-control" id="response${index}"/>`
+                    : `<textarea placeholder="Enter Answer Here..." style="resize: none;" class="form-control" id="response${index}"/>`
             }
                 <br>
              </li>`;
