@@ -61,20 +61,18 @@ $(document).ready(() => {
     }
 
     const fixPreferenceNumbers = () => {
-        let reloadCounter = 0;
-        preferences.forEach((preference, index) => {
-            preference.preferenceNumber = index + 1;
-            $.ajax({
-                type: "PUT",
-                url: `${apiUrl}/preferences`,
-                data: JSON.stringify(preference),
-                headers: {"Accept": "application/json", "Content-Type": "application/json"},
-                success: () => {
-                    if (++reloadCounter === preferences.length) {
-                        reloadPreferences();
-                    }
-                }
-            });
+
+        let data = preferences.map((preference, index) => {
+            return Object.assign({}, preference, {preferenceNumber: index + 1})
+        })
+        $.ajax({
+            type: "PUT",
+            url: `${apiUrl}/preferences`,
+            data: JSON.stringify(data),
+            headers: {"Accept": "application/json", "Content-Type": "application/json"},
+            success: () => {
+                reloadPreferences();
+            }
         });
     };
 
