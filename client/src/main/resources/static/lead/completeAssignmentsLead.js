@@ -147,7 +147,7 @@ const buildEvaluation = (evaluatee) => {
                       <label for="response${index}">Yes</label>
                       <input type="radio" id="response${index}No" name="yesNo${index}"/>
                       <label for="response${index}No">No</label>`
-                    : `<textarea placeholder="Enter Answer Here..." class="form-control" id="response${index}"/>`
+                    : `<textarea placeholder="Enter Answer Here..." style="resize: none;" class="form-control" id="response${index}"/>`
                 }
                 <br>
              </li>`;
