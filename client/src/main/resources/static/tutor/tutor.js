@@ -68,6 +68,11 @@ $(document).ready(() => {
         columns: [
             {
                 title: "Semester",
+                render: data => {
+                    const semester = (data.includes("fall") ? "Fall" : data.includes("spring") ? "Spring" : data.includes("summer") ? "Summer" : "Invalid Semester");
+                    const year = data.substr(-2);
+                    return `${semester} 20${year}`;
+                }
             },
             {
                 title: "Name",
