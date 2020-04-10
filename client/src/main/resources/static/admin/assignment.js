@@ -169,20 +169,121 @@ $("a[href='#assign']").on('show.bs.tab', function(e) { // experimenting with loa
                 $(`#${tutorName}AutoAssignButton`).click(() => {
                     autoAssign(tutorName);
                 })
-            })
+            });
 
             $("#autoAssignConfirmButton").click(() => {
                 autoAssignAll();
-            })
+            });
+
+            const getTutorAssignmentsForm = (isFiltered, tutorName) => {
+                let optionList;
+                if (isFiltered) {
+                    optionList = prefMap[tutorName].map(pref => pref.preferredAsurite);
+                } else {
+                    optionList = tutorList;
+                }
+                const tutorsLead = Object.keys(leadTeams).find(value => leadTeams[value].includes(tutorName));
+
+                return $(`<form id="${tutorName}AssignForm">
+                        <div class="form-group">
+                            <label for="${tutorName}Lead">Lead Evaluation:</label>
+                            <select id="${tutorName}Lead" class="form-control" readonly>
+                                <option value=${tutorsLead}>${names[tutorsLead]}</option>
+                            </select>
+                        </div>
+                         ${Array.from(Array(numAssignments).keys()).map((_val, index) => {// create a select for each assignment number
+                            // if an assignment exists for a tutor for this assignment number, retrieve it
+                            const existingAssignment = assignments.find(value => value.asurite === tutorName && value.assignmentNumber === (index + 1) && value.evalType === "p2p");
+                            let outsideMajorOption = "";
+                            if (existingAssignment != null && !optionList.includes(existingAssignment.assignedAsurite)) {
+                                outsideMajorOption = `<option value=${existingAssignment.assignedAsurite} selected>${names[existingAssignment.assignedAsurite]}</option>`;
+                            }
+                            return (`
+                                    <div class="form-group">
+                                        <label for="${tutorName}Peer${index}">Peer Evaluation ${index + 1}:</label>
+                                        <select id="${tutorName}Peer${index}" class="form-control">
+                                            <option>None</option>
+                                            ${optionList.map(value => // map each option to an option for this tutor to be assigned and mark it as selected if it belongs to the existing assignment
+                                                `<option value=${value} ${existingAssignment && existingAssignment.assignedAsurite === value ? "selected" : ""}>
+                                                    ${names[value]}
+                                                </option>`).join("")}
+                                            ${outsideMajorOption}
+                                         </select>
+                                     </div>
+                                `)
+                        }).join("")}
+                    </form >`)
+            };
+
+            const submitAssignments = (tutorName, event) => {
+                event.preventDefault();
+                // retrieve the selected peer assignment values
+                const values = Array.from(Array(numAssignments).keys()).map(value => $(`#${tutorName}Peer${value}`).val());
+
+                const button = $(`#assignmentsModalSubmitButton`);
+                let isValid = checkDuplicateAssignments(values); //allows duplicate "None"s but all other names may only appear once
+                if (isValid) {
+                    button.attr("disabled", "true");
+                    button.text("Saved");
+                    values.forEach((asurite, index) => {
+                        if (asurite !== "None") {
+                            // check if a past assignments at this slot exists
+                            const pastAssignment = assignments.find(assignment =>
+                                assignment.asurite === tutorName &&
+                                assignment.assignmentNumber === (index + 1) &&
+                                assignment.evalType === "p2p");
+                            let newAssignment;
+                            let method;
+                            // if it exists
+                            if (pastAssignment) {
+                                // modify the assigned asurite
+                                newAssignment = Object.assign({}, pastAssignment, { assignedAsurite: asurite });
+                                // set the method as put
+                                method = "PUT";
+                            } else {
+                                // else create the assignment
+                                newAssignment = {
+                                    assignedAsurite: asurite,
+                                    assignmentNumber: index + 1,
+                                    asurite: tutorName,
+                                    evalType: "p2p",
+                                    isComplete: false,
+                                    semesterName: activeSemester
+                                };
+                                // set the method as post
+                                method = "POST";
+                            }
+                            $.ajax({
+                                type: method,
+                                url: apiUrl + "/assignments",
+                                data: JSON.stringify(newAssignment),
+                                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                                success: () => {
+                                    $(`#assignmentsModal`).modal("hide");
+                                    reloadPage();
+                                }
+                            })
+                        }
+                    })
+                }
+                else {
+                    button.attr("disabled", "true");
+                    button.text("Error: Duplicates found")
+                }
+                setTimeout(() => {
+                    button.removeAttr("disabled");
+                    button.text("Save");
+                }, 1000);
+            };
 
             const loadAssignmentModal = tutorName => {
                 const lead = Object.keys(leadTeams).find(value => tutorName === value); // define a lead's name if the current user is a lead
-                const tutorsLead = Object.keys(leadTeams).find(value => leadTeams[value].includes(tutorName)); // else find the current user's lead
 
                 $("#assignmentsModalLabel").text(`Assign ${names[tutorName]}`);
                 $('#assignmentsModalBody').empty();
 
                 const submitButton = $('#assignmentsModalSubmitButton');
+                const filterCheckbox = $('#assignmentsFilterByMajorCheckbox');
 
                 // if tutor is a lead
                 if (lead) {
@@ -207,99 +308,27 @@ $("a[href='#assign']").on('show.bs.tab', function(e) { // experimenting with loa
                     submitButton.removeAttr("form");
                     // and disable the button to indicate it cannot be pressed
                     submitButton.attr("disabled", "true");
+                    // and disable the checkbox in the lead modal
+                    filterCheckbox.attr("disabled", "true");
+
                 } else { // else if tutor is a normal tutor
-                    $('#assignmentsModalBody').append(
-                        // create a form that has their lead evaluation
-                        $(`<form id="${tutorName}AssignForm">
-                        <div class="form-group">
-                            <label for="${tutorName}Lead">Lead Evaluation:</label>
-                            <select id="${tutorName}Lead" class="form-control" readonly>
-                                <option value=${tutorsLead}>${names[tutorsLead]}</option>
-                            </select>
-                        </div>
-                        ${Array.from(Array(numAssignments).keys()).map((_val, index) => { // and a select for each of the number of assignments
-                            // if an assignment exists for a tutor for this assignment number, retrieve it
-                            const existingAssignment = assignments.find(value => value.asurite === tutorName && value.assignmentNumber === (index + 1) && value.evalType === "p2p");
-                            return (`
-                                <div class="form-group">
-                                    <label for="${tutorName}Peer${index}">Peer Evaluation ${index + 1}:</label>
-                                    <select id="${tutorName}Peer${index}" class="form-control">
-                                        <option>None</option>
-                                        ${prefMap[tutorName].map(value => // map each preference to an option for this tutor to be assigned and mark it as selected if it belongs to the existing assignment
-                                `<option value=${value.preferredAsurite} ${existingAssignment && existingAssignment.assignedAsurite === value.preferredAsurite ? "selected" : ""}>${names[value.preferredAsurite]}</option>`).join("")}
-                                    </select>
-                                </div>
-                            `)
-                        }).join("")}
-                    </form >`)
-                    );
 
-                    // add the submission handler for this form
-                    $(`#${tutorName}AssignForm`).submit(event => {
-                        event.preventDefault();
-                        // retrieve the selected peer assignment values
-                        const values = Array.from(Array(numAssignments).keys()).map(value => $(`#${tutorName}Peer${value}`).val());
+                    filterCheckbox.change(e => {
+                        $('#assignmentsModalBody').empty()
+                        const form = getTutorAssignmentsForm(e.target.checked, tutorName);
+                        form.submit(e => submitAssignments(tutorName, e));
+                        $('#assignmentsModalBody').append(form);
+                    })
 
-                        const button = $(`#assignmentsModalSubmitButton`);
-                        let isValid = checkDuplicateAssignments(values); //allows duplicate "None"s but all other names may only appear once
-                        if (isValid) {
-                            button.attr("disabled", "true");
-                            button.text("Saved");
-                            values.forEach((asurite, index) => {
-                                if (asurite !== "None") {
-                                    // check if a past assignments at this slot exists
-                                    const pastAssignment = assignments.find(assignment =>
-                                        assignment.asurite === tutorName &&
-                                        assignment.assignmentNumber === (index + 1) &&
-                                        assignment.evalType === "p2p");
-                                    let newAssignment;
-                                    let method;
-                                    // if it exists
-                                    if (pastAssignment) {
-                                        // modify the assigned asurite
-                                        newAssignment = Object.assign({}, pastAssignment, { assignedAsurite: asurite });
-                                        // set the method as put
-                                        method = "PUT";
-                                    } else {
-                                        // else create the assignment
-                                        newAssignment = {
-                                            assignedAsurite: asurite,
-                                            assignmentNumber: index + 1,
-                                            asurite: tutorName,
-                                            evalType: "p2p",
-                                            isComplete: false,
-                                            semesterName: activeSemester
-                                        };
-                                        // set the method as post
-                                        method = "POST";
-                                    }
-                                    $.ajax({
-                                        type: method,
-                                        url: apiUrl + "/assignments",
-                                        data: JSON.stringify(newAssignment),
-                                        headers: { "Accept": "application/json", "Content-Type": "application/json" },
-                                        success: () => {
-                                            $(`#assignmentsModal`).modal("hide");
-                                            reloadPage();
-                                        }
-                                    })
-                                }
-                            })
-                        }
-                        else {
-                            button.attr("disabled", "true");
-                            button.text("Error: Duplicates found")
-                        }
-                        setTimeout(() => {
-                            button.removeAttr("disabled");
-                            button.text("Save");
-                        }, 1000);
-                    });
+                    const form = getTutorAssignmentsForm(filterCheckbox.prop("checked"), tutorName);
+                    form.submit(e => submitAssignments(tutorName, e));
+                    $('#assignmentsModalBody').append(form);
+
+                    filterCheckbox.removeAttr("disabled");
 
                     submitButton.removeAttr("disabled");
                     submitButton.attr("form", `${tutorName}AssignForm`);
                 }
-
 
                 $("#assignmentsModal").modal('show');
             }
@@ -320,7 +349,7 @@ $("a[href='#assign']").on('show.bs.tab', function(e) { // experimenting with loa
                 return true;
             }
         })
-    };
+    }
 
     reloadPage();
 
