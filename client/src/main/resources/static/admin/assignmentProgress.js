@@ -77,23 +77,31 @@ $("a[href='#checkProgress']").on('show.bs.tab', function(e) {
 });
 
 const remindEvaluator = evaluator => {
-    console.log("Reminding evaluator: " + evaluator);
     const button = $(`#remind${evaluator}Button`);
     button.attr("disabled", "true");
-    button.text("Reminded");
-    setTimeout(() => {
-        button.removeAttr("disabled");
-        button.text("Remind");
-    }, 1000);
+    button.text("Reminding");
+    $.ajax({
+        type: "POST",
+        url: apiUrl + "/reminders/" + evaluator,
+        headers: {"Accept": "application/json"},
+        success: function (response) {
+            button.removeAttr("disabled");
+            button.text("Remind");
+        }
+    });
 };
 
 const remindAll = () => {
-    console.log("Reminding all evaluators");
     const button = $("#remindAllButton");
     button.attr("disabled", "true");
-    button.text("Reminded All");
-    setTimeout(() => {
-        button.removeAttr("disabled");
-        button.text("Remind All");
-    }, 1000);
+    button.text("Reminding All");
+    $.ajax({
+        type: "POST",
+        url: apiUrl + "/reminders",
+        headers: {"Accept": "application/json"},
+        success: function (response) {
+            button.removeAttr("disabled");
+            button.text("Remind");
+        }
+    });
 };

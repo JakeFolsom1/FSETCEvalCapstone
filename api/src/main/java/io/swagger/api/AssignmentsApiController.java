@@ -67,7 +67,7 @@ public class AssignmentsApiController implements AssignmentsApi {
             if (staffMap.get(asurite).getRole().equals("TUTOR")) {
                 // get their preference list
                 List<Preference> preferenceList = preferenceRepository.findAllByAsuriteAndSemesterNameOrderByPreferenceNumber(asurite, activeSemester.getSemesterName());
-                List<Assignment> currentAssignmentsList = assignmentRepository.findAllByAsuriteAndSemesterName(asurite, activeSemester.getSemesterName());
+                List<Assignment> currentAssignmentsList = assignmentRepository.findAllByAsuriteAndSemesterNameAndEvalType(asurite, activeSemester.getSemesterName(), Question.EvalType.p2p);
 
                 // generate a list of possible assignments
                 List<Assignment> newAssignmentList = new ArrayList<Assignment>();
@@ -77,8 +77,10 @@ public class AssignmentsApiController implements AssignmentsApi {
                         // get assignment candidate's asurite and increment
                         String candidate = preferenceList.get(candidateIndex++).getPreferredAsurite();
 
-                        if (assignmentRepository.findByAsuriteAndAssignedAsurite(asurite, candidate) == null) { // if asurite has not already been assigned to candidate
-                            if (assignmentRepository.findAllByAssignedAsuriteAndSemesterName(candidate, activeSemester.getSemesterName()).size() < numAssignments) { // and if candidate has not been assigned the total number of assignments, add it to the list and break
+                        // if asurite has not already been assigned to candidate
+                        if (assignmentRepository.findByAsuriteAndAssignedAsurite(asurite, candidate) == null) {
+                            // and if candidate has not been assigned the total number of assignments, add it to the list and break
+                            if (assignmentRepository.findAllByAssignedAsuriteAndSemesterNameAndEvalType(candidate, activeSemester.getSemesterName(), Question.EvalType.p2p).size() < numAssignments) {
                                 Assignment assignment = new Assignment();
                                 assignment.setAsurite(asurite);
                                 assignment.setAssignedAsurite(candidate);

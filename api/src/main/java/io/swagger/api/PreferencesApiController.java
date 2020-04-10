@@ -22,6 +22,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-25T16:55:34.601Z")
 @Controller
@@ -116,28 +117,31 @@ public class PreferencesApiController implements PreferencesApi {
         }
         return new ResponseEntity<List<Preference>>(HttpStatus.BAD_REQUEST);
     }
-    public ResponseEntity<Void> updatePreference(@ApiParam(value = "Preference object that needs to be updated in the database" ,required=true )  @Valid @RequestBody Preference body) {
+    public ResponseEntity<Void> updatePreference(@ApiParam(value = "Preference object that needs to be updated in the database" ,required=true )  @Valid @RequestBody List<Preference> body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            if (preferenceRepository.findOne(new Preference.PreferencePK(body.getAsurite(), body.getSemesterName(), body.getPreferenceNumber())) == null) {
-                return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
-            }
-            else {
-                Staff tutor = tmsApiHelper.getStaffByAsurite(body.getAsurite());
-                Staff preferredTutor = tmsApiHelper.getStaffByAsurite(body.getAsurite());
-                Semester semester = semesterRepository.findOne(body.getSemesterName());
+            Map<String, Staff> tutorMap =  tmsApiHelper.getStaffMap();
+            for(int i = 0; i < body.size(); i++){
+                if (preferenceRepository.findOne(new Preference.PreferencePK(body.get(i).getAsurite(), body.get(i).getSemesterName(), body.get(i).getPreferenceNumber())) == null) {
+                    return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+                }
+                Staff tutor = tutorMap.get(body.get(i).getAsurite());
+                Staff preferredTutor = tutorMap.get(body.get(i).getPreferredAsurite());
+                Semester semester = semesterRepository.findOne(body.get(i).getSemesterName());
                 // ensure asurites are from valid accounts and semester is a valid semester
                 if (tutor == null || preferredTutor == null || semester == null) {
                     return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
                 }
-                // ensure both asurites are from active tutors
+                //ensure both asurites are from active tutors
                 else if(tutor.getRole().equals("TUTOR") == false
                         || preferredTutor.getRole().equals("TUTOR") == false){
                     return new ResponseEntity<Void>(HttpStatus.CONFLICT);
                 }
-                preferenceRepository.save(body);
-                return new ResponseEntity<Void>(HttpStatus.OK);
             }
+
+            preferenceRepository.save(body);
+            return new ResponseEntity<Void>(HttpStatus.OK);
+
         }
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }

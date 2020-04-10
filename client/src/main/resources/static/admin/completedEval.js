@@ -37,10 +37,7 @@ $(document).ready(() => {
             let viewButton = `<button
                             class="btn btn-primary"
                             style="border-color: #8C1D40;"
-                            onclick="viewEvaluation('${row[1].replace(
-                              " - Lead",
-                              ""
-                            )}', '${row[2]}')"
+                            onclick="viewEvaluation('${row[1].replace(" - Lead", "")}', '${row[2].replace(" - Lead", "")}')"
                             id="myButton">
                             View
                             </button>`;
