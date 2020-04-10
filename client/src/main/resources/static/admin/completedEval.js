@@ -1,5 +1,6 @@
 let completedEvals = [];
 let names = [];
+let evaluationsReleased = {};
 $(document).ready(() => {
   $.when(
     $.getJSON(apiUrl + "/completedEvaluations", function (completedEvalJson) {
@@ -7,8 +8,20 @@ $(document).ready(() => {
     }),
     $.getJSON(apiUrl + "/staff", function (namesJson) {
       names = namesJson;
+    }),
+    $.getJSON(apiUrl + "/evaluationsReleased", function (evaluationsReleasedJson) {
+      evaluationsReleased = evaluationsReleasedJson;
     })
   ).then(function () {
+    $("#releaseSwitch").prop("checked", evaluationsReleased.isReleased);
+    $("#releaseSwitch").change(e => {
+      $.ajax({
+        type: "PUT",
+        url: `${apiUrl}/evaluationsReleased/${e.target.checked}`,
+        headers: { Accept: "application/json" },
+      });
+    })
+
     const tableData = completedEvals.map((eval) => [
       eval.semester,
       eval.evaluator + (eval.evalType === "l2t" ? " - Lead" : ""),

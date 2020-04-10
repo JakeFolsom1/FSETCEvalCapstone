@@ -2,10 +2,7 @@ package io.swagger.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
-import io.swagger.model.NumberOfAssignments;
-import io.swagger.model.Preference;
-import io.swagger.model.Semester;
-import io.swagger.model.Staff;
+import io.swagger.model.*;
 import io.swagger.repository.*;
 import io.swagger.util.TmsApiHelper;
 import org.slf4j.Logger;
@@ -50,6 +47,9 @@ public class SemestersApiController implements SemestersApi {
 
     @Autowired
     private NumberOfAssignmentsRepository numberOfAssignmentsRepository;
+
+    @Autowired
+    private EvaluationsReleasedRepository evaluationsReleasedRepository;
 
     @Autowired
     private TmsApiHelper tmsApiHelper;
@@ -98,6 +98,11 @@ public class SemestersApiController implements SemestersApi {
                 numberOfAssignments.setNumAssignments(new Long(3)); // default
                 numberOfAssignments.setSemesterName(body.getSemesterName());
                 numberOfAssignmentsRepository.save(numberOfAssignments);
+
+                EvaluationsReleased evaluationsReleased = new EvaluationsReleased();
+                evaluationsReleased.setSemesterName(body.getSemesterName());
+                evaluationsReleased.setIsReleased(false);
+                evaluationsReleasedRepository.save(evaluationsReleased);
                 return new ResponseEntity<Void>(HttpStatus.CREATED);
             }
         }
@@ -117,6 +122,8 @@ public class SemestersApiController implements SemestersApi {
                 teamMemberRepository.deleteAllBySemesterName(semesterName);
                 preferenceRepository.deleteAllBySemesterName(semesterName);
                 assignmentRepository.deleteAllBySemesterName(semesterName);
+                numberOfAssignmentsRepository.delete(semesterName);
+                evaluationsReleasedRepository.delete(semesterName);
 
                 // if this semester was active
                 if (semesterToDelete.isIsActive()) {

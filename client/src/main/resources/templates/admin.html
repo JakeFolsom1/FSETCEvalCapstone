@@ -64,10 +64,16 @@
 				<h3>Search for tutor</h3>
 				<!-- Search form -->
 				<div
-					style="display: flex; flex-direction: row; justify-content: left; align-items: center; padding-bottom: 20px">
+						style="display: flex; flex-direction: row; justify-content: left; align-items: center; padding-bottom: 20px">
 					<input class="form-control" id="searchText" type="text" placeholder="Enter tutor name..."
-						style="width: 30%; " aria-label="Search" />
+						   style="width: 30%; " aria-label="Search" />
 				</div>
+
+				<div class="input-group text-right" style="display: block; margin-left: auto;">
+					<input type="checkbox" id="releaseSwitch">
+					<label for="releaseSwitch">Release Evaluations</label>
+				</div>
+
 				<table id="completedEvaluationTable" class="striped-table cell-border" style="width:100%;"></table>
 				<!-- Test Modal Start -->
 				<div id="testmodal" class="modal fade">

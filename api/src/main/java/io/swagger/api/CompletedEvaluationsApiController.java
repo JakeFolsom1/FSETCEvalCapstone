@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
 import io.swagger.model.*;
 import io.swagger.repository.AssignmentRepository;
+import io.swagger.repository.EvaluationsReleasedRepository;
 import io.swagger.repository.QuestionRepository;
 import io.swagger.repository.ResponseRepository;
 import io.swagger.util.TmsApiHelper;
@@ -37,6 +38,9 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
 
     @Autowired
     private QuestionRepository questionRepository;
+
+    @Autowired
+    private EvaluationsReleasedRepository evaluationsReleasedRepository;
 
     @Autowired
     private TmsApiHelper tmsApiHelper;
@@ -93,33 +97,36 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
             List<Assignment> completedAssignments = assignmentRepository.findAllByIsCompleteAndAssignedAsurite(true, asurite);
             List<CompletedEvaluation> completedEvaluationList = new ArrayList<CompletedEvaluation>();
             for (Assignment assignment: completedAssignments) {
-                List<Response> responses = responseRepository.findAllByAssignmentIdOrderByQuestionIdAsc(assignment.getAssignmentId());
-                if (responses.isEmpty()) {
-                    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-                }
-                if (responses.get(0).isIsShared()) {
-                    CompletedEvaluation completedEvaluation = new CompletedEvaluation();
-                    completedEvaluation.setEvalType(assignment.getEvalType().name());
-                    Staff evaluator = tmsApiHelper.getStaffByAsuriteAndSemester(assignment.getAsurite(), assignment.getSemesterName());
-                    Staff evaluatee = tmsApiHelper.getStaffByAsuriteAndSemester(assignment.getAssignedAsurite(), assignment.getSemesterName());
-                    completedEvaluation.setEvaluator(evaluator.getFname() + " " + evaluator.getLname());
-                    completedEvaluation.setEvaluatee(evaluatee.getFname() + " " + evaluatee.getLname());
-                    completedEvaluation.setIsShared(responses.get(0).isIsShared());
-                    completedEvaluation.setSemester(assignment.getSemesterName());
-                    List<QuestionAndResponse> questionsAndResponses = new ArrayList<QuestionAndResponse>();
-                    for (Response response: responses) {
-                        QuestionAndResponse questionAndResponse = new QuestionAndResponse();
-                        QuestionDetails questionDetails = new QuestionDetails();
-                        Question question = questionRepository.findOne(response.getQuestionId());
-                        questionDetails.setQuestionNumber(question.getQuestionNumber());
-                        questionDetails.setQuestionPrompt(question.getQuestionPrompt());
-                        questionDetails.setQuestionType(question.getQuestionType().name());
-                        questionAndResponse.setQuestion(questionDetails);
-                        questionAndResponse.setResponse(response.getResponse());
-                        questionsAndResponses.add(questionAndResponse);
+                // check to see if the assignment's semester has released the evaluations yet
+                if (evaluationsReleasedRepository.findOne(assignment.getSemesterName()).isIsReleased()) {
+                    List<Response> responses = responseRepository.findAllByAssignmentIdOrderByQuestionIdAsc(assignment.getAssignmentId());
+                    if (responses.isEmpty()) {
+                        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
                     }
-                    completedEvaluation.setQuestionsAndResponses(questionsAndResponses);
-                    completedEvaluationList.add(completedEvaluation);
+                    if (responses.get(0).isIsShared()) {
+                        CompletedEvaluation completedEvaluation = new CompletedEvaluation();
+                        completedEvaluation.setEvalType(assignment.getEvalType().name());
+                        Staff evaluator = tmsApiHelper.getStaffByAsuriteAndSemester(assignment.getAsurite(), assignment.getSemesterName());
+                        Staff evaluatee = tmsApiHelper.getStaffByAsuriteAndSemester(assignment.getAssignedAsurite(), assignment.getSemesterName());
+                        completedEvaluation.setEvaluator(evaluator.getFname() + " " + evaluator.getLname());
+                        completedEvaluation.setEvaluatee(evaluatee.getFname() + " " + evaluatee.getLname());
+                        completedEvaluation.setIsShared(responses.get(0).isIsShared());
+                        completedEvaluation.setSemester(assignment.getSemesterName());
+                        List<QuestionAndResponse> questionsAndResponses = new ArrayList<QuestionAndResponse>();
+                        for (Response response : responses) {
+                            QuestionAndResponse questionAndResponse = new QuestionAndResponse();
+                            QuestionDetails questionDetails = new QuestionDetails();
+                            Question question = questionRepository.findOne(response.getQuestionId());
+                            questionDetails.setQuestionNumber(question.getQuestionNumber());
+                            questionDetails.setQuestionPrompt(question.getQuestionPrompt());
+                            questionDetails.setQuestionType(question.getQuestionType().name());
+                            questionAndResponse.setQuestion(questionDetails);
+                            questionAndResponse.setResponse(response.getResponse());
+                            questionsAndResponses.add(questionAndResponse);
+                        }
+                        completedEvaluation.setQuestionsAndResponses(questionsAndResponses);
+                        completedEvaluationList.add(completedEvaluation);
+                    }
                 }
 
             }
