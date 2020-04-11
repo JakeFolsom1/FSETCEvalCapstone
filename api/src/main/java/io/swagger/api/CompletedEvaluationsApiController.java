@@ -106,9 +106,10 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                     if (responses.get(0).isIsShared()) {
                         CompletedEvaluation completedEvaluation = new CompletedEvaluation();
                         completedEvaluation.setEvalType(assignment.getEvalType().name());
-                        Staff evaluator = tmsApiHelper.getStaffByAsuriteAndSemester(assignment.getAsurite(), assignment.getSemesterName());
+//                        Staff evaluator = tmsApiHelper.getStaffByAsuriteAndSemester(assignment.getAsurite(), assignment.getSemesterName());
                         Staff evaluatee = tmsApiHelper.getStaffByAsuriteAndSemester(assignment.getAssignedAsurite(), assignment.getSemesterName());
-                        completedEvaluation.setEvaluator(evaluator.getFname() + " " + evaluator.getLname());
+                        // to stay anonymous in the shared versions, leave the evaluator as null
+//                        completedEvaluation.setEvaluator(evaluator.getFname() + " " + evaluator.getLname());
                         completedEvaluation.setEvaluatee(evaluatee.getFname() + " " + evaluatee.getLname());
                         completedEvaluation.setIsShared(responses.get(0).isIsShared());
                         completedEvaluation.setSemester(assignment.getSemesterName());
