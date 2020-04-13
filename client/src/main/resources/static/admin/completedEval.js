@@ -9,10 +9,16 @@ $(document).ready(() => {
       names = namesJson;
     })
   ).then(function () {
+    $("#shareSettingsButton").click(function () {
+      $("#testmodal").show();
+    })
+
     const tableData = completedEvals.map((eval) => [
       eval.semester,
       eval.evaluator + (eval.evalType === "l2t" ? " - Lead" : ""),
       eval.evaluatee + (eval.evalType === "t2l" ? " - Lead" : ""),
+      eval.isShared,
+      eval.isShared
     ]);
     let table = $("#completedEvaluationTable").DataTable({
       stripe: true,
@@ -31,6 +37,22 @@ $(document).ready(() => {
         },
         { title: "Evaluator Name" },
         { title: "Evaluatee Name" },
+        {
+          title: "Sharing Requested?",
+          render: (data, _type, row) => {
+            let checkboxShared =
+                `<input type="checkbox" id="isShared" ${row[3] == true ? 'checked' : ''} disabled>`
+            return checkboxShared;
+          }
+        },
+        {
+          title: "Admin Approved?",
+          render: (data, _type, row) => {
+            let checkboxAdmin =
+                `<input type="checkbox" id="isShared" ${row[4] == true ? 'checked' : ''}>`;
+            return checkboxAdmin;
+          }
+        },
         {
           title: "Actions",
           render: (data, _type, row) => {

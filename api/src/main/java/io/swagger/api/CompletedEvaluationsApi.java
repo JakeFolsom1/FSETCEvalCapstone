@@ -9,9 +9,11 @@ import io.swagger.annotations.*;
 import io.swagger.model.CompletedEvaluation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.validation.Valid;
 import java.util.List;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-11-07T08:20:05.576Z")
 
@@ -44,4 +46,14 @@ public interface CompletedEvaluationsApi {
         method = RequestMethod.GET)
     ResponseEntity<List<CompletedEvaluation>> getUserEvaluations(@ApiParam(value = "", required = true) @PathVariable("asurite") String asurite);
 
+    @ApiOperation(value = "Update an existing completed Evaluation", nickname = "updateCompletedEvaluation", notes = "", tags={ "evaluations", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Invalid completed evaluation supplied"),
+            @ApiResponse(code = 404, message = "Completed evaluation not found"),
+            @ApiResponse(code = 405, message = "Validation exception") })
+    @RequestMapping(value = "/completedEvaluations",
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.PUT)
+    ResponseEntity<Void> updateCompletedEvaluation(@ApiParam(value = "Completed Evaluation object that needs to be updated in the database" ,required=true )  @Valid @RequestBody List<CompletedEvaluation> body);
 }
