@@ -18,7 +18,6 @@ $(document).ready(() => {
       eval.evaluator + (eval.evalType === "l2t" ? " - Lead" : ""),
       eval.evaluatee + (eval.evalType === "t2l" ? " - Lead" : ""),
       eval.isShared,
-      eval.isShared
     ]);
     let table = $("#completedEvaluationTable").DataTable({
       stripe: true,
@@ -38,19 +37,11 @@ $(document).ready(() => {
         { title: "Evaluator Name" },
         { title: "Evaluatee Name" },
         {
-          title: "Sharing Requested?",
-          render: (data, _type, row) => {
+          title: "Eval Shared?",
+          render: (data, _type, row, meta) => {
             let checkboxShared =
-                `<input type="checkbox" id="isShared" ${row[3] == true ? 'checked' : ''} disabled>`
+                `<input type="checkbox" onclick = "updateIsShared(this,'${row[1].replace(" - Lead", "")}', '${row[2].replace(" - Lead", "")}')" id="isShared${meta.row}" ${row[3] == true ? 'checked' : ''}>`
             return checkboxShared;
-          }
-        },
-        {
-          title: "Admin Approved?",
-          render: (data, _type, row) => {
-            let checkboxAdmin =
-                `<input type="checkbox" id="isShared" ${row[4] == true ? 'checked' : ''}>`;
-            return checkboxAdmin;
           }
         },
         {
@@ -74,6 +65,40 @@ $(document).ready(() => {
     });
   });
 });
+
+const updateIsShared = (checkbox, evaluator, evaluatee) => {
+  const assignmentId = completedEvals.find(
+      (evaluation) =>
+          evaluator == evaluation.evaluator && evaluatee == evaluation.evaluatee
+  ).assignmentId;
+  let response = [];
+  $.when(
+      $.getJSON(apiUrl + `/responses/${assignmentId}`, function (value) {
+         response = value;
+      })
+  ).then(function () {
+    $.each(response, (index, question) => {
+      console.log(question)
+      $.ajax({
+        type: "PUT",
+        url: apiUrl + "/responses",
+        data: JSON.stringify({
+          assignment: assignmentId,
+          isShared: checkbox.checked,
+          question: question.question,
+          response: question.response
+        }),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        success: function (response) {
+          console.log(response);
+        },
+      });
+    })
+  })
+}
 
 const viewEvaluation = (evaluator, evaluatee) => {
   //Clear any old evaluations in the modal. There is probably a better way to do this
