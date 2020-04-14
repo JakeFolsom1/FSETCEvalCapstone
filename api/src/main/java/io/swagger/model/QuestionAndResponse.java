@@ -21,7 +21,6 @@ public class QuestionAndResponse   {
   @JsonProperty("response")
   private String response = null;
 
-
   /**
    * Get question
    * @return question
@@ -54,7 +53,6 @@ public class QuestionAndResponse   {
   public void setResponse(String response) {
     this.response = response;
   }
-
 
   @Override
   public boolean equals(Object o) {

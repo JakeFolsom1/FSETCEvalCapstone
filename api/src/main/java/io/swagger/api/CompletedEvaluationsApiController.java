@@ -65,6 +65,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                 completedEvaluation.setEvaluator(evaluator.getFname() + " " + evaluator.getLname());
                 completedEvaluation.setEvaluatee(evaluatee.getFname() + " " + evaluatee.getLname());
                 completedEvaluation.setSemester(assignment.getSemesterName());
+                completedEvaluation.setAssignmentId(assignment.getAssignmentId());
                 List<Response> responses = responseRepository.findAllByAssignmentIdOrderByQuestionIdAsc(assignment.getAssignmentId());
                 if (responses.isEmpty()) {
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -110,6 +111,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                     completedEvaluation.setEvaluatee(evaluatee.getFname() + " " + evaluatee.getLname());
                     completedEvaluation.setIsShared(responses.get(0).isIsShared());
                     completedEvaluation.setSemester(assignment.getSemesterName());
+                    completedEvaluation.setAssignmentId(assignment.getAssignmentId());
                     List<QuestionAndResponse> questionsAndResponses = new ArrayList<QuestionAndResponse>();
                     for (Response response: responses) {
                         QuestionAndResponse questionAndResponse = new QuestionAndResponse();
@@ -151,6 +153,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                 completedEvaluation.setEvaluatee(evaluatee.getFname() + " " + evaluatee.getLname());
                 completedEvaluation.setIsShared(responses.get(0).isIsShared());
                 completedEvaluation.setSemester(assignment.getSemesterName());
+                completedEvaluation.setAssignmentId(assignment.getAssignmentId());
                 List<QuestionAndResponse> questionsAndResponses = new ArrayList<QuestionAndResponse>();
                 for (Response response: responses) {
                     QuestionAndResponse questionAndResponse = new QuestionAndResponse();
@@ -171,15 +174,5 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
         }
 
         return new ResponseEntity<List<CompletedEvaluation>>(HttpStatus.BAD_REQUEST);
-    }
-
-    public ResponseEntity<Void> updateCompletedEvaluation(@ApiParam(value = "Preference object that needs to be updated in the database" ,required=true )  @Valid @RequestBody List<CompletedEvaluation> body) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            preferenceRepository.save(body);
-            return new ResponseEntity<Void>(HttpStatus.OK);
-
-        }
-        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 }

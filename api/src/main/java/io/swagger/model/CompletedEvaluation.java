@@ -25,11 +25,11 @@ public class CompletedEvaluation   {
   @JsonProperty("evalType")
   private String evalType = null;
 
+  @JsonProperty("assignmentId")
+  private Long assignmentId = null;
+
   @JsonProperty("isShared")
   private Boolean isShared = null;
-
-  @JsonProperty("adminApproved")
-  private Boolean adminApproved = false;
 
   @JsonProperty("semester")
   private String semester = null;
@@ -67,6 +67,21 @@ public class CompletedEvaluation   {
 
   public void setEvaluatee(String evaluatee) {
     this.evaluatee = evaluatee;
+  }
+
+  /**
+   * Get assignmentId
+   * @return assignmentId
+   **/
+  @ApiModelProperty(required = true, value = "")
+  @NotNull
+
+  public Long getAssignmentId() {
+    return assignmentId;
+  }
+
+  public void setAssignmentId(Long assignmentId) {
+    this.assignmentId = assignmentId;
   }
 
   /**
@@ -116,22 +131,6 @@ public class CompletedEvaluation   {
 
   public void setIsShared(Boolean isShared) {
     this.isShared = isShared;
-  }
-
-  /**
-   * Get adminApproved
-   * @return adminApproved
-   **/
-  @ApiModelProperty(example = "true", required = true, value = "")
-  @NotNull
-
-
-  public Boolean isAdminApproved() {
-    return adminApproved;
-  }
-
-  public void setadminApproved(Boolean adminApproved) {
-    this.adminApproved = adminApproved;
   }
 
   /**
