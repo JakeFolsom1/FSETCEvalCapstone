@@ -15,10 +15,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-11-07T08:20:05.576Z")
 
 @Controller
@@ -65,6 +69,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                 completedEvaluation.setEvaluator(evaluator.getFname() + " " + evaluator.getLname());
                 completedEvaluation.setEvaluatee(evaluatee.getFname() + " " + evaluatee.getLname());
                 completedEvaluation.setSemester(assignment.getSemesterName());
+                completedEvaluation.setAssignmentId(assignment.getAssignmentId());
                 List<Response> responses = responseRepository.findAllByAssignmentIdOrderByQuestionIdAsc(assignment.getAssignmentId());
                 if (responses.isEmpty()) {
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -112,6 +117,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
 //                        completedEvaluation.setEvaluator(evaluator.getFname() + " " + evaluator.getLname());
                         completedEvaluation.setEvaluatee(evaluatee.getFname() + " " + evaluatee.getLname());
                         completedEvaluation.setIsShared(responses.get(0).isIsShared());
+                        completedEvaluation.setAssignmentId(assignment.getAssignmentId());
                         completedEvaluation.setSemester(assignment.getSemesterName());
                         List<QuestionAndResponse> questionsAndResponses = new ArrayList<QuestionAndResponse>();
                         for (Response response : responses) {
@@ -155,6 +161,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                 completedEvaluation.setEvaluatee(evaluatee.getFname() + " " + evaluatee.getLname());
                 completedEvaluation.setIsShared(responses.get(0).isIsShared());
                 completedEvaluation.setSemester(assignment.getSemesterName());
+                completedEvaluation.setAssignmentId(assignment.getAssignmentId());
                 List<QuestionAndResponse> questionsAndResponses = new ArrayList<QuestionAndResponse>();
                 for (Response response: responses) {
                     QuestionAndResponse questionAndResponse = new QuestionAndResponse();
@@ -176,5 +183,4 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
 
         return new ResponseEntity<List<CompletedEvaluation>>(HttpStatus.BAD_REQUEST);
     }
-
 }

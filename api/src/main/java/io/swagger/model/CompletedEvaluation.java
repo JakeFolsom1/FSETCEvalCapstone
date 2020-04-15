@@ -25,6 +25,9 @@ public class CompletedEvaluation   {
   @JsonProperty("evalType")
   private String evalType = null;
 
+  @JsonProperty("assignmentId")
+  private Long assignmentId = null;
+
   @JsonProperty("isShared")
   private Boolean isShared = null;
 
@@ -64,6 +67,21 @@ public class CompletedEvaluation   {
 
   public void setEvaluatee(String evaluatee) {
     this.evaluatee = evaluatee;
+  }
+
+  /**
+   * Get assignmentId
+   * @return assignmentId
+   **/
+  @ApiModelProperty(required = true, value = "")
+  @NotNull
+
+  public Long getAssignmentId() {
+    return assignmentId;
+  }
+
+  public void setAssignmentId(Long assignmentId) {
+    this.assignmentId = assignmentId;
   }
 
   /**
