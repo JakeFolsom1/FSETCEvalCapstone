@@ -7,9 +7,9 @@ $(document).ready(() => {
             }
         )
     ).then(function () {
-        const tableData = sharedEvals.map(eval => [
+        const tableData = sharedEvals.map((eval, index) => [
             eval.semester,
-            eval.evaluator,
+            index,
             null
         ])
 
@@ -28,16 +28,22 @@ $(document).ready(() => {
                         return `${semester} 20${year}`;
                     }
                 },
-                { title: "Evaluator Name" },
+                {
+                    title: "Evaluation Number",
+                    render: data => {
+                        return `Shared Evaluation ${data + 1}`
+                    }
+                },
                 {
                     title: "Actions",
                     render: (_data, _type, row) => {
                         //Use data variable to pass the evaluation parameters to the evaluations page.
+                        //Update 4/16/2020, now key'd on the index
                         let viewButton =
                             `<button
                             class="btn btn-primary"
                             style="border-color: #8C1D40;"
-                            id="${row[0]}ViewButton${row[1].split(" ").join("")}">
+                            id="${row[0]}ViewButton${row[1]}">
                             View
                             </button>`;
                         return viewButton;
@@ -46,29 +52,28 @@ $(document).ready(() => {
             ]
         })
         tableData.forEach(row => {
-            $(`#${row[0]}ViewButton${row[1].split(" ").join("")}`).click(() => {
-                viewSharedEvaluation(row[1], names[asurite]);
+            $(`#${row[0]}ViewButton${row[1]}`).click(() => {
+                viewSharedEvaluation(row[1]);
             })
         })
 
 
-        const viewSharedEvaluation = (evaluator, evaluatee) => {
+        const viewSharedEvaluation = (index) => {
             //Clear any old evaluations in the modal. There is probably a better way to do this
             $("#questionsAndResponses").empty();
             $("#evalHeader h3").remove();
             $("#submitEvalButton").hide();
 
             //search for the evaluation and questions
-            const currentEval = sharedEvals.find(
-                (evaluation) =>
-                    evaluator == evaluation.evaluator && evaluatee == evaluation.evaluatee
-            );
+            const currentEval = sharedEvals[index];
             const questions = currentEval.questionsAndResponses;
 
             //Add the title to the Modal
-            const title = `<h3>${evaluator}'s Evaluation of ${evaluatee} </h3>`;
+            const title = `<h3>Evaluation ${index + 1}</h3>`;
+
             $("#evalHeader").append(title);
 
+            /*
             const sharedRadioInput = `<div>
             <p>Is this evaluation shared with ${evaluatee}?</p>
             ${
@@ -79,7 +84,7 @@ $(document).ready(() => {
             <input type="radio" id="isSharedNo" checked="checked" disabled="true"><label for="isSharedNo">No</label>`
             }
          </div>`;
-
+            */
             //Add the questions to the modal. Needs styling.
             $.each(questions.sort((q1, q2) => q1.question.questionNumber - q2.question.questionNumber), (index, question) => {
                 const innerHTML = `<li>
@@ -99,7 +104,7 @@ $(document).ready(() => {
              </li>`;
                 $("#questionsAndResponses").append(innerHTML);
             });
-            $("#questionsAndResponses").append(sharedRadioInput);
+           // $("#questionsAndResponses").append(sharedRadioInput);
             $("#testmodal").modal("show");
         };
     })
