@@ -58,9 +58,8 @@ $(document).ready(() => {
                                                         <label for="${type}QuestionPrompt"
                                                             >Question Prompt:</label
                                                         >
-                                                        <input
+                                                        <textarea
                                                             id="${type}QuestionPrompt"
-                                                            type="text"
                                                             class="form-control"
                                                             placeholder="Enter question here"
                                                             required
@@ -233,14 +232,12 @@ const reloadQuestions = () => {
                                         <label for="question${question.questionId}Prompt"
                                             >Question Prompt:</label
                                         >
-                                        <input
+                                        <textarea
                                             id="question${question.questionId}Prompt"
                                             class="form-control"
-                                            type="text"
                                             placeholder="Enter question here"
-                                            value="${question.questionPrompt}"
                                             required
-                                        />
+                                        >${question.questionPrompt}</textarea>
                                     </div>
                                     <br />
                                     <div class="input-group" style="width: 100%">

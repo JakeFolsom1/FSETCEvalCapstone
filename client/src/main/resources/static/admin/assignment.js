@@ -226,12 +226,12 @@ $("a[href='#assign']").on('show.bs.tab', function(e) { // experimenting with loa
                     button.attr("disabled", "true");
                     button.text("Saved");
                     values.forEach((asurite, index) => {
+                        // check if a past assignments at this slot exists
+                        const pastAssignment = assignments.find(assignment =>
+                            assignment.asurite === tutorName &&
+                            assignment.assignmentNumber === (index + 1) &&
+                            assignment.evalType === "p2p");
                         if (asurite !== "None") {
-                            // check if a past assignments at this slot exists
-                            const pastAssignment = assignments.find(assignment =>
-                                assignment.asurite === tutorName &&
-                                assignment.assignmentNumber === (index + 1) &&
-                                assignment.evalType === "p2p");
                             let newAssignment;
                             let method;
                             // if it exists
@@ -263,6 +263,18 @@ $("a[href='#assign']").on('show.bs.tab', function(e) { // experimenting with loa
                                     reloadPage();
                                 }
                             })
+                        } else {
+                            if (pastAssignment) {
+                                $.ajax({
+                                    type: 'DELETE',
+                                    url: `${apiUrl}/assignments/id/${pastAssignment.assignmentId}`,
+                                    headers: {"Accept": "application/json"},
+                                    success: () => {
+                                        $(`#assignmentsModal`).modal("hide");
+                                        reloadPage();
+                                    }
+                                });
+                            }
                         }
                     })
                 }

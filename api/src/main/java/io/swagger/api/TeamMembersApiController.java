@@ -96,12 +96,6 @@ public class TeamMembersApiController implements TeamMembersApi {
         if (accept != null && accept.contains("application/json")) {
             String activeSemesterName = semesterRepository.findByIsActive(true).getSemesterName();
             Iterator<TeamMember> teamMemberIterator = teamMemberRepository.findTeamMembersByLeadAsuriteAndSemesterName(leadAsurite, activeSemesterName).iterator();
-
-            // if no teamMembers were found using the leadAsurite
-            if (!teamMemberIterator.hasNext()) {
-                // return a not found response
-                return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
-            }
             while (teamMemberIterator.hasNext()) {
                 TeamMember teamMember = teamMemberIterator.next();
                 teamMemberRepository.delete(teamMember);
@@ -136,9 +130,6 @@ public class TeamMembersApiController implements TeamMembersApi {
             List<String> teamMemberList = new ArrayList<String>();
             String activeSemesterName = semesterRepository.findByIsActive(true).getSemesterName();
             Iterator<TeamMember> teamMemberIterator = teamMemberRepository.findTeamMembersByLeadAsuriteAndSemesterName(leadAsurite, activeSemesterName).iterator();
-            if (!teamMemberIterator.hasNext()) {
-                return new ResponseEntity<List<String>>(HttpStatus.NOT_FOUND);
-            }
             while (teamMemberIterator.hasNext()) {
                 teamMemberList.add(teamMemberIterator.next().getTutorAsurite());
             }

@@ -72,7 +72,6 @@ $(document).ready(() => {
             $("#newSemesterForm").submit(event => {
                 event.preventDefault();
                 const semesterName = $("#semesterInput").val() + $("#semesterYearInput").val()
-                console.log("Creating new semester: " + semesterName);
                 $.ajax({
                     type: "POST",
                     url: apiUrl + "/semesters",
@@ -88,10 +87,6 @@ $(document).ready(() => {
     );
 
 });
-
-// const activateSemester = semesterName => {
-//     console.log("Activating semester: " + semesterName);
-// };
 
 const deleteSemester = semesterName => {
     console.log("Deleting semester: " + semesterName);
