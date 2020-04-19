@@ -73,7 +73,7 @@ public interface AssignmentsApi {
     ResponseEntity<Void> deleteAssignment(@ApiParam(value = "",required=true) @PathVariable("assignmentId") Long assignmentId);
 
 
-    @ApiOperation(value = "Get all assignments", nickname = "getAllAssignments", notes = "", response = Assignment.class, responseContainer = "List", tags={ "assignments", })
+    @ApiOperation(value = "Get all assignments for the current semester", nickname = "getAllAssignments", notes = "", response = Assignment.class, responseContainer = "List", tags={ "assignments", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Success", response = Assignment.class, responseContainer = "List") })
     @RequestMapping(value = "/assignments",

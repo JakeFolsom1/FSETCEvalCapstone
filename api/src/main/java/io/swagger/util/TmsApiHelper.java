@@ -24,6 +24,30 @@ public class TmsApiHelper {
     @Autowired
     SemesterRepository semesterRepository;
 
+    public String getFullName(String asurite) {
+        CredentialsProvider provider = new BasicCredentialsProvider();
+        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("EVAL", "dbbac9ba-feeb-11e9-8f0b-362b9e155667");
+        provider.setCredentials(AuthScope.ANY, credentials);
+        HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
+        String url = "https://fsetc.asu.edu/tmsapi/ps-data?id=" + asurite;
+        HttpGet request = new HttpGet(url);
+        request.setHeader("Accept", "application/json");
+        try {
+            HttpResponse response = client.execute(request);
+            InputStream stream = response.getEntity().getContent();
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> responseMap = mapper.readValue(stream, Map.class);
+            if (responseMap.get("status").equals("OK")) {
+                Map<String, Object> studentData = mapper.readValue((String) responseMap.get("payload"), Map.class);
+                studentData = (Map) studentData.get("getBasicStudentInfo");
+                return studentData.get("first_name") + " " + studentData.get("last_name");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public List<Staff> getAllStaffInCurrentSemester() {
         CredentialsProvider provider = new BasicCredentialsProvider();
         UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("EVAL", "dbbac9ba-feeb-11e9-8f0b-362b9e155667");
@@ -63,7 +87,7 @@ public class TmsApiHelper {
         String activeSemester = semesterRepository.findByIsActive(true).getSemesterName();
         String url = "https://fsetc.asu.edu/tmsapi/staff?id=" + asurite;
         if (activeSemester.equals(semester) == false) {
-            url += "term=" + semester;
+            url += "&term=" + semester;
         }
         HttpGet request = new HttpGet(url);
         request.setHeader("Accept", "application/json");

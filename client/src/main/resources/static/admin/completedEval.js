@@ -47,16 +47,16 @@ $(document).ready(() => {
         { title: "Evaluator Name" },
         { title: "Evaluatee Name" },
         {
-          title: "Eval Shared?",
-          render: (data, _type, row, meta) => {
+          title: "Evaluation Shared?",
+          render: (data) => {
             let checkboxShared =
-                `<input type="checkbox" onclick = "updateIsShared(this, ${data.assignmentId})" id="isShared${meta.row}" ${data.isShared == true ? 'checked' : ''}>`
+                `<input type="checkbox" onclick = "updateIsShared(this, ${data.assignmentId})" ${data.isShared == true ? 'checked' : ''}>`
             return checkboxShared;
           }
         },
         {
           title: "Actions",
-          render: (data, _type, row) => {
+          render: (data) => {
             let viewButton = `<button
                             class="btn btn-primary"
                             style="border-color: #8C1D40;"
@@ -118,17 +118,6 @@ const viewEvaluation = (evaluationIndex) => {
   const title = `<h3>${currentEval.evaluator}'s Evaluation of ${currentEval.evaluatee} </h3>`;
   $("#evalHeader").append(title);
 
-  const sharedRadioInput = `<div>
-            <p>Is this evaluation shared with ${currentEval.evaluatee}?</p>
-            ${
-              currentEval.isShared == true
-                ? `<input type="radio" id="isSharedYes" checked="checked" disabled="true"><label for="isSharedYes">Yes</label>
-            <input type="radio" id="isSharedNo" disabled="true"><label for="isSharedNo">No</label>`
-                : `<input type="radio" id="isSharedYes" disabled="true"><label for="isSharedYes">Yes</label>
-            <input type="radio" id="isSharedNo" checked="checked" disabled="true"><label for="isSharedNo">No</label>`
-            }
-         </div>`;
-
   //Add the questions to the modal. Needs styling.
   $.each(questions.sort((q1, q2) => q1.question.questionNumber - q2.question.questionNumber), (index, question) => {
     const innerHTML = `<li>
@@ -148,6 +137,5 @@ const viewEvaluation = (evaluationIndex) => {
              </li>`;
     $("#questionsAndResponses").append(innerHTML);
   });
-  $("#questionsAndResponses").append(sharedRadioInput);
   $("#testmodal").modal("show");
 };

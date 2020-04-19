@@ -55,40 +55,59 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
         this.request = request;
     }
 
+    private String getTutorName(String asurite, String semester, Map<String, Staff> staffMap) {
+        Staff staff = staffMap.get(asurite);
+
+        // if tutor is part of the current semester
+        if (staff != null) {
+            return String.format("%s %s", staff.getFname(), staff.getLname());
+        }
+        else {
+            // else fetch it from tms api
+            staff = tmsApiHelper.getStaffByAsuriteAndSemester(asurite, semester);
+            if (staff != null) {
+                return String.format("%s %s", staff.getFname(), staff.getLname());
+            }
+            else {
+                // else get it from ps-service (this should only happen if the current term in tms is inactive in the eval platform)
+                return tmsApiHelper.getFullName(asurite);
+            }
+        }
+    }
+
+    private CompletedEvaluation getCompletedEvaluation(Assignment assignment, Map<String, Staff> staffMap) {
+        CompletedEvaluation completedEvaluation = new CompletedEvaluation();
+        completedEvaluation.setEvalType(assignment.getEvalType().name());
+        completedEvaluation.setEvaluator(getTutorName(assignment.getAsurite(), assignment.getSemesterName(), staffMap));
+        completedEvaluation.setEvaluatee(getTutorName(assignment.getAssignedAsurite(), assignment.getSemesterName(), staffMap));
+        completedEvaluation.setAssignmentId(assignment.getAssignmentId());
+        completedEvaluation.setSemester(assignment.getSemesterName());
+        List<Response> responses = responseRepository.findAllByAssignmentIdOrderByQuestionIdAsc(assignment.getAssignmentId());
+        completedEvaluation.setIsShared(responses.get(0).isIsShared());
+        List<QuestionAndResponse> questionsAndResponses = new ArrayList<QuestionAndResponse>();
+        for (Response response: responses) {
+            QuestionAndResponse questionAndResponse = new QuestionAndResponse();
+            QuestionDetails questionDetails = new QuestionDetails();
+            Question question = questionRepository.findOne(response.getQuestionId());
+            questionDetails.setQuestionNumber(question.getQuestionNumber());
+            questionDetails.setQuestionPrompt(question.getQuestionPrompt());
+            questionDetails.setQuestionType(question.getQuestionType().name());
+            questionAndResponse.setQuestion(questionDetails);
+            questionAndResponse.setResponse(response.getResponse());
+            questionsAndResponses.add(questionAndResponse);
+        }
+        completedEvaluation.setQuestionsAndResponses(questionsAndResponses);
+        return completedEvaluation;
+    }
+
     public ResponseEntity<List<CompletedEvaluation>> getAllCompletedEvaluations() {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
+            Map<String, Staff> staffMap = tmsApiHelper.getStaffMap();
             List<Assignment> completedAssignments = assignmentRepository.findAllByIsComplete(true);
             List<CompletedEvaluation> completedEvaluationList = new ArrayList<CompletedEvaluation>();
             for (Assignment assignment: completedAssignments) {
-                CompletedEvaluation completedEvaluation = new CompletedEvaluation();
-                completedEvaluation.setEvalType(assignment.getEvalType().name());
-                // Need to get the staff from the TMS API from the term it was completed
-                Staff evaluator = tmsApiHelper.getStaffByAsuriteAndSemester(assignment.getAsurite(), assignment.getSemesterName());
-                Staff evaluatee = tmsApiHelper.getStaffByAsuriteAndSemester(assignment.getAssignedAsurite(), assignment.getSemesterName());
-                completedEvaluation.setEvaluator(evaluator.getFname() + " " + evaluator.getLname());
-                completedEvaluation.setEvaluatee(evaluatee.getFname() + " " + evaluatee.getLname());
-                completedEvaluation.setSemester(assignment.getSemesterName());
-                completedEvaluation.setAssignmentId(assignment.getAssignmentId());
-                List<Response> responses = responseRepository.findAllByAssignmentIdOrderByQuestionIdAsc(assignment.getAssignmentId());
-                if (responses.isEmpty()) {
-                    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-                }
-                completedEvaluation.setIsShared(responses.get(0).isIsShared());
-                List<QuestionAndResponse> questionsAndResponses = new ArrayList<QuestionAndResponse>();
-                for (Response response: responses) {
-                    QuestionAndResponse questionAndResponse = new QuestionAndResponse();
-                    QuestionDetails questionDetails = new QuestionDetails();
-                    Question question = questionRepository.findOne(response.getQuestionId());
-                    questionDetails.setQuestionNumber(question.getQuestionNumber());
-                    questionDetails.setQuestionPrompt(question.getQuestionPrompt());
-                    questionDetails.setQuestionType(question.getQuestionType().name());
-                    questionAndResponse.setQuestion(questionDetails);
-                    questionAndResponse.setResponse(response.getResponse());
-                    questionsAndResponses.add(questionAndResponse);
-                }
-                completedEvaluation.setQuestionsAndResponses(questionsAndResponses);
-                completedEvaluationList.add(completedEvaluation);
+                completedEvaluationList.add(getCompletedEvaluation(assignment, staffMap));
             }
             return new ResponseEntity<List<CompletedEvaluation>>(completedEvaluationList, HttpStatus.OK);
         }
@@ -99,6 +118,7 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
     public ResponseEntity<List<CompletedEvaluation>> getSharedUserEvaluations(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
+            Map<String, Staff> staffMap = tmsApiHelper.getStaffMap();
             List<Assignment> completedAssignments = assignmentRepository.findAllByIsCompleteAndAssignedAsurite(true, asurite);
             List<CompletedEvaluation> completedEvaluationList = new ArrayList<CompletedEvaluation>();
             for (Assignment assignment: completedAssignments) {
@@ -109,29 +129,8 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
                         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
                     }
                     if (responses.get(0).isIsShared()) {
-                        CompletedEvaluation completedEvaluation = new CompletedEvaluation();
-                        completedEvaluation.setEvalType(assignment.getEvalType().name());
-//                        Staff evaluator = tmsApiHelper.getStaffByAsuriteAndSemester(assignment.getAsurite(), assignment.getSemesterName());
-                        Staff evaluatee = tmsApiHelper.getStaffByAsuriteAndSemester(assignment.getAssignedAsurite(), assignment.getSemesterName());
-                        // to stay anonymous in the shared versions, leave the evaluator as null
-//                        completedEvaluation.setEvaluator(evaluator.getFname() + " " + evaluator.getLname());
-                        completedEvaluation.setEvaluatee(evaluatee.getFname() + " " + evaluatee.getLname());
-                        completedEvaluation.setIsShared(responses.get(0).isIsShared());
-                        completedEvaluation.setAssignmentId(assignment.getAssignmentId());
-                        completedEvaluation.setSemester(assignment.getSemesterName());
-                        List<QuestionAndResponse> questionsAndResponses = new ArrayList<QuestionAndResponse>();
-                        for (Response response : responses) {
-                            QuestionAndResponse questionAndResponse = new QuestionAndResponse();
-                            QuestionDetails questionDetails = new QuestionDetails();
-                            Question question = questionRepository.findOne(response.getQuestionId());
-                            questionDetails.setQuestionNumber(question.getQuestionNumber());
-                            questionDetails.setQuestionPrompt(question.getQuestionPrompt());
-                            questionDetails.setQuestionType(question.getQuestionType().name());
-                            questionAndResponse.setQuestion(questionDetails);
-                            questionAndResponse.setResponse(response.getResponse());
-                            questionsAndResponses.add(questionAndResponse);
-                        }
-                        completedEvaluation.setQuestionsAndResponses(questionsAndResponses);
+                        CompletedEvaluation completedEvaluation = getCompletedEvaluation(assignment, staffMap);
+                        completedEvaluation.setEvaluator(null);
                         completedEvaluationList.add(completedEvaluation);
                     }
                 }
@@ -146,37 +145,11 @@ public class CompletedEvaluationsApiController implements CompletedEvaluationsAp
     public ResponseEntity<List<CompletedEvaluation>> getUserEvaluations(@ApiParam(value = "",required=true) @PathVariable("asurite") String asurite) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
+            Map<String, Staff> staffMap = tmsApiHelper.getStaffMap();
             List<Assignment> completedAssignments = assignmentRepository.findAllByIsCompleteAndAssignedAsurite(true, asurite);
             List<CompletedEvaluation> completedEvaluationList = new ArrayList<CompletedEvaluation>();
             for (Assignment assignment: completedAssignments) {
-                List<Response> responses = responseRepository.findAllByAssignmentIdOrderByQuestionIdAsc(assignment.getAssignmentId());
-                if (responses.isEmpty()) {
-                    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-                }
-                CompletedEvaluation completedEvaluation = new CompletedEvaluation();
-                completedEvaluation.setEvalType(assignment.getEvalType().name());
-                Staff evaluator = tmsApiHelper.getStaffByAsuriteAndSemester(assignment.getAsurite(), assignment.getSemesterName());
-                Staff evaluatee = tmsApiHelper.getStaffByAsuriteAndSemester(assignment.getAssignedAsurite(), assignment.getSemesterName());
-                completedEvaluation.setEvaluator(evaluator.getFname() + " " + evaluator.getLname());
-                completedEvaluation.setEvaluatee(evaluatee.getFname() + " " + evaluatee.getLname());
-                completedEvaluation.setIsShared(responses.get(0).isIsShared());
-                completedEvaluation.setSemester(assignment.getSemesterName());
-                completedEvaluation.setAssignmentId(assignment.getAssignmentId());
-                List<QuestionAndResponse> questionsAndResponses = new ArrayList<QuestionAndResponse>();
-                for (Response response: responses) {
-                    QuestionAndResponse questionAndResponse = new QuestionAndResponse();
-                    QuestionDetails questionDetails = new QuestionDetails();
-                    Question question = questionRepository.findOne(response.getQuestionId());
-                    questionDetails.setQuestionNumber(question.getQuestionNumber());
-                    questionDetails.setQuestionPrompt(question.getQuestionPrompt());
-                    questionDetails.setQuestionType(question.getQuestionType().name());
-                    questionAndResponse.setQuestion(questionDetails);
-                    questionAndResponse.setResponse(response.getResponse());
-                    questionsAndResponses.add(questionAndResponse);
-                }
-                completedEvaluation.setQuestionsAndResponses(questionsAndResponses);
-                completedEvaluationList.add(completedEvaluation);
-
+                completedEvaluationList.add(getCompletedEvaluation(assignment, staffMap));
             }
             return new ResponseEntity<List<CompletedEvaluation>>(completedEvaluationList, HttpStatus.OK);
         }

@@ -222,11 +222,15 @@ public class AssignmentsApiController implements AssignmentsApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             List<Assignment> assignmentList = new ArrayList<Assignment>();
-            Iterator<Assignment> assignmentIterator = assignmentRepository.findAll().iterator();
-            while(assignmentIterator.hasNext())
-            {
-                Assignment assignment = assignmentIterator.next();
-                assignmentList.add(assignment);
+            Semester activeSemester = semesterRepository.findByIsActive(true);
+            if (activeSemester != null) {
+                Iterator<Assignment> assignmentIterator =
+                        assignmentRepository.findAllBySemesterName(activeSemester.getSemesterName()).iterator();
+                while(assignmentIterator.hasNext())
+                {
+                    Assignment assignment = assignmentIterator.next();
+                    assignmentList.add(assignment);
+                }
             }
             return new ResponseEntity<List<Assignment>>(assignmentList, HttpStatus.OK);
         }

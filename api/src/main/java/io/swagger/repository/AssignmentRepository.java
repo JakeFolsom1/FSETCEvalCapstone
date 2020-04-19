@@ -14,6 +14,7 @@ public interface AssignmentRepository extends CrudRepository<Assignment, Long> {
     List<Assignment> findAllByIsCompleteAndAsuriteAndSemesterName(boolean isComplete, String asurite, String semesterName);
     List<Assignment> findAllByIsComplete(boolean isComplete);
     List<Assignment> findAllByIsCompleteAndAssignedAsurite(boolean isComplete, String assignedAsurite);
+    List<Assignment> findAllBySemesterName(String semesterName);
     List<Assignment> findAllByAssignmentId(Long assignmentId);
     List<Assignment> findAllByAsurite(String asurite);
     List<Assignment> findAllByAsuriteAndSemesterNameAndEvalType(String asurite, String semesterName, Question.EvalType evalType);
