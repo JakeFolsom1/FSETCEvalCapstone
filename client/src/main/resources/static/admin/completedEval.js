@@ -22,15 +22,12 @@ $(document).ready(() => {
       });
     })
 
-    $("#shareSettingsButton").click(function () {
-      $("#testmodal").show();
-    })
-
-    const tableData = completedEvals.map((eval) => [
+    const tableData = completedEvals.map((eval, index) => [
       eval.semester,
       eval.evaluator + (eval.evalType === "l2t" ? " - Lead" : ""),
       eval.evaluatee + (eval.evalType === "t2l" ? " - Lead" : ""),
-      eval.isShared,
+      {isShared: eval.isShared, assignmentId: eval.assignmentId},
+      index
     ]);
     let table = $("#completedEvaluationTable").DataTable({
       stripe: true,
@@ -53,7 +50,7 @@ $(document).ready(() => {
           title: "Eval Shared?",
           render: (data, _type, row, meta) => {
             let checkboxShared =
-                `<input type="checkbox" onclick = "updateIsShared(this,'${row[1].replace(" - Lead", "")}', '${row[2].replace(" - Lead", "")}')" id="isShared${meta.row}" ${row[3] == true ? 'checked' : ''}>`
+                `<input type="checkbox" onclick = "updateIsShared(this, ${data.assignmentId})" id="isShared${meta.row}" ${data.isShared == true ? 'checked' : ''}>`
             return checkboxShared;
           }
         },
@@ -63,7 +60,7 @@ $(document).ready(() => {
             let viewButton = `<button
                             class="btn btn-primary"
                             style="border-color: #8C1D40;"
-                            onclick="viewEvaluation('${row[1].replace(" - Lead", "")}', '${row[2].replace(" - Lead", "")}')"
+                            onclick="viewEvaluation('${data}')"
                             id="myButton">
                             View
                             </button>`;
@@ -79,11 +76,7 @@ $(document).ready(() => {
   });
 });
 
-const updateIsShared = (checkbox, evaluator, evaluatee) => {
-  const assignmentId = completedEvals.find(
-      (evaluation) =>
-          evaluator == evaluation.evaluator && evaluatee == evaluation.evaluatee
-  ).assignmentId;
+const updateIsShared = (checkbox, assignmentId) => {
   let response = [];
   $.when(
       $.getJSON(apiUrl + `/responses/${assignmentId}`, function (value) {
@@ -91,7 +84,6 @@ const updateIsShared = (checkbox, evaluator, evaluatee) => {
       })
   ).then(function () {
     $.each(response, (index, question) => {
-      console.log(question)
       $.ajax({
         type: "PUT",
         url: apiUrl + "/responses",
@@ -106,31 +98,28 @@ const updateIsShared = (checkbox, evaluator, evaluatee) => {
           "Content-Type": "application/json",
         },
         success: function (response) {
-          console.log(response);
+          // console.log(response);
         },
       });
     })
   })
 }
 
-const viewEvaluation = (evaluator, evaluatee) => {
+const viewEvaluation = (evaluationIndex) => {
   //Clear any old evaluations in the modal. There is probably a better way to do this
   $("#questionsAndResponses").empty();
   $("#evalHeader h3").remove();
 
   //search for the evaluation and questions
-  const currentEval = completedEvals.find(
-    (evaluation) =>
-      evaluator == evaluation.evaluator && evaluatee == evaluation.evaluatee
-  );
+  const currentEval = completedEvals[evaluationIndex];
   const questions = currentEval.questionsAndResponses;
 
   //Add the title to the Modal
-  const title = `<h3>${evaluator}'s Evaluation of ${evaluatee} </h3>`;
+  const title = `<h3>${currentEval.evaluator}'s Evaluation of ${currentEval.evaluatee} </h3>`;
   $("#evalHeader").append(title);
 
   const sharedRadioInput = `<div>
-            <p>Is this evaluation shared with ${evaluatee}?</p>
+            <p>Is this evaluation shared with ${currentEval.evaluatee}?</p>
             ${
               currentEval.isShared == true
                 ? `<input type="radio" id="isSharedYes" checked="checked" disabled="true"><label for="isSharedYes">Yes</label>

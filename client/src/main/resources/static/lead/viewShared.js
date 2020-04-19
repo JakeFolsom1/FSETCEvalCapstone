@@ -31,7 +31,7 @@ $(document).ready(() => {
 
                 { title: "Evaluation Number",
                     render: data => {
-                    return `Shared Evaluation ${data}`
+                    return `Shared Evaluation ${data + 1}`
                     }
 
                 },
@@ -62,7 +62,7 @@ $(document).ready(() => {
             $("#submitEvalButton").hide();
             const currentEval = sharedEvals[index];
             const questions = currentEval.questionsAndResponses;
-            const title = `<h3>Evaluation of ${index+1} </h3>`;
+            const title = `<h3>Evaluation ${index+1} </h3>`;
             $("#evalHeader").append(title);
             /*
             const sharedRadioInput = `<div>
@@ -95,7 +95,7 @@ $(document).ready(() => {
              </li>`;
                 $("#questionsAndResponses").append(innerHTML);
             });
-            $("#questionsAndResponses").append(sharedRadioInput);
+            // $("#questionsAndResponses").append(sharedRadioInput);
             $("#testmodal").modal("show");
         };
     })
